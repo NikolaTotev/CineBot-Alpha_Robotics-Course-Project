@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\ConfigElementBehavior.cs" />
     <Compile Include="Assets\Scripts\ConfigurationManager.cs" />
     <Compile Include="Assets\Scripts\PropertyManager.cs" />
     <Compile Include="Assets\Scripts\ToolTipManager.cs" />
@@ -124,11 +125,17 @@
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Documents/Learning/Robotics/Robotics-Course-Project/KinematiX/KinematX/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.ProGrids">
+      <HintPath>D:/Documents/Learning/Robotics/Robotics-Course-Project/KinematiX/KinematX/Library/ScriptAssemblies/Unity.ProGrids.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>D:/Documents/Learning/Robotics/Robotics-Course-Project/KinematiX/KinematX/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.InputSystem">
       <HintPath>D:/Documents/Learning/Robotics/Robotics-Course-Project/KinematiX/KinematX/Library/ScriptAssemblies/Unity.InputSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProGrids.Editor">
+      <HintPath>D:/Documents/Learning/Robotics/Robotics-Course-Project/KinematiX/KinematX/Library/ScriptAssemblies/Unity.ProGrids.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/Documents/Learning/Robotics/Robotics-Course-Project/KinematiX/KinematX/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
@@ -150,12 +157,6 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>D:/Documents/Learning/Robotics/Robotics-Course-Project/KinematiX/KinematX/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.ProGrids">
-      <HintPath>D:/Documents/Learning/Robotics/Robotics-Course-Project/KinematiX/KinematX/Library/ScriptAssemblies/Unity.ProGrids.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.ProGrids.Editor">
-      <HintPath>D:/Documents/Learning/Robotics/Robotics-Course-Project/KinematiX/KinematX/Library/ScriptAssemblies/Unity.ProGrids.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.7f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
