@@ -15,7 +15,7 @@ public class ConfigElementBehavior : MonoBehaviour, IPointerEnterHandler, IPoint
     // Start is called before the first frame update
     void Start()
     {
-
+        Debug.Log("I'm Alive");
     }
 
     // Update is called once per frame
@@ -27,6 +27,7 @@ public class ConfigElementBehavior : MonoBehaviour, IPointerEnterHandler, IPoint
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        Debug.Log("Mouse Enter");
         MouseEnter?.Invoke();
         MouseEnterTooltip?.Invoke();
     }

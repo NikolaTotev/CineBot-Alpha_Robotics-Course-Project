@@ -63,7 +63,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\GizmoDrawer.cs" />
+    <Compile Include="Assets\Scripts\BaseElement.cs" />
     <Compile Include="Assets\Scripts\ConfigElementBehavior.cs" />
+    <Compile Include="Assets\Scripts\ConfigurationElement.cs" />
     <Compile Include="Assets\Scripts\ConfigurationManager.cs" />
     <Compile Include="Assets\Scripts\PropertyManager.cs" />
     <Compile Include="Assets\Scripts\ToolTipManager.cs" />

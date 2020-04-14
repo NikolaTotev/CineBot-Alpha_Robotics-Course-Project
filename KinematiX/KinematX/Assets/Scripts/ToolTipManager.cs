@@ -22,6 +22,7 @@ public class ToolTipManager : MonoBehaviour
         ShowToolTip("This is some text so yeah");
 
         m_Instance = this;
+        HideToolTip();
     }   
 
 

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UI_Navigator : MonoBehaviour
 {
-    public enum RobotComponents
+    public enum ElementTypes
     {
         Base, RotationBase, ArmSection, RotationJoint, GimbalAssembly
     }
@@ -27,18 +27,18 @@ public class UI_Navigator : MonoBehaviour
     }
     public void OpenPropertyPanel(int enumPosition)
     {
-        RobotComponents callerType = (RobotComponents) enumPosition;
+        ElementTypes callerType = (ElementTypes) enumPosition;
         switch (callerType)
         {
-            case RobotComponents.Base:
+            case ElementTypes.Base:
                 break;
-            case RobotComponents.RotationBase:
+            case ElementTypes.RotationBase:
                 break;
-            case RobotComponents.ArmSection:
+            case ElementTypes.ArmSection:
                 break;
-            case RobotComponents.RotationJoint:
+            case ElementTypes.RotationJoint:
                 break;
-            case RobotComponents.GimbalAssembly:
+            case ElementTypes.GimbalAssembly:
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(callerType), callerType, null);
