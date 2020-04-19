@@ -20,6 +20,7 @@ while True:
         if len(fullMsg)-HEADERLENGTH == msgLen:
             print("Received full message!")
             print(fullMsg[HEADERLENGTH:])
+            clientSocket.send(bytes("Hi Server!", "utf-8"))
             newMsg = True
             fullMsg = ''
 
