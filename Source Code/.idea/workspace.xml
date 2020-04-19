@@ -2,16 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e4398c56-e0e9-49e4-a8a6-c548d81d10b0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Server Scripts/DummyMotorScript.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CAD Blueprints/Word_Gear.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../CAD Blueprints/Word_Gear.bak" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CAD Blueprints/Word_Gear.dwg" beforeDir="false" afterPath="$PROJECT_DIR$/../CAD Blueprints/Word_Gear.dwg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CAD Blueprints/Word_Gear.dwl" beforeDir="false" afterPath="$PROJECT_DIR$/../CAD Blueprints/Word_Gear.dwl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../CAD Blueprints/Word_Gear.dwl2" beforeDir="false" afterPath="$PROJECT_DIR$/../CAD Blueprints/Word_Gear.dwl2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../KinematiX/KinematX/Library/CurrentLayout-default.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/../KinematiX/KinematX/Library/CurrentLayout-default.dwlt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../KinematiX/KinematX/Library/SourceAssetDB" beforeDir="false" afterPath="$PROJECT_DIR$/../KinematiX/KinematX/Library/SourceAssetDB" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Source Code.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Source Code.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server Scripts/Robot_Server.py" beforeDir="false" afterPath="$PROJECT_DIR$/Server Scripts/Robot_Server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server Scripts/Test_Client.py" beforeDir="false" afterPath="$PROJECT_DIR$/Server Scripts/Test_Client.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -36,22 +29,22 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="5" />
+          <entry key="py" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="5" />
+          <entry key="Python" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="1894" />
+          <entry key="py" value="3326" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="1894" />
+          <entry key="Python" value="3326" />
         </counts>
       </usages-collector>
     </session>
@@ -73,22 +66,42 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Server Scripts/Robot_Server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="50">
-              <caret line="2" column="8" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
+            <state relative-caret-position="476">
+              <caret line="52" column="36" selection-start-line="52" selection-start-column="36" selection-end-line="52" selection-end-column="36" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
+                <marker date="1587306046886" expanded="true" signature="512:614" ph="..." />
+                <marker date="1587306046886" expanded="true" signature="1272:1273" ph="..." />
+                <marker date="1587306046886" expanded="true" signature="1272:2067" ph="..." />
+                <marker date="1587306046886" expanded="true" signature="2067:2073" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Server Scripts/Test_Client.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="528">
+              <caret line="22" column="53" lean-forward="true" selection-start-line="22" selection-start-column="53" selection-end-line="22" selection-end-column="53" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Sensor Scripts/custom_sensor_driver.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1981" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Server Scripts/DummyMotorScript.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="3" column="33" lean-forward="true" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
+            <state relative-caret-position="48">
+              <caret line="2" column="31" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
               <folding>
-                <marker date="1587285657882" expanded="true" signature="20:25" ph="..." />
+                <marker date="1587286089489" expanded="true" signature="19:24" ph="..." />
               </folding>
             </state>
           </provider>
@@ -106,10 +119,12 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Server Scripts/Test_Client.py">
+        <entry file="file://$PROJECT_DIR$/Sensor Scripts/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="13" column="10" selection-start-line="13" selection-start-column="10" selection-end-line="13" selection-end-column="10" />
+            <state>
+              <folding>
+                <element signature="e#0#35#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -295,12 +310,12 @@
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.108742006" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.108742006" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32917467" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32917467" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -335,13 +350,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Server Scripts/Test_Client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="13" column="10" selection-start-line="13" selection-start-column="10" selection-end-line="13" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Sensor Scripts/sensor-data-extraction.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -351,22 +359,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Server Scripts/DummyMotorScript.py">
+    <entry file="file://$PROJECT_DIR$/Sensor Scripts/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="3" column="33" lean-forward="true" selection-start-line="3" selection-start-column="33" selection-end-line="3" selection-end-column="33" />
+        <state>
           <folding>
-            <marker date="1587285657882" expanded="true" signature="20:25" ph="..." />
+            <element signature="e#0#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Server Scripts/Test_Client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="528">
+          <caret line="22" column="53" lean-forward="true" selection-start-line="22" selection-start-column="53" selection-end-line="22" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Server Scripts/DummyMotorScript.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="2" column="31" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
+          <folding>
+            <marker date="1587286089489" expanded="true" signature="19:24" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sensor Scripts/custom_sensor_driver.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1981" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Server Scripts/Robot_Server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="2" column="8" selection-start-line="2" selection-start-column="8" selection-end-line="2" selection-end-column="8" />
+        <state relative-caret-position="476">
+          <caret line="52" column="36" selection-start-line="52" selection-start-column="36" selection-end-line="52" selection-end-column="36" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
+            <marker date="1587306046886" expanded="true" signature="512:614" ph="..." />
+            <marker date="1587306046886" expanded="true" signature="1272:1273" ph="..." />
+            <marker date="1587306046886" expanded="true" signature="1272:2067" ph="..." />
+            <marker date="1587306046886" expanded="true" signature="2067:2073" ph="..." />
           </folding>
         </state>
       </provider>
