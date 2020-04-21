@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Device.Gpio;
 
 namespace PrimaryClasses
@@ -13,6 +14,12 @@ namespace PrimaryClasses
         {
 
         }
+
+        public void Initialize()
+        {
+            Console.WriteLine($"\r\n[{DateTime.Now}] Motor Manager: Initializing...");
+        }
+
 
         public static PinManager GetInstance()
         {

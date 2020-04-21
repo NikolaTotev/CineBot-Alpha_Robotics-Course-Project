@@ -7,10 +7,27 @@ using UtilityClasses;
 
 namespace Motor_Control
 {
-    class MotorManager
+    public class MotorManager
     {
         private Dictionary<string, IMotor> m_RegisteredMotors;
 
+        private static MotorManager m_Instance;
+
+        public static MotorManager GetInstance()
+        {
+            return m_Instance ?? (m_Instance = new MotorManager());
+        }
+
+        private MotorManager()
+        {
+            
+        }
+
+        public void Initialize()
+        {
+            Console.WriteLine($"\r\n[{DateTime.Now}] Motor Manager: Initializing...");
+        }
+        
         public void SetupMotors()
         {
             StringBuilder sb = new StringBuilder();

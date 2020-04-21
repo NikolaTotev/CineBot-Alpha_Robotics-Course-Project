@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Threading;
-using RobotServerLib;
+using ServerClientUtils;
+
 namespace Central_Control
 {
     class Program
     {
         static void Main(string[] args)
         {
-            RobotServer server= new RobotServer();
+           RobotServer server= new RobotServer();
            server.ServerNotification += DisplayMessage;
            server.StartServer();
            Console.WriteLine("This is from the main thread!");

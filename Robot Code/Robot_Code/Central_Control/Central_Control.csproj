@@ -6,8 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Robot_Server\RobotServer.csproj" />
-    <ProjectReference Include="..\Server_Client\ServerClient.csproj" />
+    <ProjectReference Include="..\ServerClientUtils\ServerClientUtils.csproj" />
   </ItemGroup>
 
 </Project>
