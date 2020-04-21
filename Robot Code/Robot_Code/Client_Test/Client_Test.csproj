@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ServerClientUtils\ServerClientUtils.csproj" />
     <ProjectReference Include="..\UtilityClasses\UtilityClasses.csproj" />
   </ItemGroup>
 
