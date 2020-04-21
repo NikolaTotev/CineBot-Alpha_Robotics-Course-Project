@@ -1,13 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Central_Control\Central_Control.csproj" />
+    <ProjectReference Include="..\Client_Test\Client_Test.csproj" />
     <ProjectReference Include="..\Robot_Server\RobotServer.csproj" />
     <ProjectReference Include="..\Server_Client\ServerClient.csproj" />
+    <ProjectReference Include="..\UtilityClasses\UtilityClasses.csproj" />
   </ItemGroup>
 
 </Project>
