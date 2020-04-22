@@ -5,8 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Central_Control\Central_Control.csproj" />
-    <ProjectReference Include="..\Client_Test\Client_Test.csproj" />
     <ProjectReference Include="..\UtilityClasses\UtilityClasses.csproj" />
   </ItemGroup>
 
