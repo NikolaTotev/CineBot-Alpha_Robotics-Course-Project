@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Device.Gpio;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using UtilityClasses;
 
 namespace PrimaryClasses
 {
@@ -20,14 +22,14 @@ namespace PrimaryClasses
         private Socket m_ControlClient;
         private Thread m_ListenerThread;
         private ConcurrentQueue<Guid> m_ClientHandlersQueue = new ConcurrentQueue<Guid>();
-
+        private GpioController controller;
         public delegate void Messenger(string message);
-
         public event Messenger ServerNotification;
-
+        
         public RobotServer()
         {
             ServerNotification?.Invoke($"[{DateTime.Now}]: Server version {m_ServerVersion} created. Preparing to start.");
+            
         }
 
         public void StartServer()
@@ -47,6 +49,7 @@ namespace PrimaryClasses
 
             m_ListenerThread.Start(m_localEndPoint);
             ServerNotification?.Invoke($"[{DateTime.Now}] Status Update:  Server version {m_ServerVersion} started!");
+            PinManager.GetInstance().ServerStarted();
         }
 
 
@@ -88,11 +91,13 @@ namespace PrimaryClasses
                         ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Connected to Client!");
                         ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Switching listener thread name to control thread");
                         listener.Stop();
+                        PinManager.GetInstance().ClientConnected();
                         ClientHandler();
                     }
                     else
                     {
                         ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Awaiting connection...");
+                        PinManager.GetInstance().TriplePulse();
                         Thread.Sleep(1000);
                     }
                 }
@@ -116,8 +121,9 @@ namespace PrimaryClasses
             StreamWriter writer = new StreamWriter(stream, Encoding.ASCII);
             StreamReader reader = new StreamReader(stream, Encoding.ASCII);
             writer.AutoFlush = true;
+            bool initialResponseReceived = false; 
 
-            string initialMessage = $"Hello client! I'm server version {m_ServerVersion}.";
+            string initialMessage = $"INITCONF Hello client! I'm server version {m_ServerVersion}.";
             writer.WriteLine(initialMessage);
             writer.Flush();
 
@@ -134,21 +140,30 @@ namespace PrimaryClasses
                             ServerNotification?.Invoke(
                                 $"\r\n[{DateTime.Now}] Control Thread: Client is available.");
                             string clientInstructions = reader.ReadLine();
-                            ServerNotification?.Invoke(
-                                $"\r\n[{DateTime.Now}] Control Thread: Control statement is: \n {clientInstructions} ");
-                            ServerNotification?.Invoke(
-                                $"\r\n[{DateTime.Now}] Control Thread: Sending instructions to ExecutionHandler.");
-                            bool result = ExecutionHandler(clientInstructions);
-                            string textResult = result ? "success" : "failure";
-                            string responseMessage = $"Execution of {clientInstructions} was a {textResult}.";
-                            writer.WriteLine(responseMessage);
-                            writer.Flush();
+                            if (clientInstructions != null && (clientInstructions.StartsWith("INITCONF") || !initialResponseReceived))
+                            {
+                                ServerNotification?.Invoke($"\n[{DateTime.Now}] Server: Initial command confirmation   {clientInstructions}");
+                                initialResponseReceived = true;
+                            }
+                            else
+                            {
+                                ServerNotification?.Invoke(
+                                    $"\r\n[{DateTime.Now}] Control Thread: Control statement is: \n {clientInstructions} ");
+                                ServerNotification?.Invoke(
+                                    $"\r\n[{DateTime.Now}] Control Thread: Sending instructions to ExecutionHandler.");
+                                bool result = ExecutionHandler(clientInstructions);
+                                string textResult = result ? "success" : "failure";
+                                string responseMessage = $"Execution of {clientInstructions} was a {textResult}.";
+                                writer.WriteLine(responseMessage);
+                                writer.Flush();
+                            }
+                            
                         }
                         else
                         {
                             m_ControlClient.Poll(30, SelectMode.SelectRead);
-                            ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Awaiting instructions: ");
-                            Thread.Sleep(1000);
+                            ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Awaiting instructions... ");
+                            Thread.Sleep(TimeSpan.FromSeconds(0.01));
                         }
 
                     }
@@ -176,9 +191,19 @@ namespace PrimaryClasses
             bool part2 = (socketToCheck.Available == 0);
             return !part1 || !part2;
         }
+
         public bool ExecutionHandler(string executionCode)
         {
-            Console.WriteLine($"Instructions  are: {executionCode}");
+            if (executionCode == "ON")
+            {
+                controller.Write(24, PinValue.High);
+            }
+
+            if (executionCode == "OFF")
+            {
+                controller.Write(24, PinValue.Low);
+            }
+
             return true;
         }
 

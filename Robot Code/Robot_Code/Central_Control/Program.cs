@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Threading;
 using PrimaryClasses;
+using UtilityClasses;
 
 namespace Central_Control
 {
-    class Program
+    class ProgramSTOP
     {
+        public static RobotManager RobotManager;
+
         static void Main(string[] args)
         {
-           RobotServer server= new RobotServer();
-           server.ServerNotification += DisplayMessage;
-           server.StartServer();
-           Console.WriteLine("This is from the main thread!");
-        }
-
-        public static void DisplayMessage(string message)
-        {
-           Console.WriteLine(message);
+            RobotManager = RobotManager.GetInstance();
+            Console.WriteLine("Main program stopping.");
         }
     }
 }

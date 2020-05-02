@@ -87,66 +87,23 @@ namespace PrimaryClasses
             m_Stream = m_Server.GetStream();
             m_Reader = new StreamReader(m_Stream, Encoding.ASCII);
             m_Writer = new StreamWriter(m_Stream, Encoding.ASCII);
+            
             bool responseReceived = false;
-
-            try
-            {
-                while ((m_Server.Connected || !m_StopFlag) && !responseReceived)
-                {
-                    if (m_Server.Available > 0)
-                    {
-                        string serverResponse = m_Reader.ReadLine();
-                        ClientNotification?.Invoke($"\n[{DateTime.Now}] Server:  {serverResponse}");
-                        responseReceived = true;
-                    }
-                    else
-                    {
-                        ClientNotification?.Invoke($"\n[{DateTime.Now}] : Awaiting response from server");
-                        Thread.Sleep(2000);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                ClientNotification?.Invoke($"[{DateTime.Now}] Error >> Exception occured during communication.");
-            }
-
-            ClientNotification?.Invoke($"[{DateTime.Now}] Initial response received. Switching to dialog mode.");
-
-            string initialMessage = $"Hello server! I'm client version {m_ClientVersion}.";
-            m_Writer.WriteLine(initialMessage);
-            m_Writer.Flush();
-
-
-            for (int i = 0; i < 3; i++)
-            {
-                if (m_Server.Connected && m_Server.Available > 0)
-                {
-                    string serverResponse = m_Reader.ReadLine();
-                    ClientNotification?.Invoke($"\n[{DateTime.Now}] Server: Initial command confirmation   {serverResponse}");
-                    break;
-                }
-                else if (i < 3)
-                {
-                    ClientNotification?.Invoke($"\n[{DateTime.Now}] Failed to receive initial command confirmation. Trying again in 3 sec. ");
-                    Thread.Sleep(TimeSpan.FromSeconds(3));
-                }
-                else
-                {
-                    ClientNotification?.Invoke($"\n[{DateTime.Now}] Maximum retries reached. \n Terminating connection as it is unstable!");
-                    Thread.Sleep(2000);
-                }
-            }
-
+            bool initialResponseReceived = false;
+            
             while (!m_StopFlag || m_Server.Connected)
             {
-                Configuration config = new Configuration();
-                RequestInput?.Invoke(config);
-                ClientNotification?.Invoke($"[{DateTime.Now}] DEBUG >> Config object value is {config.Debug}");
 
-                m_Writer.WriteLine(config.Debug);
-                m_Writer.Flush();
-                responseReceived = false;
+                if (initialResponseReceived)
+                {
+                    Configuration config = new Configuration();
+                    RequestInput?.Invoke(config);
+                    ClientNotification?.Invoke($"[{DateTime.Now}] DEBUG >> Config object value is {config.Debug}");
+
+                    m_Writer.WriteLine(config.Debug);
+                    m_Writer.Flush();
+                    responseReceived = false;
+                }
 
                 while ((m_Server.Connected || !m_StopFlag) && !responseReceived)
                 {
@@ -155,10 +112,19 @@ namespace PrimaryClasses
                         string serverResponse = m_Reader.ReadLine();
                         ClientNotification?.Invoke($"\n[{DateTime.Now}] Server:  {serverResponse}");
                         responseReceived = true;
+                        if (serverResponse.StartsWith("INITCONF"))
+                        {
+                            ClientNotification?.Invoke($"\n[{DateTime.Now}] Server: Initial command confirmation   {serverResponse}");
+
+                            string initialMessage = $"INITCONF Hello server! I'm client version {m_ClientVersion}.";
+                            m_Writer.WriteLine(initialMessage);
+                            m_Writer.Flush();
+                            initialResponseReceived = true;
+                        }
                     }
                     else
                     {
-                        ClientNotification?.Invoke($"\n[{DateTime.Now}] DIA Mode: Awaiting response from server");
+                        ClientNotification?.Invoke($"\n[{DateTime.Now}] Awaiting response from server...");
                         Thread.Sleep(2000);
                     }
                 }

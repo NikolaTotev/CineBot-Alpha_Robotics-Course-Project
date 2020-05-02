@@ -8,9 +8,8 @@
     ".NETCoreApp,Version=v3.1": {
       "Central_Control/1.0.0": {
         "dependencies": {
-          "Motor_Control": "1.0.0",
-          "RobotServer": "1.0.0",
-          "ServerClient": "1.0.0"
+          "PrimaryClasses": "1.0.0",
+          "UtilityClasses": "1.0.0"
         },
         "runtime": {
           "Central_Control.dll": {}
@@ -52,14 +51,6 @@
             "assetType": "runtime",
             "assemblyVersion": "4.0.1.0",
             "fileVersion": "4.700.19.46214"
-          }
-        }
-      },
-      "Newtonsoft.Json/12.0.3": {
-        "runtime": {
-          "lib/netstandard2.0/Newtonsoft.Json.dll": {
-            "assemblyVersion": "12.0.0.0",
-            "fileVersion": "12.0.3.23909"
           }
         }
       },
@@ -235,38 +226,19 @@
         }
       },
       "System.Threading.Tasks.Extensions/4.5.1": {},
-      "Motor_Control/1.0.0": {
+      "PrimaryClasses/1.0.0": {
         "dependencies": {
-          "Iot.Device.Bindings": "1.0.0",
-          "Newtonsoft.Json": "12.0.3",
-          "System.Device.Gpio": "1.0.0"
-        },
-        "runtime": {
-          "Motor_Control.dll": {}
-        }
-      },
-      "RobotServer/1.0.0": {
-        "dependencies": {
-          "Iot.Device.Bindings": "1.0.0",
-          "Newtonsoft.Json": "12.0.3",
-          "System.Device.Gpio": "1.0.0"
-        },
-        "runtime": {
-          "RobotServer.dll": {}
-        }
-      },
-      "ServerClient/1.0.0": {
-        "dependencies": {
-          "Iot.Device.Bindings": "1.0.0",
-          "Newtonsoft.Json": "12.0.3",
-          "System.Device.Gpio": "1.0.0",
           "UtilityClasses": "1.0.0"
         },
         "runtime": {
-          "ServerClient.dll": {}
+          "PrimaryClasses.dll": {}
         }
       },
       "UtilityClasses/1.0.0": {
+        "dependencies": {
+          "Iot.Device.Bindings": "1.0.0",
+          "System.Device.Gpio": "1.0.0"
+        },
         "runtime": {
           "UtilityClasses.dll": {}
         }
@@ -313,13 +285,6 @@
       "sha512": "sha512-Edg+pFW5C8WJb680Za2kTV8TqUi6Ahl/WldRVoOVJ23UQLpDHFspa+umgFjkWZw24ETsU99Cg+ErZz683M4chg==",
       "path": "microsoft.win32.systemevents/4.6.0",
       "hashPath": "microsoft.win32.systemevents.4.6.0.nupkg.sha512"
-    },
-    "Newtonsoft.Json/12.0.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
-      "path": "newtonsoft.json/12.0.3",
-      "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
     },
     "System.Collections/4.3.0": {
       "type": "package",
@@ -461,17 +426,7 @@
       "path": "system.threading.tasks.extensions/4.5.1",
       "hashPath": "system.threading.tasks.extensions.4.5.1.nupkg.sha512"
     },
-    "Motor_Control/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "RobotServer/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "ServerClient/1.0.0": {
+    "PrimaryClasses/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
