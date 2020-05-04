@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Device.Gpio;
 using System.Device.Gpio.Drivers;
 using System.Threading;
+using Unosquare.RaspberryIO.Abstractions;
 
 namespace PrimaryClasses
 {
@@ -11,9 +12,22 @@ namespace PrimaryClasses
         private Dictionary<int, PinMode> m_RegisteredPins;
         private GpioController m_Controller;
         private static PinManager m_Instance;
-        private readonly  int m_StatusPin = 25;
+        private readonly int m_StatusPin = 25;
         private readonly int m_ServerStatus = 12;
         private readonly int m_ErrorLight = 16;
+        private readonly int m_JointATopStop = 5;
+        private readonly int m_JointABottomStop = 6;
+
+        private readonly int m_JointBTopStop = 20;
+        private readonly int m_JointBBottomStop = 21;
+
+        public int JointATop { get => m_JointATopStop; }
+        public int JointABottom { get => m_JointABottomStop; }
+
+        public int JointBTop { get => m_JointBTopStop; }
+        public int JointBBottom { get => m_JointBBottomStop; }
+
+        public GpioController Controller { get => m_Controller; }
 
         private PinManager()
         {
@@ -24,13 +38,14 @@ namespace PrimaryClasses
         public void Initialize()
         {
             Console.WriteLine($"\r\n[{DateTime.Now}] Pin Manager: Initializing...");
-            m_RegisteredPins=new Dictionary<int, PinMode>();
+            m_RegisteredPins = new Dictionary<int, PinMode>();
             //Pi.Init<BootstrapWiringPi>();
             m_Controller = new GpioController(numberingScheme: PinNumberingScheme.Logical);
             SetupPin(m_StatusPin, PinMode.Output);
             SetupPin(m_ServerStatus, PinMode.Output);
             SetupPin(m_ErrorLight, PinMode.Output);
-
+            SetupPin(m_JointATopStop, PinMode.InputPullUp);
+            SetupPin(m_JointABottomStop, PinMode.InputPullUp);
             if (m_Controller != null && m_RegisteredPins != null)
             {
                 SetupLights();
@@ -71,7 +86,7 @@ namespace PrimaryClasses
             m_Controller.Write(m_ErrorLight, PinValue.Low);
 
             Thread.Sleep(TimeSpan.FromSeconds(0.1));
-            
+
             m_Controller.Write(m_StatusPin, PinValue.High);
             Thread.Sleep(TimeSpan.FromSeconds(0.1));
             m_Controller.Write(m_StatusPin, PinValue.Low);

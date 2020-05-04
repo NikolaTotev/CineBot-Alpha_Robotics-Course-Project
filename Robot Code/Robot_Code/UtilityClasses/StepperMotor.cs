@@ -13,9 +13,14 @@ namespace UtilityClasses
         public int DirPin { get; set; }
 
 
-        public StepperMotor()
+        public StepperMotor(MotorTypes type, string ID, float maxAng, float minAng, int stpPin, int dPin)
         {
-
+            MotorType = type;
+            MotorId = ID;
+            MaxAngle = maxAng;
+            MinAngle = minAng;
+            StepPin = stpPin;
+            DirPin = dPin;
         }
 
         public bool ValidPins()

@@ -39,7 +39,6 @@ namespace PrimaryClasses
             }
         }
 
-
         public static void DisplayMessage(string message)
         {
             Console.WriteLine(message);
@@ -48,6 +47,10 @@ namespace PrimaryClasses
         {
             return m_Instance ??= new RobotManager();
         }
+
+
+
+
 
 
     }

@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using Motor_Control;
 using UtilityClasses;
 
 namespace PrimaryClasses
@@ -29,7 +30,6 @@ namespace PrimaryClasses
         public RobotServer()
         {
             ServerNotification?.Invoke($"[{DateTime.Now}]: Server version {m_ServerVersion} created. Preparing to start.");
-            
         }
 
         public void StartServer()
@@ -147,10 +147,10 @@ namespace PrimaryClasses
                             }
                             else
                             {
-                                ServerNotification?.Invoke(
-                                    $"\r\n[{DateTime.Now}] Control Thread: Control statement is: \n {clientInstructions} ");
-                                ServerNotification?.Invoke(
-                                    $"\r\n[{DateTime.Now}] Control Thread: Sending instructions to ExecutionHandler.");
+                               // ServerNotification?.Invoke(
+                                 //   $"\r\n[{DateTime.Now}] Control Thread: Control statement is: \n {clientInstructions} ");
+                               // ServerNotification?.Invoke(
+                                //    $"\r\n[{DateTime.Now}] Control Thread: Sending instructions to ExecutionHandler.");
                                 bool result = ExecutionHandler(clientInstructions);
                                 string textResult = result ? "success" : "failure";
                                 string responseMessage = $"Execution of {clientInstructions} was a {textResult}.";
@@ -162,7 +162,7 @@ namespace PrimaryClasses
                         else
                         {
                             m_ControlClient.Poll(30, SelectMode.SelectRead);
-                            ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Awaiting instructions... ");
+                          //  ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Awaiting instructions... ");
                             Thread.Sleep(TimeSpan.FromSeconds(0.01));
                         }
 
@@ -194,9 +194,9 @@ namespace PrimaryClasses
 
         public bool ExecutionHandler(string executionCode)
         {
-            if (executionCode == "ON")
+            if (executionCode == "B")
             {
-                controller.Write(24, PinValue.High);
+                MotorManager.GetInstance().MoveStepper(100, 0.1f, "A", true);
             }
 
             if (executionCode == "OFF")
