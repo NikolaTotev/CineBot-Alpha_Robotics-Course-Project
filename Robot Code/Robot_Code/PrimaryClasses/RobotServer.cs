@@ -199,9 +199,14 @@ namespace PrimaryClasses
                 MotorManager.GetInstance().MoveStepper(100, 0.1f, "A", true);
             }
 
-            if (executionCode == "OFF")
+            if (executionCode == "J")
             {
-                controller.Write(24, PinValue.Low);
+                MotorManager.GetInstance().JogMode();
+            }
+
+            if (executionCode == "SJ")
+            {
+                MotorManager.GetInstance().JogModeFlag = false;
             }
 
             return true;
@@ -211,6 +216,8 @@ namespace PrimaryClasses
         {
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Calling stop command. ");
             m_StopFlag = true;
+            ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Moving to home position.");
+            MotorManager.GetInstance().GoToHome();
         }
 
         public void RestartServer()

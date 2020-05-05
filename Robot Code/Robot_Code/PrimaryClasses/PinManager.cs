@@ -12,20 +12,37 @@ namespace PrimaryClasses
         private Dictionary<int, PinMode> m_RegisteredPins;
         private GpioController m_Controller;
         private static PinManager m_Instance;
-        private readonly int m_StatusPin = 25;
-        private readonly int m_ServerStatus = 12;
-        private readonly int m_ErrorLight = 16;
-        private readonly int m_JointATopStop = 5;
-        private readonly int m_JointABottomStop = 6;
+        private readonly int m_StatusPin = 17;
+        private readonly int m_ServerStatus = 27;
+        private readonly int m_ErrorLight = 22;
 
-        private readonly int m_JointBTopStop = 20;
-        private readonly int m_JointBBottomStop = 21;
+        private readonly int m_JointATopStop = 20;
+        private readonly int m_JointABottomStop = 21;
 
-        public int JointATop { get => m_JointATopStop; }
-        public int JointABottom { get => m_JointABottomStop; }
+        private readonly int m_JointBTopStop = 12;
+        private readonly int m_JointBBottomStop = 16;
 
-        public int JointBTop { get => m_JointBTopStop; }
-        public int JointBBottom { get => m_JointBBottomStop; }
+        private readonly int m_EmergencyStop = 26;
+
+        private readonly int m_JogACW = 5;
+        private readonly int m_JogACC = 6;
+
+        private readonly int m_JogBCW = 13;
+        private readonly int m_JogBCC = 19;
+
+        public int JointATop => m_JointATopStop;
+        public int JointABottom => m_JointABottomStop;
+
+        public int JointBTop => m_JointBTopStop;
+        public int JointBBottom => m_JointBBottomStop;
+
+        public int JogACW => m_JogACW;
+        public int JogACCW => m_JogACC;
+
+        public int JogBCW => m_JogBCW;
+        public int JogBCCW => m_JogBCC;
+
+        public int EmergencyStop { get => m_EmergencyStop; }
 
         public GpioController Controller { get => m_Controller; }
 
@@ -44,8 +61,27 @@ namespace PrimaryClasses
             SetupPin(m_StatusPin, PinMode.Output);
             SetupPin(m_ServerStatus, PinMode.Output);
             SetupPin(m_ErrorLight, PinMode.Output);
+            
             SetupPin(m_JointATopStop, PinMode.InputPullUp);
             SetupPin(m_JointABottomStop, PinMode.InputPullUp);
+            
+            SetupPin(m_JointBTopStop, PinMode.InputPullUp);
+            SetupPin(m_JointBBottomStop, PinMode.InputPullUp);
+            
+            SetupPin(m_EmergencyStop, PinMode.InputPullUp);
+
+            SetupPin(m_JogACW, PinMode.InputPullUp);
+            SetupPin(m_JogACC, PinMode.InputPullUp);
+            SetupPin(m_JogBCW, PinMode.InputPullUp);
+            SetupPin(m_JogBCC, PinMode.InputPullUp);
+
+            SetupPin(23, PinMode.Output);
+            SetupPin(18, PinMode.Output);
+
+            SetupPin(24, PinMode.Output);
+            SetupPin(25, PinMode.Output);
+
+
             if (m_Controller != null && m_RegisteredPins != null)
             {
                 SetupLights();
@@ -64,10 +100,12 @@ namespace PrimaryClasses
 
         public bool SetupPin(int pin, PinMode pinMode)
         {
+            Console.WriteLine($"\r\n[{DateTime.Now}] Pin Manager: Setup called on pin {pin}");
             if (!m_RegisteredPins.ContainsKey(pin) && !m_Controller.IsPinOpen(pin))
             {
                 m_Controller.OpenPin(pin, pinMode);
                 m_RegisteredPins.Add(pin, pinMode);
+                Console.WriteLine($"\r\n[{DateTime.Now}] Pin Manager: Pin {pin} is open.");
                 return true;
             }
             return false;

@@ -2,7 +2,6 @@
 using PrimaryClasses;
 using UtilityClasses;
 
-
 namespace Client_Test
 {
     class Program
