@@ -267,28 +267,28 @@ namespace Motor_Control
                 {
                     PinManager.GetInstance().Controller.Write(dirPinA, PinValue.High);
                     SingleStep(stepPinA);
-                    Thread.Sleep(TimeSpan.FromSeconds(0.001));
+                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
                 }
 
                 while (PinManager.GetInstance().Controller.Read(jogBcw) == PinValue.Low && m_UseJogMode && !flags.collisionFlag)
                 {
                     PinManager.GetInstance().Controller.Write(dirPinB, PinValue.High);
                     SingleStep(stepPinB);
-                    Thread.Sleep(TimeSpan.FromSeconds(0.001));
+                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
                 }
 
                 while (PinManager.GetInstance().Controller.Read(jogAccw) == PinValue.Low && m_UseJogMode && !flags.collisionFlag)
                 {
                     PinManager.GetInstance().Controller.Write(dirPinA, PinValue.Low);
                     SingleStep(stepPinA);
-                    Thread.Sleep(TimeSpan.FromSeconds(0.001));
+                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
                 }
 
                 while (PinManager.GetInstance().Controller.Read(jogBccw) == PinValue.Low && m_UseJogMode && !flags.collisionFlag)
                 {
                     PinManager.GetInstance().Controller.Write(dirPinB, PinValue.Low);
                     SingleStep(stepPinB);
-                    Thread.Sleep(TimeSpan.FromSeconds(0.001));
+                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
                 }
                 //Thread.Sleep(TimeSpan.FromSeconds(0.1));
                 if (PinManager.GetInstance().Controller.Read(exitButton) == PinValue.Low)
@@ -306,9 +306,9 @@ namespace Motor_Control
 
             //Console.WriteLine($"Moove A Cw{pin}");
             PinManager.GetInstance().Controller.Write(pin, PinValue.High);
-            Thread.Sleep(TimeSpan.FromSeconds(0.001));
+            Thread.Sleep(TimeSpan.FromSeconds(0.0001));
             PinManager.GetInstance().Controller.Write(pin, PinValue.Low);
-            Thread.Sleep(TimeSpan.FromSeconds(0.001));
+            Thread.Sleep(TimeSpan.FromSeconds(0.0001));
         }
         public void SetupMotors()
         {
