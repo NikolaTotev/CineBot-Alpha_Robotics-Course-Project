@@ -1,6 +1,9 @@
 //THIS WAS USED FOR THE DEMO LAST NIGHT
 #include <Servo.h>
-Servo testServo;
+Servo panServo;
+Servo rotationServo;
+Servo tiltServo;
+
 const byte numChars = 32;
 String receivedChars;   // an array to store the received data
 
@@ -9,7 +12,9 @@ boolean newData = false;
 void setup() {
     Serial.begin(9600);
     Serial.println("<Arduino is ready>");
-    testServo.attach(9);
+    panServo.attach(9);
+    rotationServo.attach(10);
+    tiltServo.attach(11);
 }
 
 void loop() {
@@ -42,10 +47,13 @@ void recvWithEndMarker() {
 
 void showNewData() {
     if (newData == true) {
-        Serial.print("Angle:");
+        
         int servoAngle = receivedChars.toInt();
-        testServo.write(servoAngle);
-        delay(15);
+        panServo.write(servoAngle);
+        rotationServo.write(servoAngle);
+        tiltServo.write(servoAngle);
+        delay(45);
+        Serial.print("Angle:");
         Serial.println(servoAngle);
         receivedChars = "";
         newData = false;

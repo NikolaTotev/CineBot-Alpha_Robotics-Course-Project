@@ -33,14 +33,14 @@ namespace General_Testing
 			serialPort.ReadTimeout = 1500;
 			serialPort.WriteTimeout = 1500;
 			serialPort.Open();
-			serialPort.WriteLine("0");
+			serialPort.WriteLine("80");
 			while (emergencyStop != PinValue.Low)
 			{
 				emergencyStop = controller.Read(26);
 				if (controller.Read(10) == PinValue.Low)
 				{
-					stepCounter = 0;
-					serialPort.WriteLine("0");
+					stepCounter = 80;
+					serialPort.WriteLine("80");
 					Thread.Sleep(TimeSpan.FromMilliseconds(15));
 				}
 				Read();
