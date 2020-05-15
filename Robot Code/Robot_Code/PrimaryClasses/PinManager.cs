@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Device.Gpio;
 using System.Device.Gpio.Drivers;
 using System.Threading;
+using Unosquare.RaspberryIO;
 using Unosquare.RaspberryIO.Abstractions;
 
 namespace PrimaryClasses
@@ -12,9 +13,28 @@ namespace PrimaryClasses
         private Dictionary<int, PinMode> m_RegisteredPins;
         private GpioController m_Controller;
         private static PinManager m_Instance;
-        private readonly int m_StatusPin = 17;
-        private readonly int m_ServerStatus = 27;
-        private readonly int m_ErrorLight = 22;
+        private readonly int m_StatusPin = 8;
+        private readonly int m_ErrorLight = 7;
+
+        private readonly int m_PanSIA = 4;
+        private readonly int m_PanSIB = 17;
+
+        private readonly int m_RotSIA = 22;
+        private readonly int m_RotSIB = 27;
+
+        private readonly int m_TiltSIA = 9;
+        private readonly int m_TiltSIB = 10;
+
+        private readonly int m_PanReset = 11;
+        private readonly int m_RotReset = 5;
+        private readonly int m_TiltReset = 6;
+
+
+        private readonly int m_JogCW = 14;
+        private readonly int m_JogCCW = 15;
+
+        private readonly int m_SelectA = 13;
+        private readonly int m_SelectB = 19;
 
         private readonly int m_JointATopStop = 20;
         private readonly int m_JointABottomStop = 21;
@@ -24,23 +44,32 @@ namespace PrimaryClasses
 
         private readonly int m_EmergencyStop = 26;
 
-        private readonly int m_JogACW = 5;
-        private readonly int m_JogACC = 6;
-
-        private readonly int m_JogBCW = 13;
-        private readonly int m_JogBCC = 19;
-
         public int JointATop => m_JointATopStop;
         public int JointABottom => m_JointABottomStop;
 
         public int JointBTop => m_JointBTopStop;
         public int JointBBottom => m_JointBBottomStop;
 
-        public int JogACW => m_JogACW;
-        public int JogACCW => m_JogACC;
+        public int JogCW { get => m_JogCW; }
+        public int JogCCW { get => m_JogCCW; }
 
-        public int JogBCW => m_JogBCW;
-        public int JogBCCW => m_JogBCC;
+        public int SelectA { get => m_SelectA; }
+        public int SelectB { get => m_SelectB; }
+
+
+        public int PanSIA { get => m_PanSIA; }
+        public int PanSIB { get => m_PanSIB; }
+
+        public int RotSIA { get => m_RotSIA; }
+        public int RotSIB { get => m_RotSIB; }
+
+
+        public int TiltSIA { get => m_TiltSIA; }
+        public int TiltSIB { get => m_TiltSIB; }
+
+        public int PanReset { get => m_PanReset; }
+        public int RotReset { get => m_RotReset; }
+        public int TiltReset { get => m_TiltReset; }
 
         public int EmergencyStop { get => m_EmergencyStop; }
 
@@ -56,31 +85,49 @@ namespace PrimaryClasses
         {
             Console.WriteLine($"\r\n[{DateTime.Now}] Pin Manager: Initializing...");
             m_RegisteredPins = new Dictionary<int, PinMode>();
-            //Pi.Init<BootstrapWiringPi>();
+
             m_Controller = new GpioController(numberingScheme: PinNumberingScheme.Logical);
             SetupPin(m_StatusPin, PinMode.Output);
-            SetupPin(m_ServerStatus, PinMode.Output);
             SetupPin(m_ErrorLight, PinMode.Output);
-            
+
             SetupPin(m_JointATopStop, PinMode.InputPullUp);
             SetupPin(m_JointABottomStop, PinMode.InputPullUp);
-            
+
             SetupPin(m_JointBTopStop, PinMode.InputPullUp);
             SetupPin(m_JointBBottomStop, PinMode.InputPullUp);
-            
+
             SetupPin(m_EmergencyStop, PinMode.InputPullUp);
 
-            SetupPin(m_JogACW, PinMode.InputPullUp);
-            SetupPin(m_JogACC, PinMode.InputPullUp);
-            SetupPin(m_JogBCW, PinMode.InputPullUp);
-            SetupPin(m_JogBCC, PinMode.InputPullUp);
 
+            SetupPin(m_PanSIA, PinMode.InputPullUp);
+            SetupPin(m_PanSIB, PinMode.InputPullUp);
+
+            SetupPin(m_RotSIA, PinMode.InputPullUp);
+            SetupPin(m_RotSIB, PinMode.InputPullUp);
+
+            SetupPin(m_TiltSIA, PinMode.InputPullUp);
+            SetupPin(m_TiltSIB, PinMode.InputPullUp);
+
+            SetupPin(m_PanReset, PinMode.InputPullUp);
+            SetupPin(m_RotReset, PinMode.InputPullUp);
+            SetupPin(m_TiltReset, PinMode.InputPullUp);
+
+            SetupPin(m_SelectA, PinMode.InputPullUp);
+            SetupPin(m_SelectB, PinMode.InputPullUp);
+
+            SetupPin(m_JogCW, PinMode.InputPullUp);
+            SetupPin(m_JogCCW, PinMode.InputPullUp);
+
+            //Todo Remove these and  put them in motor control.
             SetupPin(23, PinMode.Output);
             SetupPin(18, PinMode.Output);
 
             SetupPin(24, PinMode.Output);
             SetupPin(25, PinMode.Output);
 
+            m_Controller.Write(m_StatusPin, PinValue.High);
+            m_Controller.Write(m_ErrorLight, PinValue.High);
+            Thread.Sleep(TimeSpan.FromSeconds(2));
 
             if (m_Controller != null && m_RegisteredPins != null)
             {
@@ -111,14 +158,8 @@ namespace PrimaryClasses
             return false;
         }
 
-        public void TriplePulse()
+        public void DoublePulse()
         {
-            m_Controller.Write(m_ServerStatus, PinValue.High);
-            Thread.Sleep(TimeSpan.FromSeconds(0.1));
-            m_Controller.Write(m_ServerStatus, PinValue.Low);
-
-            Thread.Sleep(TimeSpan.FromSeconds(0.1));
-
             m_Controller.Write(m_ErrorLight, PinValue.High);
             Thread.Sleep(TimeSpan.FromSeconds(0.1));
             m_Controller.Write(m_ErrorLight, PinValue.Low);
@@ -130,7 +171,6 @@ namespace PrimaryClasses
             m_Controller.Write(m_StatusPin, PinValue.Low);
 
             Thread.Sleep(TimeSpan.FromSeconds(0.1));
-
         }
 
         public void SetupLights()
@@ -162,36 +202,35 @@ namespace PrimaryClasses
 
         public void ServerStarted()
         {
-            m_Controller.Write(m_ServerStatus, PinValue.High);
+            m_Controller.Write(m_StatusPin, PinValue.High);
             Thread.Sleep(TimeSpan.FromSeconds(0.5));
-            m_Controller.Write(m_ServerStatus, PinValue.Low);
+            m_Controller.Write(m_StatusPin, PinValue.Low);
             Thread.Sleep(TimeSpan.FromSeconds(0.5));
 
             for (int i = 0; i < 2; i++)
             {
-                m_Controller.Write(m_ServerStatus, PinValue.High);
+                m_Controller.Write(m_StatusPin, PinValue.High);
                 Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                m_Controller.Write(m_ServerStatus, PinValue.Low);
+                m_Controller.Write(m_StatusPin, PinValue.Low);
                 Thread.Sleep(TimeSpan.FromSeconds(0.3));
             }
-            m_Controller.Write(m_ServerStatus, PinValue.Low);
+            m_Controller.Write(m_StatusPin, PinValue.Low);
         }
 
         public void ClientConnected()
         {
             for (int i = 0; i < 4; i++)
             {
-                m_Controller.Write(m_ServerStatus, PinValue.High);
-                m_Controller.Write(m_ErrorLight, PinValue.High);
                 m_Controller.Write(m_StatusPin, PinValue.High);
+                m_Controller.Write(m_ErrorLight, PinValue.High);
 
                 Thread.Sleep(TimeSpan.FromSeconds(0.2));
-                m_Controller.Write(m_ServerStatus, PinValue.Low);
-                m_Controller.Write(m_ErrorLight, PinValue.Low);
                 m_Controller.Write(m_StatusPin, PinValue.Low);
+                m_Controller.Write(m_ErrorLight, PinValue.Low);
                 Thread.Sleep(TimeSpan.FromSeconds(0.3));
             }
-            m_Controller.Write(m_ServerStatus, PinValue.Low);
+            m_Controller.Write(m_StatusPin, PinValue.Low);
+            m_Controller.Write(m_ErrorLight, PinValue.Low);
         }
     }
 }

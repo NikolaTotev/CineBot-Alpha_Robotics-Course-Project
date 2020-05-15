@@ -6,13 +6,17 @@ namespace PrimaryClasses
 {
     public class FlagArgs
     {
-        public bool collisionFlag { get; set; }
+        public bool A_CollisionFlag { get; set; }
+        public bool B_CollisionFlag { get; set; }
         public bool stopFlag { get; set; }
         public string motor { get; set; }
 
-        public FlagArgs(bool clFlag, bool stpFlag, string mtr)
+        
+
+        public FlagArgs(bool a_clFlag, bool b_clFlag, bool stpFlag, string mtr)
         {
-            collisionFlag = clFlag;
+            A_CollisionFlag = a_clFlag;
+            B_CollisionFlag = b_clFlag;
             stopFlag = stpFlag;
             motor = mtr;
         }

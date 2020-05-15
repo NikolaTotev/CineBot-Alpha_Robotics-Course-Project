@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Device.Gpio;
 using System.Drawing.Text;
+using System.IO.Ports;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
@@ -75,7 +76,7 @@ namespace Motor_Control
                 }
             }
 
-            FlagArgs flags = new FlagArgs(false, false, "A");
+            FlagArgs flags = new FlagArgs(false, false, false, "A");
             Thread collisionDetectorThread = new Thread(CollisionDetection);
             collisionDetectorThread.Start(flags);
             int counter = 0;
@@ -86,9 +87,12 @@ namespace Motor_Control
             }
             PinManager.GetInstance().Controller.Write(dirPin, PinValue.High);
             // PinManager.GetInstance().Controller.Write(dirPin, PinValue.Low);
-            while (counter < numberOfSteps && !flags.collisionFlag)
+
+            bool flagToWatch = (flags.motor == "A") ? flags.A_CollisionFlag : flags.B_CollisionFlag;
+
+            while (counter < numberOfSteps && !flagToWatch)
             {
-                Console.WriteLine($"{counter}: Moove moove {flags.collisionFlag}");
+                Console.WriteLine($"{counter}: Moove moove {flagToWatch}");
                 //  PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
                 Thread.Sleep(TimeSpan.FromSeconds(speed));
                 // PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
@@ -135,16 +139,34 @@ namespace Motor_Control
                     topSensorSateB = PinManager.GetInstance().Controller.Read(topSensorB);
                     bottomSensorStateB = PinManager.GetInstance().Controller.Read(bottomSensorB);
 
-                    if (topSensorSateA == PinValue.Low || topSensorSateB == PinValue.Low || bottomSensorStateA == PinValue.Low || bottomSensorStateB == PinValue.Low || emergencyStop == PinValue.Low)
+                    if (flags.motor == "A")
                     {
-                        Console.WriteLine("Boop Top");
-                        flags.collisionFlag = true;
+                        if (topSensorSateA == PinValue.Low || bottomSensorStateA == PinValue.Low || emergencyStop == PinValue.Low)
+                        {
+                            Console.WriteLine("Boop Top of A");
+                            flags.A_CollisionFlag = true;
+                        }
+                        else
+                        {
+                            flags.A_CollisionFlag = false;
+                        }
+
                     }
-                    else
+
+                    if (flags.motor == "B")
                     {
-                        flags.collisionFlag = false;
+                        if (topSensorSateB == PinValue.Low || bottomSensorStateB == PinValue.Low || emergencyStop == PinValue.Low)
+                        {
+                            Console.WriteLine("Boop Top of B");
+                            flags.B_CollisionFlag = true;
+                        }
+                        else
+                        {
+                            flags.B_CollisionFlag = false;
+                        }
                     }
-                    
+
+
                     Thread.Sleep(TimeSpan.FromSeconds(0.01));
                 }
             }
@@ -234,15 +256,15 @@ namespace Motor_Control
 
             int exitButton = PinManager.GetInstance().EmergencyStop;
 
-            FlagArgs flags = new FlagArgs(false, false, "A");
+            FlagArgs flags = new FlagArgs(false, false, false, "A");
             Thread collisionDetectorThread = new Thread(CollisionDetection);
             collisionDetectorThread.Start(flags);
 
-            int jogAcw = PinManager.GetInstance().JogACW;
-            int jogAccw = PinManager.GetInstance().JogACCW;
+            int jogCW = PinManager.GetInstance().JogCW;
+            int jogCCW = PinManager.GetInstance().JogCCW;
 
-            int jogBcw = PinManager.GetInstance().JogBCW;
-            int jogBccw = PinManager.GetInstance().JogBCCW;
+            int selectA = PinManager.GetInstance().SelectA;
+            int selectB = PinManager.GetInstance().SelectB;
 
             int stepPinA = 0;
             int dirPinA = 0;
@@ -261,35 +283,62 @@ namespace Motor_Control
 
             Console.WriteLine($"\r\n[{DateTime.Now}] Jog mode ready, standing by, awaiting input. Emergency stop is used to get out of jog mode.");
 
+            bool aIsSelected = true;
+
             while (m_UseJogMode)
             {
-                while (PinManager.GetInstance().Controller.Read(jogAcw) == PinValue.Low && m_UseJogMode && !flags.collisionFlag)
+                if (PinManager.GetInstance().Controller.Read(selectA) == PinValue.Low)
                 {
-                    PinManager.GetInstance().Controller.Write(dirPinA, PinValue.High);
-                    SingleStep(stepPinA);
+                    aIsSelected = true;
+                    flags.motor = "A";
+                    Console.WriteLine($"\r\n[{DateTime.Now}] A motor selected to be jogged.");
+                }
+
+                if (PinManager.GetInstance().Controller.Read(selectB) == PinValue.Low)
+                {
+                    aIsSelected = false;
+                    flags.motor = "B";
+                    Console.WriteLine($"\r\n[{DateTime.Now}] B motor selected to be jogged.");
+                }
+                bool flagToWatch = (flags.motor == "A") ? flags.A_CollisionFlag : flags.B_CollisionFlag;
+
+                while (PinManager.GetInstance().Controller.Read(jogCW) == PinValue.Low && m_UseJogMode && !((flags.motor == "A") ? flags.A_CollisionFlag : flags.B_CollisionFlag))
+                {
+                    if (aIsSelected)
+                    {
+                        PinManager.GetInstance().Controller.Write(dirPinA, PinValue.High);
+                        SingleStep(stepPinA);
+                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving A {flagToWatch}");
+                    }
+                    else
+                    {
+                        PinManager.GetInstance().Controller.Write(dirPinB, PinValue.High);
+                        SingleStep(stepPinB);
+                    }
+
+
                     Thread.Sleep(TimeSpan.FromSeconds(0.01));
                 }
 
-                while (PinManager.GetInstance().Controller.Read(jogBcw) == PinValue.Low && m_UseJogMode && !flags.collisionFlag)
+                while (PinManager.GetInstance().Controller.Read(jogCCW) == PinValue.Low && m_UseJogMode && !((flags.motor == "A") ? flags.A_CollisionFlag : flags.B_CollisionFlag))
                 {
-                    PinManager.GetInstance().Controller.Write(dirPinB, PinValue.High);
-                    SingleStep(stepPinB);
+                    if (aIsSelected)
+                    {
+                        PinManager.GetInstance().Controller.Write(dirPinA, PinValue.Low);
+                        SingleStep(stepPinA);
+                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving A {flagToWatch}");
+                    }
+                    else
+                    {
+                        PinManager.GetInstance().Controller.Write(dirPinB, PinValue.Low);
+                        SingleStep(stepPinB);
+                    }
+
+
                     Thread.Sleep(TimeSpan.FromSeconds(0.01));
                 }
 
-                while (PinManager.GetInstance().Controller.Read(jogAccw) == PinValue.Low && m_UseJogMode && !flags.collisionFlag)
-                {
-                    PinManager.GetInstance().Controller.Write(dirPinA, PinValue.Low);
-                    SingleStep(stepPinA);
-                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
-                }
 
-                while (PinManager.GetInstance().Controller.Read(jogBccw) == PinValue.Low && m_UseJogMode && !flags.collisionFlag)
-                {
-                    PinManager.GetInstance().Controller.Write(dirPinB, PinValue.Low);
-                    SingleStep(stepPinB);
-                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
-                }
                 //Thread.Sleep(TimeSpan.FromSeconds(0.1));
                 if (PinManager.GetInstance().Controller.Read(exitButton) == PinValue.Low)
                 {
@@ -303,13 +352,116 @@ namespace Motor_Control
 
         private void SingleStep(int pin)
         {
-
             //Console.WriteLine($"Moove A Cw{pin}");
             PinManager.GetInstance().Controller.Write(pin, PinValue.High);
             Thread.Sleep(TimeSpan.FromSeconds(0.0001));
             PinManager.GetInstance().Controller.Write(pin, PinValue.Low);
             Thread.Sleep(TimeSpan.FromSeconds(0.0001));
         }
+
+
+        public void GimbalJog()
+        {
+            int emergencyStop = PinManager.GetInstance().EmergencyStop;
+
+            SerialPort serialPort;
+            serialPort = new SerialPort("/dev/ttyACM0", 9600); //Set the read/write timeouts    
+            serialPort.ReadTimeout = 1500;
+            serialPort.WriteTimeout = 1500;
+            serialPort.Open();
+            serialPort.WriteLine("P75");
+            Thread.Sleep(TimeSpan.FromMilliseconds(45));
+            serialPort.WriteLine("R80");
+            Thread.Sleep(TimeSpan.FromMilliseconds(45));
+            serialPort.WriteLine("T80");
+            Thread.Sleep(TimeSpan.FromMilliseconds(45));
+
+
+            int panSia = PinManager.GetInstance().PanSIA;
+            int panSib = PinManager.GetInstance().PanSIB;
+
+            int rotSia = PinManager.GetInstance().RotSIA;
+            int rotSib = PinManager.GetInstance().RotSIB;
+
+            int tiltSia = PinManager.GetInstance().TiltSIA;
+            int tiltSib = PinManager.GetInstance().TiltSIB;
+
+            int resetPan = PinManager.GetInstance().PanReset;
+            int resetRot = PinManager.GetInstance().RotReset;
+            int resetTilt = PinManager.GetInstance().TiltReset;
+
+            int PanCounter = 75;
+            int RotCounter = 80;
+            int TiltCounter = 80;
+
+            PinValue PanState;
+            PinValue PanLastState;
+
+            PinValue RotState;
+            PinValue RotLastState;
+
+            PinValue TiltState;
+            PinValue TiltLastState;
+
+            while (PinManager.GetInstance().Controller.Read(emergencyStop) != PinValue.Low)
+            {
+                if (PinManager.GetInstance().Controller.Read(resetPan)== PinValue.Low)
+                {
+                    PanCounter = 75;
+                    serialPort.WriteLine($"P{PanCounter}");
+                    Thread.Sleep(TimeSpan.FromMilliseconds(45));
+                }
+
+                if (PinManager.GetInstance().Controller.Read(resetRot) == PinValue.Low)
+                {
+                    RotCounter = 80;
+                    serialPort.WriteLine($"P{RotCounter}");
+                    Thread.Sleep(TimeSpan.FromMilliseconds(45));
+                }
+
+                if (PinManager.GetInstance().Controller.Read(resetTilt) == PinValue.Low)
+                {
+                    TiltCounter = 80;
+                    serialPort.WriteLine($"P{TiltCounter}");
+                    Thread.Sleep(TimeSpan.FromMilliseconds(45));
+                }
+                //Read();
+                Thread.Sleep(TimeSpan.FromSeconds(0.001));
+
+                PanState = 
+
+                if (state != lastState)
+                {
+                    if (controller.Read(9) != state)
+                    {
+                        stepCounter += 2.5f;
+                    }
+                    else
+                    {
+                        stepCounter -= 2.5f;
+                    }
+
+                    if (Math.Abs(stepCounter % 1) < 0.01)
+                    {
+                        Console.WriteLine($"Step: {stepCounter}");
+                        serialPort.WriteLine($"{stepCounter}");
+                        Thread.Sleep(TimeSpan.FromMilliseconds(15));
+                    }
+
+                    if (Math.Abs(stepCounter - 360) < 0.0001 || Math.Abs(stepCounter - (-360)) < 0.0001)
+                    {
+                        stepCounter = 0;
+                    }
+                }
+
+                Thread.Sleep(TimeSpan.FromSeconds(0.001));
+                lastState = state;
+            }
+            serialPort.Close();
+        }
+        }
+
+
         public void SetupMotors()
         {
             StringBuilder sb = new StringBuilder();

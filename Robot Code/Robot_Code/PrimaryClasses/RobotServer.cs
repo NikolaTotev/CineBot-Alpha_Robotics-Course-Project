@@ -97,7 +97,7 @@ namespace PrimaryClasses
                     else
                     {
                         ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Awaiting connection...");
-                        PinManager.GetInstance().TriplePulse();
+                        PinManager.GetInstance().DoublePulse();
                         Thread.Sleep(1000);
                     }
                 }
