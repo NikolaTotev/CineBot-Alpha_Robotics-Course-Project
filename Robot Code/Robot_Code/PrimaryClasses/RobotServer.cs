@@ -204,9 +204,9 @@ namespace PrimaryClasses
                 MotorManager.GetInstance().JogMode();
             }
 
-            if (executionCode == "SJ")
+            if (executionCode == "GJ")
             {
-                MotorManager.GetInstance().JogModeFlag = false;
+                MotorManager.GetInstance().GimbalJog();
             }
 
             return true;
