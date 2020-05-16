@@ -430,14 +430,14 @@ namespace Motor_Control
                 if (PinManager.GetInstance().Controller.Read(resetRot) == PinValue.Low)
                 {
                     RotCounter = 80;
-                    serialPort.WriteLine($"P{RotCounter}");
+                    serialPort.WriteLine($"R{RotCounter}");
                     Thread.Sleep(TimeSpan.FromMilliseconds(45));
                 }
 
                 if (PinManager.GetInstance().Controller.Read(resetTilt) == PinValue.Low)
                 {
                     TiltCounter = 80;
-                    serialPort.WriteLine($"P{TiltCounter}");
+                    serialPort.WriteLine($"T{TiltCounter}");
                     Thread.Sleep(TimeSpan.FromMilliseconds(45));
                 }
 
