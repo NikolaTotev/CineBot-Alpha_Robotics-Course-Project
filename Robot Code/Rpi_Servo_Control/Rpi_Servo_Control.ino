@@ -13,9 +13,9 @@ boolean newData = false;
 void setup() {
     Serial.begin(9600);
     Serial.println("<Arduino is ready>");
-    panServo.attach(9);
-    rotationServo.attach(10);
-    tiltServo.attach(11);
+    panServo.attach(3);
+    rotationServo.attach(6);
+    tiltServo.attach(9);
 }
 
 void loop() {

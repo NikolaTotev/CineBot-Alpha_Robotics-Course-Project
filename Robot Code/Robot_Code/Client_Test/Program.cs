@@ -6,7 +6,7 @@ namespace Client_Test
 {
     class Program
     {
-
+        //Todo: Add Reconnect command
         static ControlClient client = new ControlClient("192.168.12.119", 4200);
         static void Main(string[] args)
         {
