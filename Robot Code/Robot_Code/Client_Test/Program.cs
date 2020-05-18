@@ -12,7 +12,7 @@ namespace Client_Test
         {
             client.RequestInput += Input;
             client.ClientNotification += DisplayMessage;
-            client.Start();
+            Start();
         }
 
         static void Input(Configuration config)
@@ -22,10 +22,21 @@ namespace Client_Test
             {
                 client.StopClient();
             }
+            else if (debugInput == "R")
+            {
+               client.StopClient();
+               Start();
+            }
             else
             {
                 config.Debug = debugInput;
             }
+        }
+
+        public static void Start()
+        {
+            client.Start();
+
         }
 
 

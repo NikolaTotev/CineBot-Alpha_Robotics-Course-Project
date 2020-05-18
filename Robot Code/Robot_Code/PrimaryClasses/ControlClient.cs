@@ -20,6 +20,7 @@ namespace PrimaryClasses
         private int m_PortToUse;
         private readonly IPAddress m_IpToUse;
         private bool m_StopFlag;
+        private bool m_Restart;
 
         public delegate void Messenger(string message);
         public delegate void GetInput(Configuration config);
@@ -67,16 +68,23 @@ namespace PrimaryClasses
                 }
 
                 ClientNotification?.Invoke($"\r\n[{DateTime.Now}] Main Thread: Preparing to start server handler. ");
+
                 ServerHandler();
-                //m_ListenerThread = new Thread(ServerHandler);
-                //m_ListenerThread.Name = "Server handler thread";
-                //m_ListenerThread.Start();
             }
+
+
+
             catch (Exception e)
             {
                 ClientNotification?.Invoke(
                     $"[{DateTime.Now}] Error >> An exception occured during connection attempts. {e}");
             }
+
+            //m_ListenerThread = new Thread(ServerHandler);
+            //m_ListenerThread.Name = "Server handler thread";
+            //m_ListenerThread.Start();
+
+
         }
 
 
@@ -87,10 +95,10 @@ namespace PrimaryClasses
             m_Stream = m_Server.GetStream();
             m_Reader = new StreamReader(m_Stream, Encoding.ASCII);
             m_Writer = new StreamWriter(m_Stream, Encoding.ASCII);
-            
+
             bool responseReceived = false;
             bool initialResponseReceived = false;
-            
+
             while (!m_StopFlag || m_Server.Connected)
             {
 
@@ -99,7 +107,7 @@ namespace PrimaryClasses
                     Configuration config = new Configuration();
                     RequestInput?.Invoke(config);
                     ClientNotification?.Invoke($"[{DateTime.Now}] DEBUG >> Config object value is {config.Debug}");
-
+                
                     m_Writer.WriteLine(config.Debug);
                     m_Writer.Flush();
                     responseReceived = false;
@@ -129,6 +137,15 @@ namespace PrimaryClasses
                     }
                 }
             }
+
+        }
+
+
+        public void Restart()
+        {
+            m_StopFlag = true;
+            
+            ClientNotification?.Invoke($"\n[{DateTime.Now}] Restarting server...");
         }
 
         public void StopClient()
