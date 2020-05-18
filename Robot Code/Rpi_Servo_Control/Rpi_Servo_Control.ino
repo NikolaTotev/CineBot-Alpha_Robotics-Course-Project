@@ -15,13 +15,27 @@ void setup() {
     Serial.println("<Arduino is ready>");
     panServo.attach(3);
     rotationServo.attach(6);
-    tiltServo.attach(9);
+    tiltServo.attach(5);
+
+    panServo.write(75);
+    rotationServo.write(80);
+    tiltServo.write(80);
 }
 
 void loop() {
-    recvWithEndMarker();
-    showNewData();
+   // recvWithEndMarker();
+   panServo.write(0);
+   rotationServo.write(180);
+   //tiltServo.write(15);
+   delay(1000);
+
+   panServo.write(175);
+   rotationServo.write(0);
+   //tiltServo.write(175);
+   delay(1000);
+   // showNewData();
 }
+
 
 void recvWithEndMarker() {
     static byte nextIndex = 0;
@@ -59,23 +73,24 @@ void showNewData() {
     if (newData == true) {
         
         int servoAngle = receivedChars.toInt();
-        switch(targetServo){
-        case 'P':
-        panServo.write(servoAngle);
-        Serial.print("P");
-        break;
-
-        case 'R':
-        rotationServo.write(servoAngle);
-        Serial.print("R");       
-        break;
-
-        case 'T':
-        tiltServo.write(servoAngle);
-        Serial.print("T");       
-        break;
+        if(targetServo == 'P')
+        {
+            panServo.write(servoAngle);
+            Serial.print("P"); 
         }
-        
+
+        if(targetServo == 'R')
+        {
+             rotationServo.write(servoAngle);
+             Serial.print("R");
+        }
+
+        if(targetServo == 'T')
+        {
+              tiltServo.write(servoAngle);
+              Serial.print("T"); 
+        }
+               
         gotTargetServo=false;
         delay(45);
         Serial.print("Angle:");
