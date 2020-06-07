@@ -318,12 +318,13 @@ namespace Motor_Control
                     {
                         PinManager.GetInstance().Controller.Write(dirPinA, PinValue.High);
                         SingleStep(stepPinA);
-                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving A {flagToWatch}");
+                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving A {dirPinA}");
                     }
                     else
                     {
                         PinManager.GetInstance().Controller.Write(dirPinB, PinValue.High);
                         SingleStep(stepPinB);
+                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving B CW {dirPinB}");
                     }
 
 
@@ -337,12 +338,13 @@ namespace Motor_Control
                     {
                         PinManager.GetInstance().Controller.Write(dirPinA, PinValue.Low);
                         SingleStep(stepPinA);
-                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving A {flagToWatch}");
+                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving A {dirPinA}");
                     }
                     else
                     {
                         PinManager.GetInstance().Controller.Write(dirPinB, PinValue.Low);
                         SingleStep(stepPinB);
+                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving B CCW {dirPinB}}");
                     }
 
 
@@ -463,7 +465,7 @@ namespace Motor_Control
                     {
                         Console.WriteLine($"Step: P{PanCounter}");
                         serialPort.WriteLine($"P{PanCounter}");
-                        Thread.Sleep(TimeSpan.FromMilliseconds(15));
+                        Thread.Sleep(TimeSpan.FromMilliseconds(35));
                     }
 
                     if (Math.Abs(PanCounter - 360) < 0.0001 || Math.Abs(PanCounter - (-360)) < 0.0001)
@@ -488,7 +490,7 @@ namespace Motor_Control
                     {
                         Console.WriteLine($"Step: R{RotCounter}");
                         serialPort.WriteLine($"R{RotCounter}");
-                        Thread.Sleep(TimeSpan.FromMilliseconds(15));
+                        Thread.Sleep(TimeSpan.FromMilliseconds(35));
                     }
 
                     if (Math.Abs(RotCounter - 360) < 0.0001 || Math.Abs(RotCounter - (-360)) < 0.0001)
@@ -513,7 +515,7 @@ namespace Motor_Control
                     {
                         Console.WriteLine($"Step: T{TiltCounter}");
                         serialPort.WriteLine($"T{TiltCounter}");
-                        Thread.Sleep(TimeSpan.FromMilliseconds(15));
+                        Thread.Sleep(TimeSpan.FromMilliseconds(35));
                     }
 
                     if (Math.Abs(TiltCounter - 360) < 0.0001 || Math.Abs(TiltCounter - (-360)) < 0.0001)
@@ -547,7 +549,10 @@ namespace Motor_Control
 
 
 
+        public void Dance()
+        {
 
+        }
         public void SetupMotors()
         {
             StringBuilder sb = new StringBuilder();

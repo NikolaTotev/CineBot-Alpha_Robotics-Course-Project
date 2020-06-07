@@ -23,17 +23,8 @@ void setup() {
 }
 
 void loop() {
-   // recvWithEndMarker();
-   panServo.write(0);
-   rotationServo.write(180);
-   //tiltServo.write(15);
-   delay(1000);
-
-   panServo.write(175);
-   rotationServo.write(0);
-   //tiltServo.write(175);
-   delay(1000);
-   // showNewData();
+    recvWithEndMarker();
+    showNewData();
 }
 
 
