@@ -1,3 +1,0 @@
-Nikola
-COMP-MCCOMPFACE 
-Sunday, June 7, 2020  1:18:03 PM
