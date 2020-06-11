@@ -28,7 +28,7 @@ namespace General_Testing
                         break;
 
                     case "StpPT":
-                        TestStepper(true);
+                       // TestStepper(true);
                         break;
 
                     case "Stp":
@@ -36,7 +36,7 @@ namespace General_Testing
                         break;
 
                     case "Serv":
-                        TestServos();
+                      //  TestServos();
                         break;
                 }
             }
@@ -81,51 +81,19 @@ namespace General_Testing
 
         static void TestButtons()
         {
-            GpioController controller = new GpioController();
+            GpioController controller = new GpioController(PinNumberingScheme.Logical);
             Console.WriteLine("Starting button test");
-            int[] buttonNumbers = new[] { 14, 15, 12, 16, 20, 21, 11, 5, 6, 26 };
+           
 
-            controller.OpenPin(7, PinMode.Output);
-            controller.OpenPin(8, PinMode.Output);
+            controller.OpenPin(11, PinMode.InputPullUp);
 
-            for (int i = 0; i < 4; i++)
+            while (true)
             {
-                controller.Write(7, PinValue.High);
-                controller.Write(8, PinValue.High);
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-                controller.Write(7, PinValue.Low);
-                controller.Write(8, PinValue.Low);
-            }
-
-            foreach (var i in buttonNumbers)
-            {
-                controller.OpenPin(i, PinMode.InputPullUp);
-                int counter = 0;
-                while (true)
+                if (controller.Read(11) == PinValue.Low)
                 {
-                    Console.WriteLine($"Prepare to press button {i}");
-                    Thread.Sleep(TimeSpan.FromSeconds(10));
-                    Console.WriteLine($"Test for button {i} will begin in 5 seconds");
-                    Thread.Sleep(TimeSpan.FromSeconds(10));
-
-                    if (controller.Read(i) == PinValue.Low)
-                    {
-                        Console.WriteLine($"Button {i} has been pressed.");
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Button {i} was not detected to be pressed.\n You have one more attempt");
-                        counter++;
-                    }
-
-                    if (counter >= 1)
-                    {
-                        break;
-                    }
-
+                    Console.WriteLine("Derp");
+                    Thread.Sleep(TimeSpan.FromSeconds(1));
                 }
-
             }
 
             Console.WriteLine("Button test complete");
@@ -135,23 +103,39 @@ namespace General_Testing
         {
             Console.WriteLine("Starting encoder test");
 
-            GpioController controller = new GpioController();
-            int[] buttonNumbers = new[] { 4, 17, 27, 22, 10, 9 };
-            foreach (var buttonNumber in buttonNumbers)
-            {
-                controller.OpenPin(buttonNumber, PinMode.InputPullUp);
-            }
+            int panSIA = 17;
+            int panSIB = 27;
 
-            controller.OpenPin(7, PinMode.Output);
-            controller.OpenPin(8, PinMode.Output);
+            int rotSIA = 10;
+            int rotSIB = 9;
+
+            int tiltSIA = 16;
+            int tiltSIB = 20;
+            
+
+
+            GpioController controller = new GpioController();
+
+            controller.OpenPin(panSIA, PinMode.InputPullUp);
+            controller.OpenPin(panSIB, PinMode.InputPullUp);
+            
+            controller.OpenPin(rotSIA, PinMode.InputPullUp);
+            controller.OpenPin(rotSIB, PinMode.InputPullUp);
+            
+            controller.OpenPin(tiltSIA, PinMode.InputPullUp);
+            controller.OpenPin(tiltSIB, PinMode.InputPullUp);
+
+
+            controller.OpenPin(23, PinMode.Output);
+            controller.OpenPin(24, PinMode.Output);
 
             for (int i = 0; i < 4; i++)
             {
-                controller.Write(7, PinValue.High);
-                controller.Write(8, PinValue.High);
+                controller.Write(23, PinValue.High);
+                controller.Write(24, PinValue.High);
                 Thread.Sleep(TimeSpan.FromSeconds(2));
-                controller.Write(7, PinValue.Low);
-                controller.Write(8, PinValue.Low);
+                controller.Write(23, PinValue.Low);
+                controller.Write(24, PinValue.Low);
             }
 
             float counterA = 0;
@@ -167,9 +151,9 @@ namespace General_Testing
             PinValue stateC;
             PinValue lastStateC;
 
-            lastStateA = controller.Read(4);
-            lastStateB = controller.Read(27);
-            lastStateC = controller.Read(10);
+            lastStateA = controller.Read(panSIA);
+            lastStateB = controller.Read(rotSIA);
+            lastStateC = controller.Read(tiltSIA);
 
 
 
@@ -178,13 +162,13 @@ namespace General_Testing
 
                 Thread.Sleep(TimeSpan.FromSeconds(0.001));
 
-                stateA = controller.Read(17);
-                stateB = controller.Read(22);
-                stateC = controller.Read(9);
+                stateA = controller.Read(panSIB);
+                stateB = controller.Read(rotSIB);
+                stateC = controller.Read(tiltSIB);
 
                 if (stateA != lastStateA)
                 {
-                    if (controller.Read(4) != stateA)
+                    if (controller.Read(panSIA) != stateA)
                     {
                         counterA += 2.5f;
                     }
@@ -201,7 +185,7 @@ namespace General_Testing
 
                 if (stateB != lastStateB)
                 {
-                    if (controller.Read(27) != stateB)
+                    if (controller.Read(rotSIA) != stateB)
                     {
                         counterB += 2.5f;
                     }
@@ -218,7 +202,7 @@ namespace General_Testing
 
                 if (stateC != lastStateC)
                 {
-                    if (controller.Read(10) != stateC)
+                    if (controller.Read(tiltSIA) != stateC)
                     {
                         counterC += 2.5f;
                     }
@@ -243,10 +227,10 @@ namespace General_Testing
             Console.WriteLine("Starting stepper motor test.");
 
             GpioController controller = new GpioController();
-            int jointAStep = 4;
-            int jointADir = 17;
-            int jointBStep = 27;
-            int jointBDir = 22;
+            int jointAStep = 13;
+            int jointADir = 6;
+            int jointBStep = 26;
+            int jointBDir = 19;
 
             
                 controller.OpenPin(jointAStep, PinMode.Output);
@@ -259,7 +243,7 @@ namespace General_Testing
             Console.WriteLine("Testing motor A");
 
             controller.Write(jointADir, PinValue.Low);
-            for (int i = 0; i < 400; i++)
+            for (int i = 0; i < 100; i++)
             {
                 Console.WriteLine($"Write to A {i}");
                 controller.Write(jointAStep, PinValue.High);
@@ -269,7 +253,7 @@ namespace General_Testing
             }
 
             controller.Write(jointADir, PinValue.High);
-            for (int i = 0; i < 400; i++)
+            for (int i = 0; i < 100; i++)
             {
                 Console.WriteLine($"Write to A {i}");
                 controller.Write(jointAStep, PinValue.High);
@@ -284,7 +268,7 @@ namespace General_Testing
             Console.WriteLine("Testing motor B");
 
             controller.Write(jointBDir, PinValue.Low);
-            for (int i = 0; i < 200; i++)
+            for (int i = 0; i < 100; i++)
             {
                 Console.WriteLine($"Write to B {i}");
                 controller.Write(jointBStep, PinValue.High);
@@ -294,7 +278,7 @@ namespace General_Testing
             }
 
             controller.Write(jointBDir, PinValue.High);
-            for (int i = 0; i < 200; i++)
+            for (int i = 0; i < 100; i++)
             {
                 Console.WriteLine($"Write to B {i}");
                 controller.Write(jointBStep, PinValue.High);

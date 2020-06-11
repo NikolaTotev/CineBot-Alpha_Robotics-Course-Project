@@ -13,36 +13,36 @@ namespace PrimaryClasses
         private Dictionary<int, PinMode> m_RegisteredPins;
         private GpioController m_Controller;
         private static PinManager m_Instance;
-        private readonly int m_StatusPin = 8;
-        private readonly int m_ErrorLight = 7;
 
-        private readonly int m_PanSIA = 4;
-        private readonly int m_PanSIB = 17;
+        private readonly int m_StatusPin = 23;
+        private readonly int m_ErrorLight = 24;
 
-        private readonly int m_RotSIA = 22;
-        private readonly int m_RotSIB = 27;
+        private readonly int m_JointADir = 6;
+        private readonly int m_JointAStep = 13;
 
-        private readonly int m_TiltSIA = 9;
-        private readonly int m_TiltSIB = 10;
+        private readonly int m_JointBDir = 19;
+        private readonly int m_JointBStep = 26;
 
-        private readonly int m_PanReset = 11;
-        private readonly int m_RotReset = 5;
-        private readonly int m_TiltReset = 6;
+        private readonly int m_PanSIA = 17;
+        private readonly int m_PanSIB = 27;
 
+        private readonly int m_RotSIA = 10;
+        private readonly int m_RotSIB = 9;
 
-        private readonly int m_JogCW = 14;
-        private readonly int m_JogCCW = 15;
+        private readonly int m_TiltSIA = 16;
+        private readonly int m_TiltSIB = 20;
 
-        private readonly int m_SelectA = 13;
-        private readonly int m_SelectB = 19;
+        private readonly int m_PanSwitch = 22;
+        private readonly int m_RotSwitch = 11;
+        private readonly int m_TiltSwitch = 21;
 
-        private readonly int m_JointATopStop = 20;
-        private readonly int m_JointABottomStop = 21;
+        private readonly int m_JointATopStop = 8;
+        private readonly int m_JointABottomStop = 7;
 
-        private readonly int m_JointBTopStop = 12;
-        private readonly int m_JointBBottomStop = 16;
+        private readonly int m_JointBTopStop = 14;
+        private readonly int m_JointBBottomStop = 15;
 
-        private readonly int m_EmergencyStop = 26;
+        private readonly int m_EmergencyStop = 12;
 
         public int JointATop => m_JointATopStop;
         public int JointABottom => m_JointABottomStop;
@@ -50,11 +50,11 @@ namespace PrimaryClasses
         public int JointBTop => m_JointBTopStop;
         public int JointBBottom => m_JointBBottomStop;
 
-        public int JogCW { get => m_JogCW; }
-        public int JogCCW { get => m_JogCCW; }
+        public int JogCW { get => m_PanSwitch; }
+        public int JogCCW { get => m_RotSwitch; }
 
-        public int SelectA { get => m_SelectA; }
-        public int SelectB { get => m_SelectB; }
+        public int SelectA { get => m_TiltSwitch; }
+        //public int SelectB { get => m_SelectB; }
 
 
         public int PanSIA { get => m_PanSIA; }
@@ -67,9 +67,9 @@ namespace PrimaryClasses
         public int TiltSIA { get => m_TiltSIA; }
         public int TiltSIB { get => m_TiltSIB; }
 
-        public int PanReset { get => m_PanReset; }
-        public int RotReset { get => m_RotReset; }
-        public int TiltReset { get => m_TiltReset; }
+        public int PanReset { get => m_PanSwitch; }
+        public int RotReset { get => m_RotSwitch; }
+        public int TiltReset { get => m_TiltSwitch; }
 
         public int EmergencyStop { get => m_EmergencyStop; }
 
@@ -108,26 +108,28 @@ namespace PrimaryClasses
             SetupPin(m_TiltSIA, PinMode.InputPullUp);
             SetupPin(m_TiltSIB, PinMode.InputPullUp);
 
-            SetupPin(m_PanReset, PinMode.InputPullUp);
-            SetupPin(m_RotReset, PinMode.InputPullUp);
-            SetupPin(m_TiltReset, PinMode.InputPullUp);
+            SetupPin(m_PanSwitch, PinMode.InputPullUp);
+            SetupPin(m_RotSwitch, PinMode.InputPullUp);
+            SetupPin(m_TiltSwitch, PinMode.InputPullUp);
 
-            SetupPin(m_SelectA, PinMode.InputPullUp);
-            SetupPin(m_SelectB, PinMode.InputPullUp);
+            SetupPin(SelectA, PinMode.InputPullUp);
+            //SetupPin(m_SelectB, PinMode.InputPullUp);
 
-            SetupPin(m_JogCW, PinMode.InputPullUp);
-            SetupPin(m_JogCCW, PinMode.InputPullUp);
+            SetupPin(JogCW, PinMode.InputPullUp);
+            SetupPin(JogCCW, PinMode.InputPullUp);
 
             //Todo Remove these and  put them in motor control.
-            SetupPin(23, PinMode.Output);
-            SetupPin(18, PinMode.Output);
+            SetupPin(m_JointADir, PinMode.Output);
+            SetupPin(m_JointAStep, PinMode.Output);
 
-            SetupPin(24, PinMode.Output);
-            SetupPin(25, PinMode.Output);
+            SetupPin(m_JointBDir, PinMode.Output);
+            SetupPin(m_JointBStep, PinMode.Output);
 
             m_Controller.Write(m_StatusPin, PinValue.High);
             m_Controller.Write(m_ErrorLight, PinValue.High);
             Thread.Sleep(TimeSpan.FromSeconds(2));
+            m_Controller.Write(m_StatusPin, PinValue.Low);
+            m_Controller.Write(m_ErrorLight, PinValue.Low);
 
             if (m_Controller != null && m_RegisteredPins != null)
             {

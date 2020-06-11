@@ -270,7 +270,7 @@ namespace Motor_Control
             int jogCCW = PinManager.GetInstance().JogCCW;
 
             int selectA = PinManager.GetInstance().SelectA;
-            int selectB = PinManager.GetInstance().SelectB;
+            //int selectB = PinManager.GetInstance().SelectB;
 
             int stepPinA = 0;
             int dirPinA = 0;
@@ -297,16 +297,19 @@ namespace Motor_Control
             {
                 if (PinManager.GetInstance().Controller.Read(selectA) == PinValue.Low)
                 {
-                    aIsSelected = true;
-                    flags.motor = "A";
-                    Console.WriteLine($"\r\n[{DateTime.Now}] A motor selected to be jogged.");
-                }
-
-                if (PinManager.GetInstance().Controller.Read(selectB) == PinValue.Low)
-                {
-                    aIsSelected = false;
-                    flags.motor = "B";
-                    Console.WriteLine($"\r\n[{DateTime.Now}] B motor selected to be jogged.");
+                    if (!aIsSelected)
+                    {
+                        aIsSelected = true;
+                        flags.motor = "A";
+                        Console.WriteLine($"\r\n[{DateTime.Now}] A motor selected to be jogged.");
+                    }
+                    else
+                    {
+                        aIsSelected = false;
+                        flags.motor = "A";
+                        Console.WriteLine($"\r\n[{DateTime.Now}] B motor selected to be jogged.");
+                    }
+                    
                 }
 
                 bool flagToWatch = (flags.motor == "A") ? flags.A_CollisionFlag : flags.B_CollisionFlag;
@@ -344,7 +347,7 @@ namespace Motor_Control
                     {
                         PinManager.GetInstance().Controller.Write(dirPinB, PinValue.Low);
                         SingleStep(stepPinB);
-                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving B CCW {dirPinB}}");
+                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving B CCW {dirPinB}");
                     }
 
 
@@ -355,6 +358,7 @@ namespace Motor_Control
                 //Thread.Sleep(TimeSpan.FromSeconds(0.1));
                 if (PinManager.GetInstance().Controller.Read(exitButton) == PinValue.Low)
                 {
+                    Console.WriteLine($"\r\n[{DateTime.Now}] Stop button has been pressed. {exitButton}");
                     m_UseJogMode = false;
                     flags.stopFlag = true;
                 }

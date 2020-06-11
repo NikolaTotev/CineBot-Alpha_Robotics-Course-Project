@@ -17,7 +17,7 @@ namespace PrimaryClasses
 
         private bool m_StopFlag = false;
         private readonly int m_Port = 4200;
-        private readonly IPAddress m_Ip = IPAddress.Parse("192.168.12.119");
+        private readonly IPAddress m_Ip = IPAddress.Parse("192.168.12.133");
         private readonly string m_ServerVersion = "0.01";
         private IPEndPoint m_localEndPoint;
         private Socket m_ControlClient;
