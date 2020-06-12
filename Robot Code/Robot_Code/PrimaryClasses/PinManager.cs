@@ -42,7 +42,7 @@ namespace PrimaryClasses
         private readonly int m_JointBTopStop = 14;
         private readonly int m_JointBBottomStop = 15;
 
-        private readonly int m_EmergencyStop = 12;
+        private readonly int m_EmergencyStop = 25;
 
         public int JointATop => m_JointATopStop;
         public int JointABottom => m_JointABottomStop;
@@ -71,6 +71,7 @@ namespace PrimaryClasses
         public int RotReset { get => m_RotSwitch; }
         public int TiltReset { get => m_TiltSwitch; }
 
+        //TODO Fix change button once solution for pull-up is found.
         public int EmergencyStop { get => m_EmergencyStop; }
 
         public GpioController Controller { get => m_Controller; }

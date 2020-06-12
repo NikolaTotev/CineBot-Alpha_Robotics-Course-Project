@@ -21,7 +21,7 @@ namespace General_Testing
                 switch (args[0])
                 {
                     case "Buttons":
-                        TestButtons();
+                        TestButtons(int.Parse(args[1]), int.Parse(args[2]));
                         break;
                     case "Rotary":
                         TestEncoders();
@@ -79,17 +79,24 @@ namespace General_Testing
 
         }
 
-        static void TestButtons()
+        static void TestButtons(int buttonNumber, int mode)
         {
             GpioController controller = new GpioController(PinNumberingScheme.Logical);
             Console.WriteLine("Starting button test");
-           
 
-            controller.OpenPin(11, PinMode.InputPullUp);
+            if (mode == 1)
+            {
+                controller.OpenPin(buttonNumber, PinMode.InputPullUp);
+            }
+
+            if (mode == 2)
+            {
+                controller.OpenPin(buttonNumber, PinMode.InputPullDown);
+            }
 
             while (true)
             {
-                if (controller.Read(11) == PinValue.Low)
+                if (controller.Read(buttonNumber) == PinValue.Low)
                 {
                     Console.WriteLine("Derp");
                     Thread.Sleep(TimeSpan.FromSeconds(1));
