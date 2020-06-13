@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Device.Gpio;
+using System.Device.Gpio.Drivers;
 using System.Device.Pwm;
 using System.Diagnostics.Tracing;
 using System.IO.Ports;
@@ -15,7 +16,7 @@ namespace General_Testing
 
         static void Main(string[] args)
         {
-
+            
             if (args.Length > 0)
             {
                 switch (args[0])
@@ -81,6 +82,7 @@ namespace General_Testing
 
         static void TestButtons(int buttonNumber, int mode)
         {
+            
             GpioController controller = new GpioController(PinNumberingScheme.Logical);
             Console.WriteLine("Starting button test");
 
@@ -88,7 +90,7 @@ namespace General_Testing
             {
                 controller.OpenPin(buttonNumber, PinMode.InputPullUp);
             }
-
+            
             if (mode == 2)
             {
                 controller.OpenPin(buttonNumber, PinMode.InputPullDown);

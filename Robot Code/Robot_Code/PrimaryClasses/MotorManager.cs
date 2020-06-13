@@ -37,7 +37,7 @@ namespace Motor_Control
 
         public void Initialize()
         {
-            StepperMotor MotorA = new StepperMotor(MotorTypes.Stepper, "A", 90, -90, 18, 23);
+            StepperMotor MotorA = new StepperMotor(MotorTypes.Stepper, "A", 90, -90,20, 23);
             StepperMotor MotorB = new StepperMotor(MotorTypes.Stepper, "B", 90, -90, 25, 24);
             m_RegisteredMotors = new Dictionary<string, IMotor>();
             m_RegisteredMotors.Add(MotorA.MotorId, MotorA);
@@ -256,7 +256,7 @@ namespace Motor_Control
 
         public void JogMode()
         {
-            Console.WriteLine($"\r\n[{DateTime.Now}] Jog mode enabled. Control the arm via the buttons.");
+            Console.WriteLine($"\r\n[{DateTime.Now}] Jog mode enabled. Control the arm via the buttons pan for CW and rotate for CCW.");
 
             m_UseJogMode = true;
 
@@ -270,7 +270,6 @@ namespace Motor_Control
             int jogCCW = PinManager.GetInstance().JogCCW;
 
             int selectA = PinManager.GetInstance().SelectA;
-            //int selectB = PinManager.GetInstance().SelectB;
 
             int stepPinA = 0;
             int dirPinA = 0;
@@ -330,7 +329,6 @@ namespace Motor_Control
                         Console.WriteLine($"\r\n[{DateTime.Now}] Moving B CW {dirPinB}");
                     }
 
-
                     Thread.Sleep(TimeSpan.FromSeconds(0.01));
                 }
 
@@ -369,7 +367,6 @@ namespace Motor_Control
 
         private void SingleStep(int pin)
         {
-            //Console.WriteLine($"Moove A Cw{pin}");
             PinManager.GetInstance().Controller.Write(pin, PinValue.High);
             Thread.Sleep(TimeSpan.FromSeconds(0.0001));
             PinManager.GetInstance().Controller.Write(pin, PinValue.Low);
