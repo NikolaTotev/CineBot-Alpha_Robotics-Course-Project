@@ -10,9 +10,10 @@
 #include <functional>
 #include <iostream>
 
+
 using namespace std;
 
-#define NAME "/var/run/socket"
+#define NAME "/var/run/socketTest.sock"
 #define DATA "Half a league, half a league . . ."
 
 class Server
@@ -36,7 +37,7 @@ public:
 
 		server.sun_family = AF_UNIX;
 		strcpy(server.sun_path, NAME);
-
+		unlink(NAME);
 		if (bind(sock, (struct sockaddr*)&server, sizeof(struct sockaddr_un)))
 		{
 			perror("binding stream socket");
@@ -55,18 +56,15 @@ public:
 				if ((rval = read(msgsock, buf, 1024)) < 0)
 					perror("reading stream message");
 				else if (rval == 0)
-					printf("Ending connection\n");
+					printf("[SERVER] Ending connection\n");
 				else
-					printf("-->%s\n", buf);
+					printf("[SERVER]- ->%s\n", buf);
 
 			} while (rval > 0);
 			close(msgsock);
 
 		}
 		close(sock);
-		unlink(NAME);
-
-
 	}
 };
 
@@ -91,12 +89,12 @@ public:
 
 		if (connect(sock, (struct sockaddr*)&server, sizeof(struct sockaddr_un)) < 0) {
 			close(sock);
-			perror("connecting stream socket");
+			perror("[CLIENT] connecting stream socket");
 			exit(1);
 
 		}
 		if (write(sock, DATA, sizeof(DATA)) < 0)
-			perror("writing on stream socket");
+			perror("[CLIENT] writing on stream socket");
 		close(sock);
 	}
 };
@@ -105,13 +103,13 @@ public:
 int main(int argc, char const* argv[])
 {
 
-	if (strcmp(argv[1], "Client"))
+	if (strcmp(argv[1], "Client")==0)
 	{
 		cout << "Starting as client." << endl;
 		Client newClient = Client();
 	}
 
-	if (strcmp(argv[1], "Server"))
+	if (strcmp(argv[1], "Server")==0)
 	{
 		cout << "Starting as server." << endl;
 		Server newServer = Server();

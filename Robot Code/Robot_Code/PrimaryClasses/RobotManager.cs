@@ -1,4 +1,5 @@
 ﻿using System;
+using Iot.Device.Lsm9Ds1;
 using Motor_Control;
 using UtilityClasses;
 

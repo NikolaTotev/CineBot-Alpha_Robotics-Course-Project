@@ -92,6 +92,7 @@ namespace PrimaryClasses
                         ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Switching listener thread name to control thread");
                         listener.Stop();
                         PinManager.GetInstance().ClientConnected();
+                        //ToDo Make ClientHanlder return some value to indicate if listening for next connection should continue.
                         ClientHandler();
                     }
                     else
@@ -179,6 +180,7 @@ namespace PrimaryClasses
                     ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Client has disconnected. Terminating handling.");
                     ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Returning to listening mode.");
                     m_ControlClient.Disconnect(true);
+                    //TODO This eventually results in unwanted reccursion
                     AwaitConnection(m_localEndPoint);
                 }
             }
