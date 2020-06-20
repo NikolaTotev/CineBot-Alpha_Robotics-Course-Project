@@ -27,6 +27,7 @@ namespace Motor_Control
         private readonly float m_SpeedSensitivity = 1;
         private readonly float m_CollisionDetectionFrequency = 0.01f;
         private int m_MovementSensitivity = 1;
+        private int m_StepsInRange = 0;
 
         public bool JogModeFlag
         {
@@ -65,34 +66,34 @@ namespace Motor_Control
             return stepsForInputAngle;
         }
 
-        public void MoveStepper(int angle, float speed, MotorOptions motor, bool direction, MotorThreadStartObj runtimeInfo, bool useDebugMessages)
+        public void MoveStepper(int angle, float speed, StepperMotorOptions stepperMotor, bool direction, bool useDebugMessages)
         {
             int numberOfSteps = ConvertAngleToSteps(angle);
             int stepPin = 0;
             int dirPin = 0;
 
-            switch (motor)
+            switch (stepperMotor)
             {
-                case MotorOptions.motorA:
+                case StepperMotorOptions.motorA:
                     stepPin = PinManager.GetInstance().JointAStep;
                     dirPin = PinManager.GetInstance().JointADir;
                     break;
-                case MotorOptions.motorB:
+                case StepperMotorOptions.motorB:
                     stepPin = PinManager.GetInstance().JointBStep;
                     dirPin = PinManager.GetInstance().JointBDir;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(motor), motor, null);
+                    throw new ArgumentOutOfRangeException(nameof(stepperMotor), stepperMotor, null);
             }
 
             if (stepPin == 0 || dirPin == 0)
             {
-                Console.WriteLine($"[{DateTime.Now}] <ERROR>: Failed to get motor control pins. Aborting motor {motor} movement.");
+                Console.WriteLine($"[{DateTime.Now}] <ERROR>: Failed to get stepperMotor control pins. Aborting stepperMotor {stepperMotor} movement.");
                 return;
             }
 
 
-            FlagArgs flags = new FlagArgs(false, false, motor);
+            FlagArgs flags = new FlagArgs(false, false, stepperMotor);
             Thread collisionDetectorThread = new Thread(CollisionDetection);
             collisionDetectorThread.Start(flags);
 
@@ -106,24 +107,50 @@ namespace Motor_Control
             {
                 PinManager.GetInstance().Controller.Write(dirPin, PinValue.High);
             }
-        
+
             while (counter < numberOfSteps && !flags.CollisionFlag)
             {
                 if (useDebugMessages)
                 {
-                    Console.WriteLine($"Moving {motor}, currently on step {counter}");
+                    Console.WriteLine($"Moving {stepperMotor}, currently on step {counter}");
+                    counter++;
                 }
-                
+
+                if (flags.EmergencyStopActive)
+                {
+                    Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
+                    flags.StopFlag = true;
+                    break;
+                }
                 PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
                 Thread.Sleep(TimeSpan.FromSeconds(speed));
                 PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
                 Thread.Sleep(TimeSpan.FromSeconds(speed));
-                counter++;
             }
 
             flags.StopFlag = true;
 
-            collisionDetectorThread.Join();
+            try
+            {
+                if (collisionDetectorThread.IsAlive)
+                {
+                    Console.WriteLine($"[{DateTime.Now}] <Movement Warning>: Collision detector thread is still running. Attempting to join it.");
+                    bool collisionThreadStopped = collisionDetectorThread.Join(1500);
+                    if (!collisionThreadStopped)
+                    {
+                        Console.WriteLine($"[{DateTime.Now}] <COLLISION ERROR>: Failed to join collision detector thread gracefully. Aborting thread.");
+                        collisionDetectorThread.Abort();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[{DateTime.Now}] <Movement Info>: Collision detector thread has been successfully joined.");
+                    }
+                }
+            }
+            catch (ThreadAbortException e)
+            {
+                Console.WriteLine($"[{DateTime.Now}] <EXCEPTION>: An exception with code {e.HResult} occured during thread abortion.");
+            }
         }
 
         private void CollisionDetection(object boolObject)
@@ -135,139 +162,192 @@ namespace Motor_Control
                 int bottomSensor = 1;
                 int emergencyStop = PinManager.GetInstance().EmergencyStop;
 
-                switch (flags.TargetMotor)
+                switch (flags.TargetStepperMotor)
                 {
-                    case MotorOptions.motorA:
+                    case StepperMotorOptions.motorA:
                         topSensor = PinManager.GetInstance().JointATop;
                         bottomSensor = PinManager.GetInstance().JointABottom;
                         break;
-                    case MotorOptions.motorB:
+                    case StepperMotorOptions.motorB:
                         topSensor = PinManager.GetInstance().JointBTop;
                         bottomSensor = PinManager.GetInstance().JointBBottom;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(flags.TargetMotor), flags.TargetMotor, null);
+                        throw new ArgumentOutOfRangeException(nameof(flags.TargetStepperMotor), flags.TargetStepperMotor, null);
                 }
 
                 PinValue topSensorSate;
                 PinValue bottomSensorState;
+                PinValue emergencyButtonState;
 
                 while (!flags.StopFlag)
                 {
                     topSensorSate = PinManager.GetInstance().Controller.Read(topSensor);
                     bottomSensorState = PinManager.GetInstance().Controller.Read(bottomSensor);
+                    emergencyButtonState = PinManager.GetInstance().Controller.Read(emergencyStop);
 
                     //ToDo: Invert button activation to provide redundancy in the event of disconnected cable.
-                    if (topSensorSate == PinValue.Low || bottomSensorState == PinValue.Low || emergencyStop == PinValue.Low)
+                    if (topSensorSate == PinValue.Low || bottomSensorState == PinValue.Low || emergencyButtonState == PinValue.Low)
                     {
-                        Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Motor {flags.TargetMotor} has reached an end-stop.");
+                        if (emergencyButtonState == PinValue.Low)
+                        {
+                            flags.EmergencyStopActive = true;
+                        }
+                        Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Motor {flags.TargetStepperMotor} has reached an end-stop or the emergency switch as been activated..");
                         flags.CollisionFlag = true;
                     }
                     else
                     {
                         flags.CollisionFlag = false;
                     }
-
+                    Thread.Sleep(TimeSpan.FromSeconds(m_CollisionDetectionFrequency));
                 }
-                Thread.Sleep(TimeSpan.FromSeconds(m_CollisionDetectionFrequency));
+                Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Stop flag has been raised. Ending collision detection.");
             }
         }
 
-        public void GoToHome()
+        public void GoToHome(StepperMotorOptions targetStepperMotor, bool useDebugMessages)
         {
-            Console.WriteLine($"\r\n[{DateTime.Now}] Going to home position.");
-            int topSensorA = PinManager.GetInstance().JointATop;
-            int topSensorB = PinManager.GetInstance().JointBTop;
-            int emergencyStop = PinManager.GetInstance().EmergencyStop;
+            int stepPin = 0;
+            int dirPin = 0;
 
-            bool jointAStop = false;
-            bool jointBStop = false;
+            int numberOfSteps = 0;
+            bool direction = false;
+            bool hasReachedEndStop = false;
+            bool hasCalculatedSteps = false;
+
+            switch (targetStepperMotor)
+            {
+                case StepperMotorOptions.motorA:
+                    stepPin = PinManager.GetInstance().JointAStep;
+                    dirPin = PinManager.GetInstance().JointADir;
+                    break;
+                case StepperMotorOptions.motorB:
+                    stepPin = PinManager.GetInstance().JointBStep;
+                    dirPin = PinManager.GetInstance().JointBDir;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(targetStepperMotor), targetStepperMotor, null);
+            }
+
+            if (stepPin == 0 || dirPin == 0)
+            {
+                Console.WriteLine($"[{DateTime.Now}] <MOVEMENT ERROR>: Failed to get stepperMotor control pins. Aborting stepperMotor {targetStepperMotor} movement.");
+                return;
+            }
+
+
+            FlagArgs flags = new FlagArgs(false, false, targetStepperMotor);
+            Thread collisionDetectorThread = new Thread(CollisionDetection);
+            collisionDetectorThread.Start(flags);
 
             int counter = 0;
-
-            int stepPinA = 0;
-            int dirPinA = 0;
-
-            int stepPinB = 0;
-            int dirPinB = 0;
-
-            if (m_RegisteredMotors["A"] is StepperMotor stepperMotorA &&
-                m_RegisteredMotors["B"] is StepperMotor stepperMotorB)
+            while (!hasCalculatedSteps)
             {
-                stepPinA = stepperMotorA.StepPin;
-                dirPinA = stepperMotorA.DirPin;
-
-                stepPinB = stepperMotorB.StepPin;
-                dirPinB = stepperMotorB.DirPin;
-            }
-
-            PinManager.GetInstance().Controller.Write(dirPinA, PinValue.Low);
-            PinManager.GetInstance().Controller.Write(dirPinB, PinValue.Low);
-
-            Console.WriteLine($"\r\n[{DateTime.Now}] Moving motor A");
-            while (!jointAStop)
-            {
-
-                if (topSensorA == PinValue.Low || emergencyStop == PinValue.Low)
+                if (flags.EmergencyStopActive)
                 {
-                    jointAStop = true;
+                    Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
+                    break;
+                }
+
+                if (direction)
+                {
+                    PinManager.GetInstance().Controller.Write(dirPin, PinValue.Low);
                 }
                 else
                 {
-                    Console.WriteLine($"{counter}: Moove A, moove A {jointAStop}");
-                    //  PinManager.GetInstance().Controller.Write(stepPinA, PinValue.High);
-                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
-                    // PinManager.GetInstance().Controller.Write(stepPinA, PinValue.Low);
-                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
-                    counter++;
+                    PinManager.GetInstance().Controller.Write(dirPin, PinValue.High);
+                }
+
+                while (!flags.CollisionFlag)
+                {
+                    if (useDebugMessages)
+                    {
+                        Console.WriteLine($"Moving {targetStepperMotor}, currently on step {counter}");
+                        counter++;
+                    }
+
+                    if (flags.EmergencyStopActive)
+                    {
+                        Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
+                        break;
+                    }
+                    PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
+                    Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
+                    PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
+                    Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
+                    if (hasReachedEndStop)
+                    {
+                        numberOfSteps++;
+                    }
+                }
+
+                direction = true;
+                hasReachedEndStop = true;
+
+                if (numberOfSteps != 0)
+                {
+                    hasCalculatedSteps = true;
                 }
             }
 
-            counter = 0;
 
-            Console.WriteLine($"\r\n[{DateTime.Now}] Moving motor B");
-            while (!jointBStop)
+            for (int i = 0; i < numberOfSteps / 2; i++)
             {
-
-                if (topSensorB == PinValue.Low || emergencyStop == PinValue.Low)
+                if (flags.EmergencyStopActive)
                 {
-                    jointBStop = true;
+                    Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
+                    break;
                 }
-                else
-                {
-                    Console.WriteLine($"{counter}: Moove B, moove B {jointBStop}");
-                    PinManager.GetInstance().Controller.Write(stepPinB, PinValue.High);
-                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
-                    PinManager.GetInstance().Controller.Write(stepPinB, PinValue.Low);
-                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
-                    counter++;
-                }
+                PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
+                Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed * 0.5));
+                PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
+                Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed * 0.5));
             }
 
-            Console.WriteLine($"\r\n[{DateTime.Now}] Centering joints");
-            //Fix code to correctly center the joints.
-            MoveStepper(5, 0.1f, "A", true);
-            MoveStepper(5, 0.1f, "B", true);
+            flags.StopFlag = true;
+
+            try
+            {
+                if (collisionDetectorThread.IsAlive)
+                {
+                    Console.WriteLine($"[{DateTime.Now}] <Movement Warning>: Collision detector thread is still running. Attempting to join it.");
+                    bool collisionThreadStopped = collisionDetectorThread.Join(1500);
+                    if (!collisionThreadStopped)
+                    {
+                        Console.WriteLine($"[{DateTime.Now}] <COLLISION ERROR>: Failed to join collision detector thread gracefully. Aborting thread.");
+                        collisionDetectorThread.Abort();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[{DateTime.Now}] <Movement Info>: Collision detector thread has been successfully joined.");
+                    }
+                }
+            }
+            catch (ThreadAbortException e)
+            {
+                Console.WriteLine($"[{DateTime.Now}] <EXCEPTION>: An exception with code {e.HResult} occured during thread abortion.");
+            }
         }
 
         public void JogMode(object threadParams)
         {
             if (threadParams is MotorThreadStartObj tParams)
             {
-                Console.WriteLine($"[{DateTime.Now}] <Motor Manager Jog Mode>: Motor {tParams.TargetMotor}: Control thread started.");
+                Console.WriteLine($"[{DateTime.Now}] <Motor Manager Jog Mode>: Motor {tParams.TargetStepperMotor}: Control thread started.");
                 int encoderSIA;
                 int enncoderSIB;
                 int resetPin;
-
-                switch (tParams.TargetMotor)
+                int emergencyButton = PinManager.GetInstance().EmergencyStop;
+                switch (tParams.TargetStepperMotor)
                 {
-                    case MotorOptions.motorA:
+                    case StepperMotorOptions.motorA:
                         encoderSIA = PinManager.GetInstance().PanSIA;
                         enncoderSIB = PinManager.GetInstance().PanSIB;
                         resetPin = PinManager.GetInstance().PanReset;
                         break;
 
-                    case MotorOptions.motorB:
+                    case StepperMotorOptions.motorB:
                         encoderSIA = PinManager.GetInstance().RotSIA;
                         enncoderSIB = PinManager.GetInstance().RotSIB;
                         resetPin = PinManager.GetInstance().RotReset;
@@ -284,6 +364,12 @@ namespace Motor_Control
 
                 while (!tParams.ShouldStop)
                 {
+
+                    if (PinManager.GetInstance().Controller.Read(emergencyButton) == PinValue.Low)
+                    {
+                        Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
+                        break;
+                    }
                     encoderState = PinManager.GetInstance().Controller.Read(encoderSIA);
                     encoderLastState = PinManager.GetInstance().Controller.Read(encoderSIA);
 
@@ -311,120 +397,14 @@ namespace Motor_Control
                             int movementAngle = m_MinimumAngle * m_MovementSensitivity;
                             float speed = m_MinimumSpeed * m_SpeedSensitivity;
                             bool direction = previousCounterState < encoderCounter;
-                            MoveStepper(movementAngle, speed, tParams.TargetMotor, direction);
-                            Console.WriteLine($"[{DateTime.Now}] <Motor info>: Motor {tParams.TargetMotor}: \n Moving {movementAngle} with speed {speed} and direction {direction}");
+                            MoveStepper(movementAngle, speed, tParams.TargetStepperMotor, direction, false);
+                            Console.WriteLine($"[{DateTime.Now}] <Motor info>: Motor {tParams.TargetStepperMotor}: \n Moving {movementAngle} with speed {speed} and direction {direction}");
                             Thread.Sleep(TimeSpan.FromMilliseconds(35));
                         }
                     }
                     encoderLastState = encoderState;
                 }
             }
-
-            m_UseJogMode = true;
-
-            int exitButton = PinManager.GetInstance().EmergencyStop;
-
-            FlagArgs flags = new FlagArgs(false, false, false, "A");
-            Thread collisionDetectorThread = new Thread(CollisionDetection);
-            collisionDetectorThread.Start(flags);
-
-            int jogCW = PinManager.GetInstance().JogCW;
-            int jogCCW = PinManager.GetInstance().JogCCW;
-
-            int selectA = PinManager.GetInstance().SelectA;
-
-            int stepPinA = 0;
-            int dirPinA = 0;
-
-            int stepPinB = 0;
-            int dirPinB = 0;
-
-            if (m_RegisteredMotors["A"] is StepperMotor stepperMotorA &&
-                m_RegisteredMotors["B"] is StepperMotor stepperMotorB)
-            {
-                stepPinA = stepperMotorA.StepPin;
-                dirPinA = stepperMotorA.DirPin;
-
-                stepPinB = stepperMotorB.StepPin;
-                dirPinB = stepperMotorB.DirPin;
-            }
-
-            Console.WriteLine(
-                $"\r\n[{DateTime.Now}] Jog mode ready, standing by, awaiting input. Emergency stop is used to get out of jog mode.");
-
-            bool aIsSelected = true;
-
-            while (m_UseJogMode)
-            {
-                if (PinManager.GetInstance().Controller.Read(selectA) == PinValue.Low)
-                {
-                    if (!aIsSelected)
-                    {
-                        aIsSelected = true;
-                        flags.motor = "A";
-                        Console.WriteLine($"\r\n[{DateTime.Now}] A motor selected to be jogged.");
-                    }
-                    else
-                    {
-                        aIsSelected = false;
-                        flags.motor = "A";
-                        Console.WriteLine($"\r\n[{DateTime.Now}] B motor selected to be jogged.");
-                    }
-
-                }
-
-                bool flagToWatch = (flags.motor == "A") ? flags.A_CollisionFlag : flags.B_CollisionFlag;
-
-                while (PinManager.GetInstance().Controller.Read(jogCW) == PinValue.Low && m_UseJogMode &&
-                       !((flags.motor == "A") ? flags.A_CollisionFlag : flags.B_CollisionFlag))
-                {
-                    if (aIsSelected)
-                    {
-                        PinManager.GetInstance().Controller.Write(dirPinA, PinValue.High);
-                        SingleStep(stepPinA);
-                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving A {dirPinA}");
-                    }
-                    else
-                    {
-                        PinManager.GetInstance().Controller.Write(dirPinB, PinValue.High);
-                        SingleStep(stepPinB);
-                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving B CW {dirPinB}");
-                    }
-
-                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
-                }
-
-                while (PinManager.GetInstance().Controller.Read(jogCCW) == PinValue.Low && m_UseJogMode &&
-                       !((flags.motor == "A") ? flags.A_CollisionFlag : flags.B_CollisionFlag))
-                {
-                    if (aIsSelected)
-                    {
-                        PinManager.GetInstance().Controller.Write(dirPinA, PinValue.Low);
-                        SingleStep(stepPinA);
-                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving A {dirPinA}");
-                    }
-                    else
-                    {
-                        PinManager.GetInstance().Controller.Write(dirPinB, PinValue.Low);
-                        SingleStep(stepPinB);
-                        Console.WriteLine($"\r\n[{DateTime.Now}] Moving B CCW {dirPinB}");
-                    }
-
-
-                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
-                }
-
-
-                //Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                if (PinManager.GetInstance().Controller.Read(exitButton) == PinValue.Low)
-                {
-                    Console.WriteLine($"\r\n[{DateTime.Now}] Stop button has been pressed. {exitButton}");
-                    m_UseJogMode = false;
-                    flags.stopFlag = true;
-                }
-            }
-
-            Console.WriteLine($"\r\n[{DateTime.Now}] Exiting Jog Mode. Buttons disabled.");
         }
 
         private void SingleStep(int pin)
@@ -628,11 +608,11 @@ namespace Motor_Control
 
                     if ((addedDirPin && addedStepPin))
                     {
-                        Console.WriteLine($"Stepper motor{stepperMotor.MotorId}: Status - Added on Step Pin: {stepperMotor.StepPin}, Dir Pin {stepperMotor.DirPin} , Mode: Output \n");
+                        Console.WriteLine($"Stepper stepperMotor{stepperMotor.MotorId}: Status - Added on Step Pin: {stepperMotor.StepPin}, Dir Pin {stepperMotor.DirPin} , Mode: Output \n");
                     }
                     else
                     {
-                        Console.WriteLine($"Stepper motor{stepperMotor.MotorId}: Status - NOT ADDED");
+                        Console.WriteLine($"Stepper stepperMotor{stepperMotor.MotorId}: Status - NOT ADDED");
                     }
 
                 }
@@ -642,16 +622,16 @@ namespace Motor_Control
 
                     if (addedControlPin)
                     {
-                        Console.WriteLine(($"Stepper motor{servoMotor.MotorId}: Status - Added on Control Pin: {servoMotor.ControlPin}, Mode: Output \n"));
+                        Console.WriteLine(($"Stepper stepperMotor{servoMotor.MotorId}: Status - Added on Control Pin: {servoMotor.ControlPin}, Mode: Output \n"));
                     }
                     else
                     {
-                        Console.WriteLine($"Stepper motor{servoMotor.MotorId}: Status - NOT ADDED");
+                        Console.WriteLine($"Stepper stepperMotor{servoMotor.MotorId}: Status - NOT ADDED");
                     }
                 }
                 else
                 {
-                    sb.Append("Element in configuration not recognized motor!");
+                    sb.Append("Element in configuration not recognized stepperMotor!");
                 }
             }
 

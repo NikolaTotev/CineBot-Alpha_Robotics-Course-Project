@@ -173,7 +173,7 @@ namespace PrimaryClasses
                         }
                         else
                         {
-                            //ToDo Call for motor move function.
+                            //ToDo Call for stepperMotor move function.
                         }
                     }
                     Thread.Sleep(TimeSpan.FromMilliseconds(loopSpeed));

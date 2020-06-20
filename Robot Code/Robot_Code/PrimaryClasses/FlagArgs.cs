@@ -8,15 +8,15 @@ namespace PrimaryClasses
     {
         public bool CollisionFlag { get; set; }
         public bool StopFlag { get; set; }
-        public MotorOptions TargetMotor { get; set; }
+        public StepperMotorOptions TargetStepperMotor { get; set; }
+        public bool EmergencyStopActive { get; set; }
 
-        
-
-        public FlagArgs(bool clFlag, bool stpFlag, MotorOptions targetMotor)
+        public FlagArgs(bool clFlag, bool stpFlag, StepperMotorOptions targetStepperMotor)
         {
            CollisionFlag = clFlag;
            StopFlag = stpFlag;
-           TargetMotor = targetMotor
+           TargetStepperMotor = targetStepperMotor;
+           EmergencyStopActive = false;
         }
     }
 }
