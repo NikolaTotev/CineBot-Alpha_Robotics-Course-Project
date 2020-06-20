@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using PrimaryClasses;
 using Unosquare.RaspberryIO;
+using Unosquare.RaspberryIO.Abstractions;
 using UtilityClasses;
 
 namespace Motor_Control
@@ -18,6 +19,14 @@ namespace Motor_Control
 
         private static MotorManager m_Instance;
         private bool m_UseJogMode = false;
+        private readonly int m_StepsPerRevolution = 200;
+        private readonly int m_StepMultiplier = 1;
+        private readonly int m_GearRatio = 7;
+        private readonly int m_MinimumAngle = 5;
+        private readonly float m_MinimumSpeed = 0.01f;
+        private readonly float m_SpeedSensitivity = 1;
+        private readonly float m_CollisionDetectionFrequency = 0.01f;
+        private int m_MovementSensitivity = 1;
 
         public bool JogModeFlag
         {
@@ -25,19 +34,19 @@ namespace Motor_Control
             set => m_UseJogMode = value;
         }
 
-        public static MotorManager GetInstance()
-        {
-            return m_Instance ?? (m_Instance = new MotorManager());
-        }
+        //public static MotorManager GetInstance()
+        //{
+        //    return m_Instance ?? (m_Instance = new MotorManager());
+        //}
 
-        private MotorManager()
+        public MotorManager()
         {
             Initialize();
         }
 
         public void Initialize()
         {
-            StepperMotor MotorA = new StepperMotor(MotorTypes.Stepper, "A", 90, -90,20, 23);
+            StepperMotor MotorA = new StepperMotor(MotorTypes.Stepper, "A", 90, -90, 20, 23);
             StepperMotor MotorB = new StepperMotor(MotorTypes.Stepper, "B", 90, -90, 25, 24);
             m_RegisteredMotors = new Dictionary<string, IMotor>();
             m_RegisteredMotors.Add(MotorA.MotorId, MotorA);
@@ -47,133 +56,120 @@ namespace Motor_Control
         }
 
 
-        public int ConvertAngle(float inputAngle)
+        public int ConvertAngleToSteps(int inputAngle)
         {
-            return 1;
+
+            int stepsForCarrierRevolution = m_StepsPerRevolution * m_StepMultiplier * m_GearRatio;
+            int stepsForInputAngle = stepsForCarrierRevolution / inputAngle;
+
+            return stepsForInputAngle;
         }
 
-        public void MoveStepper(int angle, float speed, string motor, bool direction)
+        public void MoveStepper(int angle, float speed, MotorOptions motor, bool direction, MotorThreadStartObj runtimeInfo, bool useDebugMessages)
         {
-
-            int numberOfSteps = ConvertAngle(angle);
-
+            int numberOfSteps = ConvertAngleToSteps(angle);
             int stepPin = 0;
             int dirPin = 0;
-            if (m_RegisteredMotors[motor] is StepperMotor stepperMotor)
+
+            switch (motor)
             {
-                switch (motor)
-                {
-                    case "A":
-
-                        stepPin = stepperMotor.StepPin;
-                        dirPin = stepperMotor.DirPin;
-                        break;
-
-                    case "B":
-
-                        stepPin = stepperMotor.StepPin;
-                        dirPin = stepperMotor.DirPin;
-                        break;
-                }
+                case MotorOptions.motorA:
+                    stepPin = PinManager.GetInstance().JointAStep;
+                    dirPin = PinManager.GetInstance().JointADir;
+                    break;
+                case MotorOptions.motorB:
+                    stepPin = PinManager.GetInstance().JointBStep;
+                    dirPin = PinManager.GetInstance().JointBDir;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(motor), motor, null);
             }
 
-            FlagArgs flags = new FlagArgs(false, false, false, "A");
+            if (stepPin == 0 || dirPin == 0)
+            {
+                Console.WriteLine($"[{DateTime.Now}] <ERROR>: Failed to get motor control pins. Aborting motor {motor} movement.");
+                return;
+            }
+
+
+            FlagArgs flags = new FlagArgs(false, false, motor);
             Thread collisionDetectorThread = new Thread(CollisionDetection);
             collisionDetectorThread.Start(flags);
+
             int counter = 0;
 
             if (!direction)
             {
                 PinManager.GetInstance().Controller.Write(dirPin, PinValue.Low);
             }
-
-            PinManager.GetInstance().Controller.Write(dirPin, PinValue.High);
-            // PinManager.GetInstance().Controller.Write(dirPin, PinValue.Low);
-
-            bool flagToWatch = (flags.motor == "A") ? flags.A_CollisionFlag : flags.B_CollisionFlag;
-
-            while (counter < numberOfSteps && !flagToWatch)
+            else
             {
-                Console.WriteLine($"{counter}: Moove moove {flagToWatch}");
-                //  PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
+                PinManager.GetInstance().Controller.Write(dirPin, PinValue.High);
+            }
+        
+            while (counter < numberOfSteps && !flags.CollisionFlag)
+            {
+                if (useDebugMessages)
+                {
+                    Console.WriteLine($"Moving {motor}, currently on step {counter}");
+                }
+                
+                PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
                 Thread.Sleep(TimeSpan.FromSeconds(speed));
-                // PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
+                PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
                 Thread.Sleep(TimeSpan.FromSeconds(speed));
                 counter++;
             }
 
-            flags.stopFlag = true;
+            flags.StopFlag = true;
 
             collisionDetectorThread.Join();
         }
 
         private void CollisionDetection(object boolObject)
         {
-            Console.WriteLine("ENTERING COLLISION DETECTION");
+            Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Collision detection enabled.");
             if (boolObject is FlagArgs flags)
             {
-                int topSensorA = 1;
-                int bottomSensorA = 1;
-
-                int topSensorB = 1;
-                int bottomSensorB = 1;
+                int topSensor = 1;
+                int bottomSensor = 1;
                 int emergencyStop = PinManager.GetInstance().EmergencyStop;
 
-
-                topSensorA = PinManager.GetInstance().JointATop;
-                bottomSensorA = PinManager.GetInstance().JointABottom;
-
-
-
-                topSensorB = PinManager.GetInstance().JointBTop;
-                bottomSensorB = PinManager.GetInstance().JointBBottom;
-
-
-                PinValue topSensorSateA;
-                PinValue bottomSensorStateA;
-
-                PinValue topSensorSateB;
-                PinValue bottomSensorStateB;
-                while (!flags.stopFlag)
+                switch (flags.TargetMotor)
                 {
-                    topSensorSateA = PinManager.GetInstance().Controller.Read(topSensorA);
-                    bottomSensorStateA = PinManager.GetInstance().Controller.Read(bottomSensorA);
-
-                    topSensorSateB = PinManager.GetInstance().Controller.Read(topSensorB);
-                    bottomSensorStateB = PinManager.GetInstance().Controller.Read(bottomSensorB);
-
-                    if (flags.motor == "A")
-                    {
-                        if (topSensorSateA == PinValue.Low || bottomSensorStateA == PinValue.Low ||
-                            emergencyStop == PinValue.Low)
-                        {
-                            Console.WriteLine("Boop Top of A");
-                            flags.A_CollisionFlag = true;
-                        }
-                        else
-                        {
-                            flags.A_CollisionFlag = false;
-                        }
-
-                    }
-
-                    if (flags.motor == "B")
-                    {
-                        if (topSensorSateB == PinValue.Low || bottomSensorStateB == PinValue.Low ||
-                            emergencyStop == PinValue.Low)
-                        {
-                            Console.WriteLine("Boop Top of B");
-                            flags.B_CollisionFlag = true;
-                        }
-                        else
-                        {
-                            flags.B_CollisionFlag = false;
-                        }
-                    }
-
-
-                    Thread.Sleep(TimeSpan.FromSeconds(0.01));
+                    case MotorOptions.motorA:
+                        topSensor = PinManager.GetInstance().JointATop;
+                        bottomSensor = PinManager.GetInstance().JointABottom;
+                        break;
+                    case MotorOptions.motorB:
+                        topSensor = PinManager.GetInstance().JointBTop;
+                        bottomSensor = PinManager.GetInstance().JointBBottom;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(flags.TargetMotor), flags.TargetMotor, null);
                 }
+
+                PinValue topSensorSate;
+                PinValue bottomSensorState;
+
+                while (!flags.StopFlag)
+                {
+                    topSensorSate = PinManager.GetInstance().Controller.Read(topSensor);
+                    bottomSensorState = PinManager.GetInstance().Controller.Read(bottomSensor);
+
+                    //ToDo: Invert button activation to provide redundancy in the event of disconnected cable.
+                    if (topSensorSate == PinValue.Low || bottomSensorState == PinValue.Low || emergencyStop == PinValue.Low)
+                    {
+                        Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Motor {flags.TargetMotor} has reached an end-stop.");
+                        flags.CollisionFlag = true;
+                    }
+                    else
+                    {
+                        flags.CollisionFlag = false;
+                    }
+
+                }
+                Thread.Sleep(TimeSpan.FromSeconds(m_CollisionDetectionFrequency));
             }
         }
 
@@ -254,9 +250,75 @@ namespace Motor_Control
             MoveStepper(5, 0.1f, "B", true);
         }
 
-        public void JogMode()
+        public void JogMode(object threadParams)
         {
-            Console.WriteLine($"\r\n[{DateTime.Now}] Jog mode enabled. Control the arm via the buttons pan for CW and rotate for CCW.");
+            if (threadParams is MotorThreadStartObj tParams)
+            {
+                Console.WriteLine($"[{DateTime.Now}] <Motor Manager Jog Mode>: Motor {tParams.TargetMotor}: Control thread started.");
+                int encoderSIA;
+                int enncoderSIB;
+                int resetPin;
+
+                switch (tParams.TargetMotor)
+                {
+                    case MotorOptions.motorA:
+                        encoderSIA = PinManager.GetInstance().PanSIA;
+                        enncoderSIB = PinManager.GetInstance().PanSIB;
+                        resetPin = PinManager.GetInstance().PanReset;
+                        break;
+
+                    case MotorOptions.motorB:
+                        encoderSIA = PinManager.GetInstance().RotSIA;
+                        enncoderSIB = PinManager.GetInstance().RotSIB;
+                        resetPin = PinManager.GetInstance().RotReset;
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                float encoderCounter = 0;
+                float previousCounterState = encoderCounter;
+                PinValue encoderState;
+                PinValue encoderLastState;
+
+                while (!tParams.ShouldStop)
+                {
+                    encoderState = PinManager.GetInstance().Controller.Read(encoderSIA);
+                    encoderLastState = PinManager.GetInstance().Controller.Read(encoderSIA);
+
+                    if (PinManager.GetInstance().Controller.Read(resetPin) == PinValue.Low)
+                    {
+                        //ToDo return to home. 
+                        Thread.Sleep(TimeSpan.FromMilliseconds(45));
+                    }
+
+                    if (encoderState != encoderLastState)
+                    {
+                        if (PinManager.GetInstance().Controller.Read(enncoderSIB) != encoderState)
+                        {
+                            previousCounterState = encoderCounter;
+                            encoderCounter += 0.5f;
+                        }
+                        else
+                        {
+                            previousCounterState = encoderCounter;
+                            encoderCounter -= 0.5f;
+                        }
+
+                        if (Math.Abs(encoderCounter % 1) < 0.01)
+                        {
+                            int movementAngle = m_MinimumAngle * m_MovementSensitivity;
+                            float speed = m_MinimumSpeed * m_SpeedSensitivity;
+                            bool direction = previousCounterState < encoderCounter;
+                            MoveStepper(movementAngle, speed, tParams.TargetMotor, direction);
+                            Console.WriteLine($"[{DateTime.Now}] <Motor info>: Motor {tParams.TargetMotor}: \n Moving {movementAngle} with speed {speed} and direction {direction}");
+                            Thread.Sleep(TimeSpan.FromMilliseconds(35));
+                        }
+                    }
+                    encoderLastState = encoderState;
+                }
+            }
 
             m_UseJogMode = true;
 
@@ -308,7 +370,7 @@ namespace Motor_Control
                         flags.motor = "A";
                         Console.WriteLine($"\r\n[{DateTime.Now}] B motor selected to be jogged.");
                     }
-                    
+
                 }
 
                 bool flagToWatch = (flags.motor == "A") ? flags.A_CollisionFlag : flags.B_CollisionFlag;

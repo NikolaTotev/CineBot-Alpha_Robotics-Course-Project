@@ -44,6 +44,12 @@ namespace PrimaryClasses
 
         private readonly int m_EmergencyStop = 25;
 
+        public int JointADir => m_JointADir;
+        public int JointBDir => m_JointBDir;
+        public int JointAStep => m_JointAStep;
+        public int JointBStep => m_JointBStep;
+
+
         public int JointATop => m_JointATopStop;
         public int JointABottom => m_JointABottomStop;
 
@@ -119,7 +125,6 @@ namespace PrimaryClasses
             SetupPin(JogCW, PinMode.InputPullUp);
             SetupPin(JogCCW, PinMode.InputPullUp);
 
-            //Todo Remove these and  put them in motor control.
             SetupPin(m_JointADir, PinMode.Output);
             SetupPin(m_JointAStep, PinMode.Output);
 

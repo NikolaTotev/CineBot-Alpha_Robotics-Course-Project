@@ -17,8 +17,9 @@ namespace PrimaryClasses
         private bool m_StopClientHandling;
         //TODO Put this in a config file so it is available to the c++ program.
         private readonly string m_SocketPath = "/var/run/socketTest.sock";
-        private readonly string m_ConnectionMessage = "Hello from the other side! I will be your server today.";
-        private readonly string m_ConfirmationMsg = "Hello from the other side! I will be your server today.";
+        private readonly string m_ConnectionMessage = "Client V0.1";
+        private readonly string m_ConfirmationMsg = "Server V0.1";
+
         public OpenCVManager()
         {
             

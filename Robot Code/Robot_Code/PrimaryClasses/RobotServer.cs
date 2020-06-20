@@ -92,8 +92,17 @@ namespace PrimaryClasses
                         ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Switching listener thread name to control thread");
                         listener.Stop();
                         PinManager.GetInstance().ClientConnected();
-                        //ToDo Make ClientHanlder return some value to indicate if listening for next connection should continue.
-                        ClientHandler();
+                        
+                        int handlerResult = ClientHandler();
+                        if (handlerResult == 0)
+                        {
+                            m_StopFlag = true;
+                        }
+
+                        if (handlerResult == 1)
+                        {
+                            m_StopFlag = false;
+                        }
                     }
                     else
                     {
@@ -115,7 +124,7 @@ namespace PrimaryClasses
             }
         }
 
-        public void ClientHandler()
+        public int  ClientHandler()
         {
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Starting client handler. ");
             NetworkStream stream = new NetworkStream(m_ControlClient);
@@ -180,11 +189,11 @@ namespace PrimaryClasses
                     ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Client has disconnected. Terminating handling.");
                     ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Returning to listening mode.");
                     m_ControlClient.Disconnect(true);
-                    //TODO This eventually results in unwanted reccursion
-                    AwaitConnection(m_localEndPoint);
+                    return 1;
                 }
             }
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Received stop instruction. Stopping client handling.");
+            return 0;
         }
 
         public bool IsSocketConnected(Socket socketToCheck)
