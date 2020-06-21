@@ -25,7 +25,6 @@ namespace PrimaryClasses
             
         }
 
-
         bool StartOpenCVManager()
         {
             if (m_ComsManagementThread != null)
@@ -173,7 +172,7 @@ namespace PrimaryClasses
                         }
                         else
                         {
-                            //ToDo Call for stepperMotor move function.
+                            Console.WriteLine($"Numbers from c++ program are: {Encoding.ASCII.GetString(response)}");
                         }
                     }
                     Thread.Sleep(TimeSpan.FromMilliseconds(loopSpeed));

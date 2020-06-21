@@ -83,19 +83,14 @@ namespace General_Testing
         static void TestButtons(int buttonNumber, int mode)
         {
             
-            GpioController controller = new GpioController(PinNumberingScheme.Logical);
+            GpioController controller = new GpioController();
             Console.WriteLine("Starting button test");
 
-            if (mode == 1)
-            {
-                controller.OpenPin(buttonNumber, PinMode.InputPullUp);
-            }
-            
-            if (mode == 2)
-            {
-                controller.OpenPin(buttonNumber, PinMode.InputPullDown);
-            }
+            controller.OpenPin(buttonNumber, PinMode.Output);
+            controller.Write(buttonNumber, PinValue.High);
+            Thread.Sleep(TimeSpan.FromSeconds(20));
 
+            return;
             while (true)
             {
                 if (controller.Read(buttonNumber) == PinValue.Low)
