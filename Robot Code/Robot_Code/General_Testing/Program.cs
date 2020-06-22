@@ -86,11 +86,8 @@ namespace General_Testing
             GpioController controller = new GpioController();
             Console.WriteLine("Starting button test");
 
-            controller.OpenPin(buttonNumber, PinMode.Output);
-            controller.Write(buttonNumber, PinValue.High);
-            Thread.Sleep(TimeSpan.FromSeconds(20));
+            controller.OpenPin(buttonNumber, PinMode.InputPullUp);
 
-            return;
             while (true)
             {
                 if (controller.Read(buttonNumber) == PinValue.Low)
@@ -99,8 +96,6 @@ namespace General_Testing
                     Thread.Sleep(TimeSpan.FromSeconds(1));
                 }
             }
-
-            Console.WriteLine("Button test complete");
         }
 
         static void TestEncoders()
