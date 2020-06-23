@@ -15,11 +15,13 @@ namespace WindowsClientGUI
         CL_RETRY,
         CL_CONNECTED,
         CL_SENDCMD,
+        CL_CMDCOMPLETE,
         CL_WAITING,
         CL_DISCONNECTED,
         CL_CONNECTIONABORT,
         CL_ERROR,
-        CL_SVRHANDLERR
+        CL_SVRHANDLERR,
+
     }
 
     public enum AvailableCommands
@@ -123,7 +125,6 @@ namespace WindowsClientGUI
 
             try
             {
-
                 while (!m_StopFlag || m_Server.Connected)
                 {
 
@@ -131,9 +132,9 @@ namespace WindowsClientGUI
                     {
                         InputUtil config = new InputUtil();
                         RequestInput?.Invoke(config);
-                        ClientNotification?.Invoke($"[{DateTime.Now}] DEBUG >> Config object value is {config.Debug}");
+                        ClientNotification?.Invoke($"[{DateTime.Now}] DEBUG >> Config object value is {config.Command}");
 
-                        m_Writer.WriteLine(config.Debug);
+                        m_Writer.WriteLine(TranslateOption(config.Command));
                         m_Writer.Flush();
                         responseReceived = false;
                     }
@@ -170,6 +171,31 @@ namespace WindowsClientGUI
                 StatusUpdate?.Invoke(StatusCodes.CL_SVRHANDLERR);
             }
 
+        }
+
+        private string TranslateOption(AvailableCommands command)
+        {
+            switch (command)
+            {
+                case AvailableCommands.NoOp:
+                    return "NOOP";
+
+                case AvailableCommands.GimbalJog:
+                    return "GJ";
+
+                case AvailableCommands.StepperJog:
+                    return "SJ";
+
+                case AvailableCommands.ObjTracking:
+                    return "OBJT";
+
+                case AvailableCommands.PathFollow:
+                    return "PF";
+                case AvailableCommands.TestMode:
+                    return "TST";
+                default:
+                    return "NOOP";
+            }
         }
 
 

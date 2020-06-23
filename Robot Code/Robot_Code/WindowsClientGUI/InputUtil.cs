@@ -8,11 +8,11 @@ namespace WindowsClientGUI
 {
     public class InputUtil
     {
-        public AvailableCommands Debug;
+        public AvailableCommands Command;
 
         public InputUtil()
         {
-            Debug = AvailableCommands.NoOp;
+            Command = AvailableCommands.NoOp;
         }
     }
 }

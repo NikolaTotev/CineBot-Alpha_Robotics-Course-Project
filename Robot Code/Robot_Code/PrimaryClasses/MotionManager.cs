@@ -11,7 +11,9 @@ namespace PrimaryClasses
     {
         StepperJog,
         GimbalJog,
-        PathFollow
+        ObjectTrack,
+        PathFollow,
+        TestMode
     };
 
     public enum StepperMotorOptions
@@ -25,6 +27,11 @@ namespace PrimaryClasses
         pan,
         rotate,
         tilt
+    }
+
+    public class TestResults
+    {
+
     }
 
     public class MotorThreadStartObj
@@ -57,22 +64,26 @@ namespace PrimaryClasses
             switch (m_CurrentMode)
             {
                 case MotionModes.StepperJog:
-                    Thread jogThread = new Thread(StepperJog);
-
+                    StepperJog();
                     break;
                 case MotionModes.GimbalJog:
+                    GimbalJog();
                     break;
                 case MotionModes.PathFollow:
+                    break;
+                case MotionModes.ObjectTrack:
+                    ObjectTrack();
+                    break;
+                case MotionModes.TestMode:
+                    TestMode();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        public void StepperJog(object returnReference)
+        public int StepperJog()
         {
-            if (returnReference is int retValue)
-            {
                 MotorManager currentManager = new MotorManager();
                 Thread motorAThread = new Thread(currentManager.JogMode);
                 Thread motorBThread = new Thread(currentManager.JogMode);
@@ -82,17 +93,30 @@ namespace PrimaryClasses
 
                 motorAThread.Start(mtrAParams);
                 motorBThread.Start(mtrBParams);
-            }
-            else
-            {
-                Console.WriteLine($"\r\n[{DateTime.Now}] <Motion Manager> Given parameter is not integer. \n" + 
-                                  $" Aborting Jog Mode as there is no way to return execution status.");
-            }
+
+                return 0;
         }
 
         public int GimbalJog()
         {
             return 0; 
         }
+
+        public int PathFollow(string nCodeFile)
+        {
+            return 0;
+        }
+
+        public int ObjectTrack()
+        {
+            return 0;
+        }
+
+        public TestResults TestMode()
+        {
+            TestResults results = new TestResults();
+            return results;
+        }
     }
+
 }

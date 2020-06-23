@@ -26,7 +26,7 @@ namespace PrimaryClasses
         private GpioController controller;
         public delegate void Messenger(string message);
         public event Messenger ServerNotification;
-        
+
         public RobotServer()
         {
             ServerNotification?.Invoke($"[{DateTime.Now}]: Server version {m_ServerVersion} created. Preparing to start.");
@@ -92,7 +92,7 @@ namespace PrimaryClasses
                         ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Switching listener thread name to control thread");
                         listener.Stop();
                         PinManager.GetInstance().ClientConnected();
-                        
+
                         int handlerResult = ClientHandler();
                         if (handlerResult == 0)
                         {
@@ -124,14 +124,14 @@ namespace PrimaryClasses
             }
         }
 
-        public int  ClientHandler()
+        public int ClientHandler()
         {
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Starting client handler. ");
             NetworkStream stream = new NetworkStream(m_ControlClient);
             StreamWriter writer = new StreamWriter(stream, Encoding.ASCII);
             StreamReader reader = new StreamReader(stream, Encoding.ASCII);
             writer.AutoFlush = true;
-            bool initialResponseReceived = false; 
+            bool initialResponseReceived = false;
 
             string initialMessage = $"INITCONF Hello client! I'm server version {m_ServerVersion}.";
             writer.WriteLine(initialMessage);
@@ -157,9 +157,9 @@ namespace PrimaryClasses
                             }
                             else
                             {
-                               // ServerNotification?.Invoke(
-                                 //   $"\r\n[{DateTime.Now}] Control Thread: Control statement is: \n {clientInstructions} ");
-                               // ServerNotification?.Invoke(
+                                // ServerNotification?.Invoke(
+                                //   $"\r\n[{DateTime.Now}] Control Thread: Control statement is: \n {clientInstructions} ");
+                                // ServerNotification?.Invoke(
                                 //    $"\r\n[{DateTime.Now}] Control Thread: Sending instructions to ExecutionHandler.");
                                 bool result = ExecutionHandler(clientInstructions);
                                 string textResult = result ? "success" : "failure";
@@ -167,12 +167,12 @@ namespace PrimaryClasses
                                 writer.WriteLine(responseMessage);
                                 writer.Flush();
                             }
-                            
+
                         }
                         else
                         {
                             m_ControlClient.Poll(30, SelectMode.SelectRead);
-                          //  ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Awaiting instructions... ");
+                            //  ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Awaiting instructions... ");
                             Thread.Sleep(TimeSpan.FromSeconds(0.01));
                         }
 
@@ -205,17 +205,37 @@ namespace PrimaryClasses
 
         public bool ExecutionHandler(string executionCode)
         {
-            if (executionCode == "J")
+            MotionManager currentManager;
+            switch (executionCode)
             {
-                MotorManager.GetInstance().JogMode();
+                case "NOOP":
+                    break;
+
+                case "GJ":
+                    currentManager= new MotionManager(MotionModes.GimbalJog);
+                    break;
+
+                case "SJ":
+                    currentManager = new MotionManager(MotionModes.StepperJog);
+                    break;
+
+                case "OBJT":
+                    currentManager = new MotionManager(MotionModes.ObjectTrack);
+                    break;
+
+                case "PF":
+                    currentManager = new MotionManager(MotionModes.PathFollow);
+                    break;
+
+                case "TST":
+                    currentManager = new MotionManager(MotionModes.TestMode);
+                    break;
+
+                default:
+                    ServerNotification?.Invoke($"\r\n[{DateTime.Now}] <ERROR> Wrong command passed to server. Unable to execute.");
+                    break;
+
             }
-
-            if (executionCode == "GJ")
-            {
-                MotorManager.GetInstance().GimbalJog();
-            }
-
-
             return true;
         }
 

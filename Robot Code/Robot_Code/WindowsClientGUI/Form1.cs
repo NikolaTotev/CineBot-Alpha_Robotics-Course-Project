@@ -32,16 +32,16 @@ namespace WindowsClientGUI
             m_Client = new ClientLogic(m_ServerIP, m_PortToUse);
             m_Client.StatusUpdate += HandleClientEvents;
             m_currentCommand = new InputUtil();
-            m_currentCommand.Debug = AvailableCommands.NoOp;
+            m_currentCommand.Command = AvailableCommands.NoOp;
             m_Client.RequestInput += GetNextCommand;
         }
 
         private void GetNextCommand(InputUtil cmd)
         {
-            m_currentCommand.Debug = AvailableCommands.NoOp;
+            m_currentCommand.Command = AvailableCommands.NoOp;
             Lb_CommandSent.BackColor = Color.LightBlue;
 
-            while (m_currentCommand.Debug == AvailableCommands.NoOp)
+            while (m_currentCommand.Command == AvailableCommands.NoOp)
             {
                 if (Lb_AwaitingResponse.BackColor == Color.DodgerBlue)
                 {
@@ -53,7 +53,7 @@ namespace WindowsClientGUI
                 }
             }
 
-            cmd.Debug = m_currentCommand.Debug;
+            cmd.Command = m_currentCommand.Command;
         }
 
         private void HandleClientEvents(StatusCodes code)
@@ -117,27 +117,27 @@ namespace WindowsClientGUI
 
         private void Btn_GimbalJog_Click(object sender, EventArgs e)
         {
-            m_currentCommand.Debug = AvailableCommands.GimbalJog;
+            m_currentCommand.Command = AvailableCommands.GimbalJog;
         }
 
         private void Btn_StepperJog_Click(object sender, EventArgs e)
         {
-            m_currentCommand.Debug = AvailableCommands.StepperJog;
+            m_currentCommand.Command = AvailableCommands.StepperJog;
         }
 
         private void Btn_ObjTracking_Click(object sender, EventArgs e)
         {
-            m_currentCommand.Debug = AvailableCommands.ObjTracking;
+            m_currentCommand.Command = AvailableCommands.ObjTracking;
         }
 
         private void Btn_PathFollow_Click(object sender, EventArgs e)
         {
-            m_currentCommand.Debug = AvailableCommands.PathFollow;
+            m_currentCommand.Command = AvailableCommands.PathFollow;
         }
 
         private void Btn_TestMode_Click(object sender, EventArgs e)
         {
-            m_currentCommand.Debug = AvailableCommands.TestMode;
+            m_currentCommand.Command = AvailableCommands.TestMode;
         }
 
     }
