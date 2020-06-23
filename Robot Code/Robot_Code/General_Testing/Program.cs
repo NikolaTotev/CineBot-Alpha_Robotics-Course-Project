@@ -16,7 +16,7 @@ namespace General_Testing
 
         static void Main(string[] args)
         {
-            
+
             if (args.Length > 0)
             {
                 switch (args[0])
@@ -24,12 +24,17 @@ namespace General_Testing
                     case "Buttons":
                         TestButtons(int.Parse(args[1]), int.Parse(args[2]));
                         break;
+
                     case "Rotary":
                         TestEncoders();
                         break;
 
-                    case "StpPT":
-                       // TestStepper(true);
+                    case "MStp":
+                        Thread stepperA = new Thread(MultiThreadStepperTest);
+                        Thread stepperB = new Thread(MultiThreadStepperTest);
+
+                        stepperA.Start("A");
+                        stepperB.Start("B");
                         break;
 
                     case "Stp":
@@ -37,52 +42,15 @@ namespace General_Testing
                         break;
 
                     case "Serv":
-                      //  TestServos();
+                        TestServos();
                         break;
                 }
             }
-
-            //float stepCounter = 0;
-            //GpioController controller = new GpioController();
-            //Console.WriteLine("STARTING GENERAL TESTING");
-
-            //controller.OpenPin(18, PinMode.Output);
-
-            //while (true)
-            //{
-            //    controller.Write(18, PinValue.High);
-            //    Thread.Sleep(TimeSpan.FromSeconds(1));
-            //    controller.Write(18, PinValue.Low);
-            //    Thread.Sleep(TimeSpan.FromSeconds(1));
-            //}
-
-
-            //Thread.Sleep(TimeSpan.FromSeconds(20));
-
-            //for (int i = 0; i < 400; i++)
-            //{
-            //    Console.WriteLine($"Write {i}");
-            //    controller.Write(18, PinValue.High);
-            //    Thread.Sleep(TimeSpan.FromSeconds(0.01));
-            //    controller.Write(18, PinValue.Low);
-            //    Thread.Sleep(TimeSpan.FromSeconds(0.01));
-            //}
-
-            //controller.Write(24, PinValue.Low);
-            //for (int i = 0; i < 400; i++)
-            //{
-            //    Console.WriteLine($"Write {i}");
-            //    controller.Write(25, PinValue.High);
-            //    Thread.Sleep(TimeSpan.FromSeconds(0.01));
-            //    controller.Write(25, PinValue.Low);
-            //    Thread.Sleep(TimeSpan.FromSeconds(0.01));
-            //}
-
         }
 
         static void TestButtons(int buttonNumber, int mode)
         {
-            
+
             GpioController controller = new GpioController();
             Console.WriteLine("Starting button test");
 
@@ -110,31 +78,35 @@ namespace General_Testing
 
             int tiltSIA = 16;
             int tiltSIB = 20;
-            
+
 
 
             GpioController controller = new GpioController();
 
             controller.OpenPin(panSIA, PinMode.InputPullUp);
             controller.OpenPin(panSIB, PinMode.InputPullUp);
-            
+
             controller.OpenPin(rotSIA, PinMode.InputPullUp);
             controller.OpenPin(rotSIB, PinMode.InputPullUp);
-            
+
             controller.OpenPin(tiltSIA, PinMode.InputPullUp);
             controller.OpenPin(tiltSIB, PinMode.InputPullUp);
 
 
             controller.OpenPin(23, PinMode.Output);
             controller.OpenPin(24, PinMode.Output);
+            controller.OpenPin(5, PinMode.Output);
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 2; i++)
             {
                 controller.Write(23, PinValue.High);
                 controller.Write(24, PinValue.High);
-                Thread.Sleep(TimeSpan.FromSeconds(2));
+                controller.Write(5, PinValue.High);
+                Thread.Sleep(TimeSpan.FromSeconds(1));
                 controller.Write(23, PinValue.Low);
                 controller.Write(24, PinValue.Low);
+                controller.Write(5, PinValue.Low);
+                Thread.Sleep(TimeSpan.FromSeconds(1));
             }
 
             float counterA = 0;
@@ -231,12 +203,12 @@ namespace General_Testing
             int jointBStep = 26;
             int jointBDir = 19;
 
-            
-                controller.OpenPin(jointAStep, PinMode.Output);
-                controller.OpenPin(jointADir, PinMode.Output);
-                controller.OpenPin(jointBStep, PinMode.Output);
-                controller.OpenPin(jointBDir, PinMode.Output);
-            
+
+            controller.OpenPin(jointAStep, PinMode.Output);
+            controller.OpenPin(jointADir, PinMode.Output);
+            controller.OpenPin(jointBStep, PinMode.Output);
+            controller.OpenPin(jointBDir, PinMode.Output);
+
 
             Console.WriteLine("ENTERING PIN TEST MODE");
             Console.WriteLine("Testing motor A");
@@ -287,8 +259,142 @@ namespace General_Testing
             }
         }
 
+
+
+        static void MultiThreadStepperTest(object threadInput)
+        {
+
+            if (threadInput is string motor)
+            {
+                Console.WriteLine("Starting stepper motor test.");
+
+                GpioController controller = new GpioController();
+
+                if (motor == "A")
+                {
+                    int jointAStep = 13;
+                    int jointADir = 6;
+                    controller.OpenPin(jointAStep, PinMode.Output);
+                    controller.OpenPin(jointADir, PinMode.Output);
+
+                    Console.WriteLine("ENTERING PIN TEST MODE");
+                    Console.WriteLine("Testing motor A");
+
+                    controller.Write(jointADir, PinValue.Low);
+                    for (int i = 0; i < 100; i++)
+                    {
+                        Console.WriteLine($"Write to A {i}");
+                        controller.Write(jointAStep, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.01));
+                        controller.Write(jointAStep, PinValue.Low);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.01));
+                    }
+
+                    controller.Write(jointADir, PinValue.High);
+                    for (int i = 0; i < 100; i++)
+                    {
+                        Console.WriteLine($"Write to A {i}");
+                        controller.Write(jointAStep, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.01));
+                        controller.Write(jointAStep, PinValue.Low);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.01));
+                    }
+
+                    Console.WriteLine("Thread for stepper A is complete.");
+                }
+
+                if (motor == "B")
+                {
+                    int jointBStep = 26;
+                    int jointBDir = 19;
+
+                    controller.OpenPin(jointBStep, PinMode.Output);
+                    controller.OpenPin(jointBDir, PinMode.Output);
+
+                    Console.WriteLine("Testing motor B");
+
+                    controller.Write(jointBDir, PinValue.Low);
+                    for (int i = 0; i < 100; i++)
+                    {
+                        Console.WriteLine($"Write to B {i}");
+                        controller.Write(jointBStep, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.01));
+                        controller.Write(jointBStep, PinValue.Low);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.01));
+                    }
+
+                    controller.Write(jointBDir, PinValue.High);
+                    for (int i = 0; i < 100; i++)
+                    {
+                        Console.WriteLine($"Write to B {i}");
+                        controller.Write(jointBStep, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.01));
+                        controller.Write(jointBStep, PinValue.Low);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.01));
+                    }
+
+                    Console.WriteLine("Thread for stepper B is complete.");
+
+                }
+            }
+        }
+
+
         static void TestServos()
         {
+            Console.WriteLine($"Starting servo test.");
+            GpioController controller = new GpioController();
+
+            controller.OpenPin(23, PinMode.Output);
+            controller.OpenPin(24, PinMode.Output);
+            controller.OpenPin(5, PinMode.Output);
+
+            for (int i = 0; i < 2; i++)
+            {
+                controller.Write(23, PinValue.High);
+                controller.Write(24, PinValue.High);
+                controller.Write(5, PinValue.High);
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+                controller.Write(23, PinValue.Low);
+                controller.Write(24, PinValue.Low);
+                controller.Write(5, PinValue.Low);
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+            }
+
+            SerialPort serialPort = new SerialPort("/dev/ttyACM0", 9600); //Set the read/write timeouts    
+            serialPort.ReadTimeout = 1500;
+            serialPort.WriteTimeout = 1500;
+            serialPort.Open();
+
+            Console.WriteLine(serialPort.ReadLine());
+            serialPort.WriteLine("CLEAR");
+
+            for (int i = 0; i < 2; i++)
+            {
+                serialPort.WriteLine("P25");
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+                serialPort.WriteLine("P170");
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+                serialPort.WriteLine("P75");
+
+                Thread.Sleep(TimeSpan.FromSeconds(4));
+
+                serialPort.WriteLine("R25");
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+                serialPort.WriteLine("R180");
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+                serialPort.WriteLine("R75");
+
+                Thread.Sleep(TimeSpan.FromSeconds(4));
+
+                serialPort.WriteLine("T25");
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+                serialPort.WriteLine("T170");
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+                serialPort.WriteLine("T75");
+
+                Thread.Sleep(TimeSpan.FromSeconds(4));
+            }
         }
     }
 }

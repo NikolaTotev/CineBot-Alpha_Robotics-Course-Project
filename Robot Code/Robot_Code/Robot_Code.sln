@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrimaryClasses", "PrimaryCl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "General_Testing", "General_Testing\General_Testing.csproj", "{5439ECD7-7D2C-4A09-8BDC-147DFC0EDEBF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client_GUI", "Client_GUI\Client_GUI.csproj", "{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CameraStreamTest", "CameraStreamTest\CameraStreamTest.csproj", "{C706657E-C2A6-4F47-97BA-CFF0F440FDDE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamApp_Framework", "CamApp_Framework\CamApp_Framework.csproj", "{9981642A-D60B-4CB7-AEA9-0AE4CC236745}"
@@ -24,6 +22,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnixSocketTest", "UnixSocketTest\UnixSocketTest.csproj", "{EF68F8CF-D03D-41F7-A2D5-EB25F7B89393}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnixSocketTest_CPP", "UnixSocketTest_CPP\UnixSocketTest_CPP.vcxproj", "{3C2E82D5-2FF3-496F-A010-78020572415C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsClientGUI", "WindowsClientGUI\WindowsClientGUI.csproj", "{CA394EFD-AF73-4140-ADC0-56A44431F1CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,18 +95,6 @@ Global
 		{5439ECD7-7D2C-4A09-8BDC-147DFC0EDEBF}.Release|x64.Build.0 = Release|Any CPU
 		{5439ECD7-7D2C-4A09-8BDC-147DFC0EDEBF}.Release|x86.ActiveCfg = Release|Any CPU
 		{5439ECD7-7D2C-4A09-8BDC-147DFC0EDEBF}.Release|x86.Build.0 = Release|Any CPU
-		{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}.Debug|x64.Build.0 = Debug|Any CPU
-		{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}.Debug|x86.Build.0 = Debug|Any CPU
-		{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}.Release|x64.ActiveCfg = Release|Any CPU
-		{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}.Release|x64.Build.0 = Release|Any CPU
-		{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}.Release|x86.ActiveCfg = Release|Any CPU
-		{A2A3706F-7FB0-4ED3-B1C1-6A21CB9C83AA}.Release|x86.Build.0 = Release|Any CPU
 		{C706657E-C2A6-4F47-97BA-CFF0F440FDDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C706657E-C2A6-4F47-97BA-CFF0F440FDDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C706657E-C2A6-4F47-97BA-CFF0F440FDDE}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -163,6 +151,18 @@ Global
 		{3C2E82D5-2FF3-496F-A010-78020572415C}.Release|x64.Build.0 = Release|x64
 		{3C2E82D5-2FF3-496F-A010-78020572415C}.Release|x86.ActiveCfg = Release|Win32
 		{3C2E82D5-2FF3-496F-A010-78020572415C}.Release|x86.Build.0 = Release|Win32
+		{CA394EFD-AF73-4140-ADC0-56A44431F1CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA394EFD-AF73-4140-ADC0-56A44431F1CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA394EFD-AF73-4140-ADC0-56A44431F1CB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CA394EFD-AF73-4140-ADC0-56A44431F1CB}.Debug|x64.Build.0 = Debug|Any CPU
+		{CA394EFD-AF73-4140-ADC0-56A44431F1CB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CA394EFD-AF73-4140-ADC0-56A44431F1CB}.Debug|x86.Build.0 = Debug|Any CPU
+		{CA394EFD-AF73-4140-ADC0-56A44431F1CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA394EFD-AF73-4140-ADC0-56A44431F1CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA394EFD-AF73-4140-ADC0-56A44431F1CB}.Release|x64.ActiveCfg = Release|Any CPU
+		{CA394EFD-AF73-4140-ADC0-56A44431F1CB}.Release|x64.Build.0 = Release|Any CPU
+		{CA394EFD-AF73-4140-ADC0-56A44431F1CB}.Release|x86.ActiveCfg = Release|Any CPU
+		{CA394EFD-AF73-4140-ADC0-56A44431F1CB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

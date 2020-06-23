@@ -205,11 +205,6 @@ namespace PrimaryClasses
 
         public bool ExecutionHandler(string executionCode)
         {
-            if (executionCode == "B")
-            {
-                MotorManager.GetInstance().MoveStepper(100, 0.1f, "A", true);
-            }
-
             if (executionCode == "J")
             {
                 MotorManager.GetInstance().JogMode();
