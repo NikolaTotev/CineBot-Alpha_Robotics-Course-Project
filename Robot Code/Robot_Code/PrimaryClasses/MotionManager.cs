@@ -39,7 +39,6 @@ namespace PrimaryClasses
         public int CompleteStatus { get; set; }
         public StepperMotorOptions TargetStepperMotor { get; set; }
         public bool ShouldStop { get; set; }
-
         public MotorThreadStartObj(int initialStatus, StepperMotorOptions targetStepperMotor)
         {
             CompleteStatus = initialStatus;
@@ -60,7 +59,10 @@ namespace PrimaryClasses
         public MotionManager(MotionModes mode)
         {
             m_CurrentMode = mode;
+        }
 
+        public void ExecuteCommand()
+        {
             switch (m_CurrentMode)
             {
                 case MotionModes.StepperJog:
@@ -81,6 +83,7 @@ namespace PrimaryClasses
                     throw new ArgumentOutOfRangeException();
             }
         }
+
 
         public int StepperJog()
         {

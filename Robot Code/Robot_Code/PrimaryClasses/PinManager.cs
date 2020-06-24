@@ -16,6 +16,7 @@ namespace PrimaryClasses
 
         private readonly int m_StatusPin = 23;
         private readonly int m_ErrorLight = 24;
+        private readonly int m_NotificationLight = 5;
 
         private readonly int m_JointADir = 6;
         private readonly int m_JointAStep = 13;
@@ -96,6 +97,7 @@ namespace PrimaryClasses
             m_Controller = new GpioController(numberingScheme: PinNumberingScheme.Logical);
             SetupPin(m_StatusPin, PinMode.Output);
             SetupPin(m_ErrorLight, PinMode.Output);
+            SetupPin(m_NotificationLight, PinMode.Output);
 
             SetupPin(m_JointATopStop, PinMode.InputPullUp);
             SetupPin(m_JointABottomStop, PinMode.InputPullUp);

@@ -213,22 +213,27 @@ namespace PrimaryClasses
 
                 case "GJ":
                     currentManager= new MotionManager(MotionModes.GimbalJog);
+                    currentManager.ExecuteCommand();
                     break;
 
                 case "SJ":
                     currentManager = new MotionManager(MotionModes.StepperJog);
+                    currentManager.ExecuteCommand();
                     break;
 
                 case "OBJT":
                     currentManager = new MotionManager(MotionModes.ObjectTrack);
+                    currentManager.ExecuteCommand();
                     break;
 
                 case "PF":
                     currentManager = new MotionManager(MotionModes.PathFollow);
+                    currentManager.ExecuteCommand();
                     break;
 
                 case "TST":
                     currentManager = new MotionManager(MotionModes.TestMode);
+                    currentManager.ExecuteCommand();
                     break;
 
                 default:
@@ -244,7 +249,7 @@ namespace PrimaryClasses
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Calling stop command. ");
             m_StopFlag = true;
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Moving to home position.");
-            MotorManager.GetInstance().GoToHome();
+            //MotorManager.GetInstance().GoToHome();
         }
 
         public void RestartServer()

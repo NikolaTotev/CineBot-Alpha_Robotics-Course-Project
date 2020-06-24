@@ -17,7 +17,7 @@ namespace PrimaryClasses
         private bool m_StopFlag;
         private RobotManager()
         {
-            MotorManager.GetInstance().Initialize();
+            //MotorManager.GetInstance().Initialize();
             m_PinManager= PinManager.GetInstance();
             Console.WriteLine("Starting server.");
             m_Server = new RobotServer();

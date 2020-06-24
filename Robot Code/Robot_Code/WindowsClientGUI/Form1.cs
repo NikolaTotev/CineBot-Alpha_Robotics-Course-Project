@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -20,7 +21,7 @@ namespace WindowsClientGUI
         private readonly string m_ServerIP = "192.168.12.133";
         private readonly int m_PortToUse = 4200;
         private InputUtil m_currentCommand;
-
+        private Thread m_ClientThread;
         public Form1()
         {
             InitializeComponent();
@@ -112,7 +113,8 @@ namespace WindowsClientGUI
 
         private void Btn_Connect_Click(object sender, EventArgs e)
         {
-            m_Client.Start();
+            m_ClientThread = new Thread(m_Client.Start);
+            m_ClientThread.Start();
         }
 
         private void Btn_GimbalJog_Click(object sender, EventArgs e)

@@ -7,6 +7,7 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
 using PrimaryClasses;
+using Swan;
 using Unosquare.RaspberryIO;
 using Unosquare.RaspberryIO.Abstractions;
 using UtilityClasses;
@@ -22,7 +23,7 @@ namespace Motor_Control
         private readonly int m_StepsPerRevolution = 200;
         private readonly int m_StepMultiplier = 1;
         private readonly int m_GearRatio = 7;
-        private readonly int m_MinimumAngle = 5;
+        private readonly int m_MinimumAngle = 2;
         private readonly float m_MinimumSpeed = 0.01f;
         private readonly float m_SpeedSensitivity = 1;
         private readonly float m_CollisionDetectionFrequency = 0.01f;
@@ -61,14 +62,15 @@ namespace Motor_Control
         {
 
             int stepsForCarrierRevolution = m_StepsPerRevolution * m_StepMultiplier * m_GearRatio;
-            int stepsForInputAngle = stepsForCarrierRevolution / inputAngle;
-
+            int partOfCircle = 360 / inputAngle;
+            int stepsForInputAngle = stepsForCarrierRevolution / partOfCircle;
             return stepsForInputAngle;
         }
 
-        public void MoveStepper(int angle, float speed, StepperMotorOptions stepperMotor, bool direction, bool useDebugMessages)
+        public void MoveStepper(int angle, float speed, StepperMotorOptions stepperMotor, bool direction, bool useDebugMessages, FlagArgs flags)
         {
             int numberOfSteps = ConvertAngleToSteps(angle);
+            Console.WriteLine($"Number of steps = {numberOfSteps}");
             int stepPin = 0;
             int dirPin = 0;
 
@@ -91,12 +93,7 @@ namespace Motor_Control
                 Console.WriteLine($"[{DateTime.Now}] <ERROR>: Failed to get stepperMotor control pins. Aborting stepperMotor {stepperMotor} movement.");
                 return;
             }
-
-
-            FlagArgs flags = new FlagArgs(false, false, stepperMotor);
-            Thread collisionDetectorThread = new Thread(CollisionDetection);
-            collisionDetectorThread.Start(flags);
-
+            
             int counter = 0;
 
             if (!direction)
@@ -108,12 +105,11 @@ namespace Motor_Control
                 PinManager.GetInstance().Controller.Write(dirPin, PinValue.High);
             }
 
-            while (counter < numberOfSteps && !flags.CollisionFlag)
+            while (counter < numberOfSteps)
             {
                 if (useDebugMessages)
                 {
                     Console.WriteLine($"Moving {stepperMotor}, currently on step {counter}");
-                    counter++;
                 }
 
                 if (flags.EmergencyStopActive)
@@ -122,34 +118,15 @@ namespace Motor_Control
                     flags.StopFlag = true;
                     break;
                 }
-                PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
-                Thread.Sleep(TimeSpan.FromSeconds(speed));
-                PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
-                Thread.Sleep(TimeSpan.FromSeconds(speed));
-            }
 
-            flags.StopFlag = true;
-
-            try
-            {
-                if (collisionDetectorThread.IsAlive)
+                if (!flags.CollisionFlag)
                 {
-                    Console.WriteLine($"[{DateTime.Now}] <Movement Warning>: Collision detector thread is still running. Attempting to join it.");
-                    bool collisionThreadStopped = collisionDetectorThread.Join(1500);
-                    if (!collisionThreadStopped)
-                    {
-                        Console.WriteLine($"[{DateTime.Now}] <COLLISION ERROR>: Failed to join collision detector thread gracefully. Aborting thread.");
-                        collisionDetectorThread.Abort();
-                    }
-                    else
-                    {
-                        Console.WriteLine($"[{DateTime.Now}] <Movement Info>: Collision detector thread has been successfully joined.");
-                    }
+                    PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
+                    Thread.Sleep(TimeSpan.FromSeconds(speed));
+                    PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
+                    Thread.Sleep(TimeSpan.FromSeconds(speed));
+                    counter++;
                 }
-            }
-            catch (ThreadAbortException e)
-            {
-                Console.WriteLine($"[{DateTime.Now}] <EXCEPTION>: An exception with code {e.HResult} occured during thread abortion.");
             }
         }
 
@@ -361,6 +338,10 @@ namespace Motor_Control
                 float previousCounterState = encoderCounter;
                 PinValue encoderState;
                 PinValue encoderLastState;
+                encoderLastState = PinManager.GetInstance().Controller.Read(encoderSIA);
+                FlagArgs flags = new FlagArgs(false, false, tParams.TargetStepperMotor);
+                Thread collisionDetectorThread = new Thread(CollisionDetection);
+                collisionDetectorThread.Start(flags);
 
                 while (!tParams.ShouldStop)
                 {
@@ -370,17 +351,18 @@ namespace Motor_Control
                         Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
                         break;
                     }
+
                     encoderState = PinManager.GetInstance().Controller.Read(encoderSIA);
-                    encoderLastState = PinManager.GetInstance().Controller.Read(encoderSIA);
 
                     if (PinManager.GetInstance().Controller.Read(resetPin) == PinValue.Low)
                     {
-                        //ToDo return to home. 
+                        Console.WriteLine($"Go to home on motor {tParams.TargetStepperMotor} pressed.");
                         Thread.Sleep(TimeSpan.FromMilliseconds(45));
                     }
 
                     if (encoderState != encoderLastState)
                     {
+                        Console.WriteLine($"Encoder state for {tParams.TargetStepperMotor} has changed.");
                         if (PinManager.GetInstance().Controller.Read(enncoderSIB) != encoderState)
                         {
                             previousCounterState = encoderCounter;
@@ -391,18 +373,44 @@ namespace Motor_Control
                             previousCounterState = encoderCounter;
                             encoderCounter -= 0.5f;
                         }
-
                         if (Math.Abs(encoderCounter % 1) < 0.01)
                         {
                             int movementAngle = m_MinimumAngle * m_MovementSensitivity;
                             float speed = m_MinimumSpeed * m_SpeedSensitivity;
                             bool direction = previousCounterState < encoderCounter;
-                            MoveStepper(movementAngle, speed, tParams.TargetStepperMotor, direction, false);
-                            Console.WriteLine($"[{DateTime.Now}] <Motor info>: Motor {tParams.TargetStepperMotor}: \n Moving {movementAngle} with speed {speed} and direction {direction}");
+                            MoveStepper(movementAngle, speed, tParams.TargetStepperMotor, direction, false, flags);
+                            Console.WriteLine($"Previous counter: {previousCounterState}, Current counter: {encoderCounter}");
+                            //Console.WriteLine($"[{DateTime.Now}] <Motor info>: Motor {tParams.TargetStepperMotor}: \n Moving {movementAngle} with speed {speed} and direction {direction}");
                             Thread.Sleep(TimeSpan.FromMilliseconds(35));
                         }
+                       
+
                     }
                     encoderLastState = encoderState;
+                }
+
+                flags.StopFlag = true;
+
+                try
+                {
+                    if (collisionDetectorThread.IsAlive)
+                    {
+                        Console.WriteLine($"[{DateTime.Now}] <Movement Warning>: Collision detector thread is still running. Attempting to join it.");
+                        bool collisionThreadStopped = collisionDetectorThread.Join(1500);
+                        if (!collisionThreadStopped)
+                        {
+                            Console.WriteLine($"[{DateTime.Now}] <COLLISION ERROR>: Failed to join collision detector thread gracefully. Aborting thread.");
+                            collisionDetectorThread.Abort();
+                        }
+                        else
+                        {
+                            Console.WriteLine($"[{DateTime.Now}] <Movement Info>: Collision detector thread has been successfully joined.");
+                        }
+                    }
+                }
+                catch (ThreadAbortException e)
+                {
+                    Console.WriteLine($"[{DateTime.Now}] <EXCEPTION>: An exception with code {e.HResult} occured during thread abortion.");
                 }
             }
         }

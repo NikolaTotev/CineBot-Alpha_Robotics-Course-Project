@@ -14,9 +14,12 @@ namespace General_Testing
         //static SerialPort serialPort;
         //static int counter = 0;
 
-        static void Main(string[] args)
+        static void Main()
         {
 
+            PolyMotorControl();
+            return;
+            string[] args;
             if (args.Length > 0)
             {
                 switch (args[0])
@@ -192,6 +195,88 @@ namespace General_Testing
                 lastStateB = stateB;
                 lastStateC = stateC;
             }
+        }
+
+        private static float A0;
+        private static float A1;
+        private static float A2;
+        private static float A3;
+        private static float A4;
+        private static float A5;
+        private static float startAngle = 0;
+        private static float finalAngle = 45;
+        private static float startVelocity = 0;
+        private static float finalVelocity = 0;
+        private static float startAcceleration = 0;
+        private static float finalAcceleration = 0;
+
+        private static readonly int m_StepsPerRevolution = 200;
+        private static readonly int m_StepMultiplier = 1;
+        private static readonly int m_GearRatio = 7;
+        private static readonly int m_MinimumAngle = 2;
+        private static readonly float m_MinimumSpeed = 0.01f;
+        private static readonly float m_SpeedSensitivity = 1;
+        private static readonly float m_CollisionDetectionFrequency = 0.01f;
+        private int m_MovementSensitivity = 1;
+        static void CalcCoefs(float t)
+        {
+            A0 = startAngle;
+            A1 = startVelocity;
+            A2 = startAcceleration / 2f;
+            A3 = -1 * (20 * startAngle - 20 * finalAngle + 12 * t * startVelocity + 8 * t * finalVelocity + 3 * startAcceleration * t * t - finalAcceleration * t * t) / (2 * t * t * t);
+            A4 = (30f * startAngle - 30f * finalAngle + 16f * t * startVelocity + 14f * t * finalVelocity + 3f * startAcceleration * t * t - 2f * finalAcceleration * t * t) / (2f * t * t * t * t);
+            A5 = -1f * (12f * startAngle - 12f * finalAngle + 6f * t * startVelocity + 6f * t * finalVelocity + startAcceleration * t * t - finalAcceleration * t * t) / (2f * t * t * t * t * t);
+            if (float.IsNaN(A0))//make sure it is not undefined
+            {
+                A0 = 0;
+            }
+            if (float.IsNaN(A1))//make sure it is not undefined
+            {
+                A1 = 0;
+            }
+            if (float.IsNaN(A2))//make sure it is not undefined
+            {
+                A2 = 0;
+            }
+            if (float.IsNaN(A3))//make sure it is not undefined
+            {
+                A3 = 0;
+            }
+            if (float.IsNaN(A4))//make sure it is not undefined
+            {
+                A4 = 0;
+            }
+            if (float.IsNaN(A5))//make sure it is not undefined
+            {
+                A5 = 0;
+            }
+        }
+
+        static float GetSpeed(float t)
+        {
+            return A5 * 5 * (float)Math.Pow(t, 4) + A4 * 4 * (float)Math.Pow(t, 3) + A3 * 3 * (float)Math.Pow(t, 2) + A2 * 2 * (float)Math.Pow(t, 1) + A1;
+
+        }
+        public static int ConvertAngleToSteps(int inputAngle)
+        {
+
+            int stepsForCarrierRevolution = m_StepsPerRevolution * m_StepMultiplier * m_GearRatio;
+            int partOfCircle = 360 / inputAngle;
+            int stepsForInputAngle = stepsForCarrierRevolution / partOfCircle;
+            return stepsForInputAngle;
+        }
+        static void PolyMotorControl()
+        {
+            CalcCoefs(3);
+            float numberOfMoves = ConvertAngleToSteps(45);
+            float eti = 3 / numberOfMoves;
+
+            for (float i = 0; i <= eti; i += (eti / 200))
+            {
+                Console.WriteLine(GetSpeed(i));
+                Thread.Sleep(TimeSpan.FromSeconds(0.01));
+            }
+
         }
         static void TestStepper(bool pinTest)
         {
