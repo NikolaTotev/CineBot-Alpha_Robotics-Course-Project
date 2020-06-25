@@ -3,6 +3,7 @@ using System.Device.Gpio;
 using System.Device.Gpio.Drivers;
 using System.Device.Pwm;
 using System.Diagnostics.Tracing;
+using System.Dynamic;
 using System.IO.Ports;
 using System.Threading;
 using Iot.Device.ServoMotor;
@@ -14,12 +15,11 @@ namespace General_Testing
         //static SerialPort serialPort;
         //static int counter = 0;
 
-        static void Main()
+        static void Main(string[] args)
         {
-
-            PolyMotorControl();
-            return;
-            string[] args;
+            //PolyMotorControl();
+            //return;
+            //string[] args;
             if (args.Length > 0)
             {
                 switch (args[0])
@@ -46,6 +46,25 @@ namespace General_Testing
 
                     case "Serv":
                         TestServos();
+                        break;
+                    case "Poly":
+                        int counter = 0;
+                        while (counter < 100)
+                        {
+                            if (args.Length == 6)
+                            {
+                                bool useB;
+                                useB = args[5] != "0";
+                                PolyMotorControl(float.Parse(args[1]), float.Parse(args[2]), float.Parse(args[3]), float.Parse(args[4]));
+                            }
+                            else
+                            {
+                                PolyMotorControl();
+                            }
+
+                            counter++;
+                        }
+                       
                         break;
                 }
             }
@@ -204,7 +223,7 @@ namespace General_Testing
         private static float A4;
         private static float A5;
         private static float startAngle = 0;
-        private static float finalAngle = 45;
+        private static float m_FinalAngle = 60;
         private static float startVelocity = 0;
         private static float finalVelocity = 0;
         private static float startAcceleration = 0;
@@ -218,14 +237,17 @@ namespace General_Testing
         private static readonly float m_SpeedSensitivity = 1;
         private static readonly float m_CollisionDetectionFrequency = 0.01f;
         private int m_MovementSensitivity = 1;
+        private static float m_OverallTime = 5;
+        private static float m_MaxSpeed=0.003f;
+        private static float m_MinSpeed = 0.008f;
         static void CalcCoefs(float t)
         {
             A0 = startAngle;
             A1 = startVelocity;
             A2 = startAcceleration / 2f;
-            A3 = -1 * (20 * startAngle - 20 * finalAngle + 12 * t * startVelocity + 8 * t * finalVelocity + 3 * startAcceleration * t * t - finalAcceleration * t * t) / (2 * t * t * t);
-            A4 = (30f * startAngle - 30f * finalAngle + 16f * t * startVelocity + 14f * t * finalVelocity + 3f * startAcceleration * t * t - 2f * finalAcceleration * t * t) / (2f * t * t * t * t);
-            A5 = -1f * (12f * startAngle - 12f * finalAngle + 6f * t * startVelocity + 6f * t * finalVelocity + startAcceleration * t * t - finalAcceleration * t * t) / (2f * t * t * t * t * t);
+            A3 = -1 * (20 * startAngle - 20 * m_FinalAngle + 12 * t * startVelocity + 8 * t * finalVelocity + 3 * startAcceleration * t * t - finalAcceleration * t * t) / (2 * t * t * t);
+            A4 = (30f * startAngle - 30f * m_FinalAngle + 16f * t * startVelocity + 14f * t * finalVelocity + 3f * startAcceleration * t * t - 2f * finalAcceleration * t * t) / (2f * t * t * t * t);
+            A5 = -1f * (12f * startAngle - 12f * m_FinalAngle + 6f * t * startVelocity + 6f * t * finalVelocity + startAcceleration * t * t - finalAcceleration * t * t) / (2f * t * t * t * t * t);
             if (float.IsNaN(A0))//make sure it is not undefined
             {
                 A0 = 0;
@@ -257,26 +279,109 @@ namespace General_Testing
             return A5 * 5 * (float)Math.Pow(t, 4) + A4 * 4 * (float)Math.Pow(t, 3) + A3 * 3 * (float)Math.Pow(t, 2) + A2 * 2 * (float)Math.Pow(t, 1) + A1;
 
         }
-        public static int ConvertAngleToSteps(int inputAngle)
+        public static int ConvertAngleToSteps(int inputAngle )
         {
-
             int stepsForCarrierRevolution = m_StepsPerRevolution * m_StepMultiplier * m_GearRatio;
             int partOfCircle = 360 / inputAngle;
             int stepsForInputAngle = stepsForCarrierRevolution / partOfCircle;
             return stepsForInputAngle;
         }
-        static void PolyMotorControl()
-        {
-            CalcCoefs(3);
-            float numberOfMoves = ConvertAngleToSteps(45);
-            float eti = 3 / numberOfMoves;
 
-            for (float i = 0; i <= eti; i += (eti / 200))
+        private static float mapCoef;
+        static float mapValue(float input)
+        {
+            return mapCoef * input + m_MinSpeed;
+        }
+        static void PolyMotorControl(float maxSpeed = 0.003f, float minSpeed = 0.008f, float finalAngle=45f, float overAllTime = 5f, bool useB = false)
+        {
+            m_MaxSpeed = maxSpeed;
+            m_MinSpeed = minSpeed;
+            m_FinalAngle = finalAngle;
+            m_OverallTime = overAllTime;
+            GpioController controller = new GpioController();
+            int jointAStep = 13;
+            int jointADir = 6;
+            int jointBStep = 26;
+            int jointBDir = 19;
+
+
+            controller.OpenPin(jointAStep, PinMode.Output);
+            controller.OpenPin(jointADir, PinMode.Output);
+            controller.OpenPin(jointBStep, PinMode.Output);
+            controller.OpenPin(jointBDir, PinMode.Output);
+
+            CalcCoefs(m_OverallTime);
+            float numberOfSteps = ConvertAngleToSteps((int)finalAngle);
+            float eti = m_OverallTime / numberOfSteps;
+            float timeDivisionSize = 0.001f;
+            float numberOfTimeDivisions = m_OverallTime / timeDivisionSize;
+            float funcMaxSpeed = GetSpeed((numberOfTimeDivisions / 2) * timeDivisionSize);
+            mapCoef = (maxSpeed-minSpeed) / funcMaxSpeed;
+
+            int counter = 0;
+            controller.Write(jointADir, PinValue.Low);
+
+            for (float i = 0; i <= m_OverallTime; i += (eti))
             {
-                Console.WriteLine(GetSpeed(i));
-                Thread.Sleep(TimeSpan.FromSeconds(0.01));
+                float speed = mapValue(GetSpeed(i));
+                controller.Write(jointAStep, PinValue.High);
+                Thread.Sleep(TimeSpan.FromSeconds(speed));
+                controller.Write(jointAStep, PinValue.Low);
+                Thread.Sleep(TimeSpan.FromSeconds(speed));
+                // Console.WriteLine(mapValue(GetSpeed(i)));
+                counter++;
+            }
+            Console.WriteLine($"Counter value: {counter}, Needed Step Count {numberOfSteps}, etiValue {eti}");
+
+            controller.Write(jointADir, PinValue.High);
+
+            for (float i = 0; i <= m_OverallTime; i += (eti))
+            {
+                controller.Write(jointAStep, PinValue.High);
+                Thread.Sleep(TimeSpan.FromSeconds(mapValue(GetSpeed(i))));
+                controller.Write(jointAStep, PinValue.Low);
+                Thread.Sleep(TimeSpan.FromSeconds(mapValue(GetSpeed(i))));
+                // Console.WriteLine(mapValue(GetSpeed(i)));
+                counter++;
             }
 
+            Console.WriteLine($"Counter value: {counter}, Needed Step Count {numberOfSteps}, etiValue {eti}");
+
+            if (useB)
+            {
+                m_MinSpeed = 0.0098f;
+                mapCoef = (maxSpeed - minSpeed) / funcMaxSpeed;
+
+                controller.Write(jointBDir, PinValue.Low);
+
+
+                for (float i = 0; i <= m_OverallTime; i += (eti))
+                {
+                    float speed = mapValue(GetSpeed(i));
+                    controller.Write(jointBStep, PinValue.High);
+                    Thread.Sleep(TimeSpan.FromSeconds(speed));
+                    controller.Write(jointBStep, PinValue.Low);
+                    Thread.Sleep(TimeSpan.FromSeconds(speed));
+                    // Console.WriteLine(mapValue(GetSpeed(i)));
+                    counter++;
+                }
+                Console.WriteLine($"Counter value: {counter}, Needed Step Count {numberOfSteps}, etiValue {eti}");
+
+                controller.Write(jointBDir, PinValue.High);
+
+                for (float i = 0; i <= m_OverallTime; i += (eti))
+                {
+                    controller.Write(jointBStep, PinValue.High);
+                    Thread.Sleep(TimeSpan.FromSeconds(mapValue(GetSpeed(i))));
+                    controller.Write(jointBStep, PinValue.Low);
+                    Thread.Sleep(TimeSpan.FromSeconds(mapValue(GetSpeed(i))));
+                    // Console.WriteLine(mapValue(GetSpeed(i)));
+                    counter++;
+                }
+
+                Console.WriteLine($"Counter value: {counter}, Needed Step Count {numberOfSteps}, etiValue {eti}");
+            }
+        
         }
         static void TestStepper(bool pinTest)
         {
