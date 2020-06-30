@@ -8,6 +8,8 @@ namespace PrimaryClasses
     {
         public bool CollisionFlag { get; set; }
         public bool StopFlag { get; set; }
+        public bool topHit { get; set; }
+        public bool bottomHit { get; set; }
         public StepperMotorOptions TargetStepperMotor { get; set; }
         public bool EmergencyStopActive { get; set; }
 
@@ -17,6 +19,8 @@ namespace PrimaryClasses
            StopFlag = stpFlag;
            TargetStepperMotor = targetStepperMotor;
            EmergencyStopActive = false;
+           topHit = false;
+           bottomHit = false;
         }
     }
 }

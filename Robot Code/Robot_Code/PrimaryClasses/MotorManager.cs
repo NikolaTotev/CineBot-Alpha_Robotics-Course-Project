@@ -35,12 +35,6 @@ namespace Motor_Control
             get => m_UseJogMode;
             set => m_UseJogMode = value;
         }
-
-        //public static MotorManager GetInstance()
-        //{
-        //    return m_Instance ?? (m_Instance = new MotorManager());
-        //}
-
         public MotorManager()
         {
             Initialize();
@@ -119,7 +113,7 @@ namespace Motor_Control
                     break;
                 }
 
-                if (!flags.CollisionFlag)
+                if (!flags.CollisionFlag && CanMove(direction, flags))
                 {
                     PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
                     Thread.Sleep(TimeSpan.FromSeconds(speed));
@@ -130,6 +124,18 @@ namespace Motor_Control
             }
         }
 
+        //0 = CW, 1 = CCW
+        private bool CanMove(bool directionFlag, FlagArgs collisionInfo)
+        {
+            if (directionFlag)
+            {
+                return !collisionInfo.bottomHit;
+            }
+            else
+            {
+                return !collisionInfo.topHit;
+            }
+        }
         private void CollisionDetection(object boolObject)
         {
             Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Collision detection enabled.");
@@ -172,10 +178,21 @@ namespace Motor_Control
                         }
                         Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Motor {flags.TargetStepperMotor} has reached an end-stop or the emergency switch as been activated..");
                         flags.CollisionFlag = true;
+                        if (topSensorSate == PinValue.Low)
+                        {
+                            flags.topHit = true;
+                        }
+
+                        if (bottomSensorState == PinValue.Low)
+                        {
+                            flags.bottomHit = true;
+                        }
                     }
                     else
                     {
                         flags.CollisionFlag = false;
+                        flags.topHit = false;
+                        flags.bottomHit = false;
                     }
                     Thread.Sleep(TimeSpan.FromSeconds(m_CollisionDetectionFrequency));
                 }
@@ -604,6 +621,7 @@ namespace Motor_Control
         {
 
         }
+
         public void SetupMotors()
         {
             StringBuilder sb = new StringBuilder();
