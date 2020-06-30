@@ -615,7 +615,10 @@ namespace Motor_Control
             serialPort.Close();
         }
 
+        public void RecordMotion()
+        {
 
+        }
 
         public void Dance()
         {
