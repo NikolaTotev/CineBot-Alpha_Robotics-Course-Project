@@ -14,41 +14,41 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 -  [Introduction](#Introduction)
 	* [Scope](#Scope)
 	* [Key features](#Key-features)
-	* Initial design decisions 
--  Hardware
-	* Design constraints
-		* Actuators
-		* Method of manufacturing 
-			* Manufacturing capabilities
-			* Material choice
-		* Assembly methods
-		* Other resource constraints regarding hardware development
+	* [Initial design decisions](#Initial-design-decisions)
+-  [Hardware](#Hardware)
+	* [Design constraints](#Design-constraints)
+		* [Actuators](#Actuators)
+		* [Method of manufacturing](#Method-of-manufacturing)
+			* [Manufacturing capabilities](#Manufacturing-capabilities)
+			* [Material choice](#Material-choice)
+		* [Assembly methods](#Assembly-methods)
+		* [Other resource constraints regarding hardware development](#Other-resource-constraints-regarding-hardware-development)
 	
-	* Hardware design decisions 	
-		*	Structure overview (part evolution and motivation behind the design)
-			*	Base & base drive train
-			* Arm sections
-			* Reducer mechanisms 
-			* Counter balance 
-			* Gimbal
-			* Limit switches
-			* Electronics housing ***(design aspects)***
+	* [Hardware design decisions](#Hardware-design-decisions) 	
+		*	[Structure overview](#Structure-overview) (part evolution and motivation behind the design)
+			*	[Base & base drive train](#Base-&-base-drive-train)
+			* [Arm sections](#Arm-sections)
+			* [Reducer mechanisms](#Reducer-mechanisms) 
+			* [Counter balance](#Counter-balance)
+			* [Gimbal](#Gimbal)
+			* [Limit switches](#Limit-switches)
+			* [Electronics housing](#Electronics-housing) ***(design aspects)***
 			
-		* Electrical system
-			* Schematics
-			* Used components
-			* Electronics housing and connections to robot
-				
-		*  Misc	
+		* [Electrical system](#Electrical system)
+			* [Schematics](#Schematics)
+			* [Used components](#Used components)
+			* [Electronics housing and connections to robot](#Electronics housing and connections to robot)
+			
+		*  [Misc](#Misc)	
 		
-- ## Software 
-	- Software Requirements
-		- Safety requirements
-		- Required modes of operation 
+- ## [Software](#Software)
+	- [Software Requirements](#Software-Requirements)
+		- [Safety requirements](#Safety-requirements)
+		- [Required modes of operation](#Required-modes-of-operation)
 
-	- Software Architecture 
- 	- Choosing a suitable platform
-	- Programing language selection
+	- [Software Architecture](#Software-Architecture)
+ 	- [Choosing a suitable platform](#Choosing-a-suitable-platform)
+	- [Programing language selection](#Programing-language-selection)
 
 	- 
 # ==== Disclaimer ====
