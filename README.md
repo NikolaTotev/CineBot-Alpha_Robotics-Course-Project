@@ -11,11 +11,11 @@ and
 Trayan Iliev, for expanding my horizons on the subjects of IoT and the software side of robotics.
 
 # Contents
-- ## [Introduction](#Introduction)
+-  [Introduction](#Introduction)
 	* [Scope](##Scope)
 	* [Key features](##Key-features)
 	* Initial design decisions 
-- ## Hardware
+-  Hardware
 	* Design constraints
 		* Actuators
 		* Method of manufacturing 
@@ -57,8 +57,8 @@ If you decide to recreate this please do so carefully. If any issues are discove
 
 
 # Introduction
- ## Scope
- ##Key features
+## Scope
+## Key features
 ## Initial design decisions 
 # Hardware
 
