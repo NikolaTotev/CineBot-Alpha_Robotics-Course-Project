@@ -12,8 +12,8 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 
 # Contents
 -  [Introduction](#Introduction)
-	* [Scope](##Scope)
-	* [Key features](##Key-features)
+	* [Scope](#Scope)
+	* [Key features](#Key-features)
 	* Initial design decisions 
 -  Hardware
 	* Design constraints
