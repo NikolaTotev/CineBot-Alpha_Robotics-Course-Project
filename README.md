@@ -34,10 +34,10 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 			* [Limit switches](#Limit-switches)
 			* [Electronics housing](#Electronics-housing) ***(design aspects)***
 			
-		* [Electrical system](#Electrical system)
+		* [Electrical system](#Electrical-system)
 			* [Schematics](#Schematics)
-			* [Used components](#Used components)
-			* [Electronics housing and connections to robot](#Electronics housing and connections to robot)
+			* [Used components](#Used-components)
+			* [Electronics housing and connections to robot](#Electronics-housing-and-connections-to-robot)
 			
 		*  [Misc](#Misc)	
 		
