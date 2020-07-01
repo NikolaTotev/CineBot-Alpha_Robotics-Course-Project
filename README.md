@@ -1,4 +1,4 @@
-# Robotics-Course-Project# Project Cinebot Alpha 
+# Project Cinebot Alpha 
 
 This is the documentation for my Robotics Course Project created during my second year, second semester in FMI for the course Practical Robotics and Smart "Things". 
 
@@ -11,9 +11,9 @@ and
 Trayan Iliev, for expanding my horizons on the subjects of IoT and the software side of robotics.
 
 # Contents
-- ## Introduction
-	* Scope
-	* Key features
+- ## [Introduction](#Introduction)
+	* [Scope](##Scope)
+	* [Key features](##Key-features)
 	* Initial design decisions 
 - ## Hardware
 	* Design constraints
@@ -57,9 +57,9 @@ If you decide to recreate this please do so carefully. If any issues are discove
 
 
 # Introduction
-	* Scope
-	* Key features
-	* Initial design decisions 
+ ## Scope
+ ##Key features
+## Initial design decisions 
 # Hardware
 
 ## Design constraints
@@ -88,10 +88,10 @@ If you decide to recreate this please do so carefully. If any issues are discove
 ###  Misc	
 		
 # Software 
-	- Software Requirements
-		- Safety requirements
-		- Required modes of operation 
+## Software Requirements
+	### Safety requirements
+	### Required modes of operation 
 
-	- Software Architecture 
- 	- Choosing a suitable platform
-	- Programing language selection
+## Software Architecture 
+### Choosing a suitable platform
+### Programing language selection
