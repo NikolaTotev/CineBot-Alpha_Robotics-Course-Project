@@ -60,16 +60,18 @@ If you decide to recreate this please do so carefully. If any issues are discove
 ## Scope
 ## Key features
 ## Initial design decisions 
+##### [Back to top](#Contents)
+
 # Hardware
 
 ## Design constraints
 ### Actuators
 ### Method of manufacturing 
-	#### Manufacturing capabilities
-	#### Material choice
+#### Manufacturing capabilities
+#### Material choice
 ### Assembly methods
-## Other resource constraints regarding hardware development
-
+### Other resource constraints regarding hardware development
+##### [Back to top](#Contents)
 ## Hardware design decisions
 ###	Structure overview (part evolution and motivation behind the design)
 ####	Base & base drive train
@@ -79,6 +81,7 @@ If you decide to recreate this please do so carefully. If any issues are discove
 #### Gimbal
 #### Limit switches
 #### Electronics housing ***(design aspects)***
+##### [Back to top](#Contents)
 
 ### Electrical system
 #### Schematics
@@ -86,6 +89,7 @@ If you decide to recreate this please do so carefully. If any issues are discove
 #### Electronics housing and connections to robot
 		
 ###  Misc	
+##### [Back to top](#Contents)
 		
 # Software 
 ## Software Requirements
@@ -95,3 +99,4 @@ If you decide to recreate this please do so carefully. If any issues are discove
 ## Software Architecture 
 ### Choosing a suitable platform
 ### Programing language selection
+##### [Back to top](#Contents)
