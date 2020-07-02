@@ -41,7 +41,7 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 			
 		*  [Misc](#Misc)	
 		
-- ## [Software](#Software)
+-  [Software](#Software)
 	- [Software Requirements](#Software-Requirements)
 		- [Safety requirements](#Safety-requirements)
 		- [Required modes of operation](#Required-modes-of-operation)
