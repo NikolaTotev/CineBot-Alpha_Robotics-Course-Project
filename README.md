@@ -139,9 +139,28 @@ For the primary actuators I decides to use two NEMA 14 35x28 stepper motors and 
 
 *Due to lack of knowledge at one stage of the project I had to change the stepper motors from my initial NEMA 14 35x26 to the slightly more powerful 35x28. That said, I believe it is possible to make this project work with the smaller motors but better gearing would be required*
 
+Since these motors lack the holding torque to hold the arm of the robot horizontal or to even lift it, [reducer mechanisms](#Reducer-mechanisms)  had to be implemented
 
 
 ### Assembly methods
+As I am using 3D printing for the making all of the parts I need to take into account the weaknesses and strengths of additive manufacturing in order to print good parts. 
+Most of the parts are printed in a way that avoids overhangs as much as possible. Layer orientation is taken into consideration when possible. 
+
+In order to asseble all of the parts I use two main techniques:
+- M3 & M2.5 machine screws of various lengths. (more information can be found in the [assembly booklet](#Assembly-Information)
+- Trapezoid wedges that slide into each other 
+
+The combination between these two methods allows for a good balance between solid assembly of large modules and allows those modules to be connected using a universal attachement interface.
+
+===	INSERT IMAGE ===
+
+***Note:*** Initially I used two other methods of assembling the robot:
+1. Friction fit connections with square or hexagonal shape to allow for easy assembly/disassembly.
+2. Screws for all of the connections.
+
+Both of these method had significant downsides. The friction fit relied on tight tollerances, something that is not consistent when 3D printing parts.
+For the screw method, once the larger parts were connected, if something needed to be replaced, a siginificant amount of work needed to be put in to change a singlep part.
+
 ### Other resource constraints regarding hardware development
 ### Possible improvements
 ##### [Back to top](#Contents)
@@ -173,3 +192,4 @@ For the primary actuators I decides to use two NEMA 14 35x28 stepper motors and 
 ### Choosing a suitable platform
 ### Programing language selection
 ##### [Back to top](#Contents)
+##Assembly Information
