@@ -26,6 +26,7 @@ namespace General_Testing
                 {
                     case "Buttons":
                         TestButtons(int.Parse(args[1]), int.Parse(args[2]));
+
                         break;
 
                     case "Rotary":
@@ -223,7 +224,7 @@ namespace General_Testing
         private static float A4;
         private static float A5;
         private static float startAngle = 0;
-        private static float m_FinalAngle = 60;
+        private static float m_FinalAngle = 45;
         private static float startVelocity = 0;
         private static float finalVelocity = 0;
         private static float startAcceleration = 0;
@@ -383,6 +384,9 @@ namespace General_Testing
             }
         
         }
+
+
+
         static void TestStepper(bool pinTest)
         {
             Console.WriteLine("Starting stepper motor test.");

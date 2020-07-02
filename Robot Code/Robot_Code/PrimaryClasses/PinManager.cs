@@ -37,11 +37,11 @@ namespace PrimaryClasses
         private readonly int m_RotSwitch = 11;
         private readonly int m_TiltSwitch = 21;
 
-        private readonly int m_JointATopStop = 8;
-        private readonly int m_JointABottomStop = 7;
+        private readonly int m_JointBTopStop = 8;
+        private readonly int m_JointBBottomStop = 7;
 
-        private readonly int m_JointBTopStop = 14;
-        private readonly int m_JointBBottomStop = 15;
+        private readonly int m_JointATopStop = 15;
+        private readonly int m_JointABottomStop = 14;
 
         private readonly int m_EmergencyStop = 25;
 

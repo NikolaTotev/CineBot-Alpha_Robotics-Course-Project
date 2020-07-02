@@ -13,7 +13,8 @@ namespace PrimaryClasses
         GimbalJog,
         ObjectTrack,
         PathFollow,
-        TestMode
+        TestMode,
+        Home
     };
 
     public enum StepperMotorOptions
@@ -79,6 +80,9 @@ namespace PrimaryClasses
                 case MotionModes.TestMode:
                     TestMode();
                     break;
+                case MotionModes.Home:
+                    GoHome();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -98,6 +102,17 @@ namespace PrimaryClasses
                 motorBThread.Start(mtrBParams);
 
                 return 0;
+        }
+
+        public int GoHome()
+        {
+            MotorManager currentManager = new MotorManager();
+
+            currentManager.GoToHome(StepperMotorOptions.motorA, false);
+            
+            currentManager.GoToHome(StepperMotorOptions.motorB, false);
+            return 0;
+
         }
 
         public int GimbalJog()

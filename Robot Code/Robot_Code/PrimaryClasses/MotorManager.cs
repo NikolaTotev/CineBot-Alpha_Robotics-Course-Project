@@ -29,7 +29,8 @@ namespace Motor_Control
         private readonly float m_CollisionDetectionFrequency = 0.01f;
         private int m_MovementSensitivity = 1;
         private int m_StepsInRange = 0;
-
+        public readonly bool CW = true;
+        public readonly bool CCW = false;
         public bool JogModeFlag
         {
             get => m_UseJogMode;
@@ -87,7 +88,7 @@ namespace Motor_Control
                 Console.WriteLine($"[{DateTime.Now}] <ERROR>: Failed to get stepperMotor control pins. Aborting stepperMotor {stepperMotor} movement.");
                 return;
             }
-            
+
             int counter = 0;
 
             if (!direction)
@@ -205,7 +206,7 @@ namespace Motor_Control
             int stepPin = 0;
             int dirPin = 0;
 
-            int numberOfSteps = 0;
+            int numberOfStepsToHome = 0;
             bool direction = false;
             bool hasReachedEndStop = false;
             bool hasCalculatedSteps = false;
@@ -236,67 +237,30 @@ namespace Motor_Control
             collisionDetectorThread.Start(flags);
 
             int counter = 0;
-            while (!hasCalculatedSteps)
+
+
+            PinManager.GetInstance().Controller.Write(dirPin, PinValue.High);
+
+
+            while (!flags.CollisionFlag || !flags.topHit)
             {
-                if (flags.EmergencyStopActive)
+                if (useDebugMessages)
                 {
-                    Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
-                    break;
+                    Console.WriteLine($"Moving {targetStepperMotor}, currently on step {counter}");
+                    counter++;
                 }
 
-                if (direction)
-                {
-                    PinManager.GetInstance().Controller.Write(dirPin, PinValue.Low);
-                }
-                else
-                {
-                    PinManager.GetInstance().Controller.Write(dirPin, PinValue.High);
-                }
-
-                while (!flags.CollisionFlag)
-                {
-                    if (useDebugMessages)
-                    {
-                        Console.WriteLine($"Moving {targetStepperMotor}, currently on step {counter}");
-                        counter++;
-                    }
-
-                    if (flags.EmergencyStopActive)
-                    {
-                        Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
-                        break;
-                    }
-                    PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
-                    Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
-                    PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
-                    Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
-                    if (hasReachedEndStop)
-                    {
-                        numberOfSteps++;
-                    }
-                }
-
-                direction = true;
-                hasReachedEndStop = true;
-
-                if (numberOfSteps != 0)
-                {
-                    hasCalculatedSteps = true;
-                }
-            }
-
-
-            for (int i = 0; i < numberOfSteps / 2; i++)
-            {
                 if (flags.EmergencyStopActive)
                 {
                     Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
                     break;
                 }
                 PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
-                Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed * 0.5));
+                Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
                 PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
-                Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed * 0.5));
+                Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
+                
+                    numberOfStepsToHome++;
             }
 
             flags.StopFlag = true;
@@ -321,6 +285,20 @@ namespace Motor_Control
             catch (ThreadAbortException e)
             {
                 Console.WriteLine($"[{DateTime.Now}] <EXCEPTION>: An exception with code {e.HResult} occured during thread abortion.");
+            }
+
+            hasReachedEndStop = true;
+            Console.WriteLine($"[{DateTime.Now}] There were {numberOfStepsToHome} taken to get to home position on {targetStepperMotor} ");
+            
+            PinManager.GetInstance().Controller.Write(dirPin, PinValue.Low);
+
+            for (int i = 0; i < 20; i++)
+            {
+                PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
+                Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
+                PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
+                Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
+                Console.WriteLine("Move back");
             }
         }
 
@@ -400,7 +378,7 @@ namespace Motor_Control
                             //Console.WriteLine($"[{DateTime.Now}] <Motor info>: Motor {tParams.TargetStepperMotor}: \n Moving {movementAngle} with speed {speed} and direction {direction}");
                             Thread.Sleep(TimeSpan.FromMilliseconds(35));
                         }
-                       
+
 
                     }
                     encoderLastState = encoderState;

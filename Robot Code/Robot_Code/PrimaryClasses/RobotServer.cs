@@ -235,7 +235,10 @@ namespace PrimaryClasses
                     currentManager = new MotionManager(MotionModes.TestMode);
                     currentManager.ExecuteCommand();
                     break;
-
+                case "HM":
+                        currentManager=new MotionManager(MotionModes.Home);
+                        currentManager.ExecuteCommand();
+                    break;
                 default:
                     ServerNotification?.Invoke($"\r\n[{DateTime.Now}] <ERROR> Wrong command passed to server. Unable to execute.");
                     break;

@@ -19,10 +19,10 @@ namespace Client_Test
         static ControlClient client = new ControlClient("192.168.12.133", 4200);
         static void Main(string[] args)
         {
-        //    client.RequestInput += Input;
-        //    client.ClientNotification += DisplayMessage;
-        //    Start();
-            Console.WriteLine($"{ConvertAngleToSteps(5)}");
+            client.RequestInput += Input;
+            client.ClientNotification += DisplayMessage;
+             Start();
+            //Console.WriteLine($"{ConvertAngleToSteps(5)}");
         }
 
 
