@@ -162,11 +162,36 @@ Both of these method had significant downsides. The friction fit relied on tight
 For the screw method, once the larger parts were connected, if something needed to be replaced, a siginificant amount of work needed to be put in to change a singlep part.
 
 ### Other resource constraints regarding hardware development
-### Possible improvements
+
 ##### [Back to top](#Contents)
 ## Hardware design decisions
-###	Structure overview (part evolution and motivation behind the design)
+### Structure overview (part evolution and motivation behind the design)
+The structure of the robot is fairly simple. In the following points I'll describe each part and all of the itterations I had to go though. The general goals for the hardware can be divided into two sections:
+* Robot structure
+
+	1. It has to be printable 
+	2. The parts need to be able to support the expected forces and use as little material as possible
+	3. The reducer mechanisms need to move smoothly
+	4. As mentioned above assembly needs to be pretty simple
+	5. Parts must be modular and easy to swap out
+	6. Built-in cable management.
+	7. It needs to look good (this has s lower priority, but still an important aspect)
+	
+* Electronics housing 
+	1. There must be enough room to work in side and fit the electronics
+	2. Cooling needs to be integrated into the case to help with performance
+	3. Notification LEDs need to be in a good position for the user
+	4. Any controls such as rotary encoders also need to be in a easily accesible spot.
+	5. All ports that are used for connection to the robot need to be in the back
+	6. As with the robot it has to look good (again lower priority)
+
+*Some of the things mentioned in the electronics housing are described in more detail in the [electrical system](#Electrical-system) section.*
+####  A little bit about itterations
+I have decided to go through all of the itterations because I think it is important for me to show the whole process. That away I can describe the things I've learned along the way and it is a great section for beginners to see the mistakes I've made so they don't make them as well. 
+Since this is quite a lengthy section I will provide skip links so that you can only see the final design or so you can skip directly to the [software part](#Software) of the project. 
+
 ####	Base & base drive train
+Since this is a stationary robot, the base is a key part of the design and a good base is essential for the overall stability of the system. This section also also experiences the most loading and has to be designed with that in mind. I will now walk you through the different itterations. 
 #### Arm sections
 #### Reducer mechanisms 
 #### Counter balance 
@@ -179,7 +204,8 @@ For the screw method, once the larger parts were connected, if something needed 
 #### Schematics
 #### Used components
 #### Electronics housing and connections to robot
-		
+
+### Possible improvements
 ###  Misc	
 ##### [Back to top](#Contents)
 		
