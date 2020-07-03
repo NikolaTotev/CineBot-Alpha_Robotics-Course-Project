@@ -146,75 +146,121 @@ namespace General_Testing
             PinValue lastStateC;
 
             lastStateA = controller.Read(panSIA);
-            lastStateB = controller.Read(rotSIA);
-            lastStateC = controller.Read(tiltSIA);
-
-
+            //  lastStateB = controller.Read(rotSIA);
+            // lastStateC = controller.Read(tiltSIA);
 
             while (true)
             {
-
-                Thread.Sleep(TimeSpan.FromSeconds(0.001));
-
-                stateA = controller.Read(panSIB);
-                stateB = controller.Read(rotSIB);
-                stateC = controller.Read(tiltSIB);
+                stateA = controller.Read(panSIA);
+                stateB = controller.Read(panSIB);
 
                 if (stateA != lastStateA)
                 {
-                    if (controller.Read(panSIA) != stateA)
+
+                    if (stateB == stateA)
                     {
-                        counterA += 2.5f;
+                        Console.WriteLine("Moving CW");
                     }
                     else
                     {
-                        counterA -= 2.5f;
+                        Console.WriteLine("Moving CCW");
                     }
 
-                    if (Math.Abs(counterA % 1) < 0.01)
-                    {
-                        Console.WriteLine($"Counter A: {counterA}");
-                    }
-                }
 
-                if (stateB != lastStateB)
-                {
-                    if (controller.Read(rotSIA) != stateB)
+                    bool stateABool;
+                    bool stateBBool;
+                    if (stateA == PinValue.Low)
                     {
-                        counterB += 2.5f;
+                        Console.WriteLine("A is low");
+                        stateABool = false;
                     }
                     else
                     {
-                        counterB -= 2.5f;
+                        Console.WriteLine("A is high");
+                        stateABool = true;
                     }
 
-                    if (Math.Abs(counterB % 1) < 0.01)
+                    if (stateB == PinValue.Low)
                     {
-                        Console.WriteLine($"Counter B: {counterB}");
-                    }
-                }
-
-                if (stateC != lastStateC)
-                {
-                    if (controller.Read(tiltSIA) != stateC)
-                    {
-                        counterC += 2.5f;
+                        Console.WriteLine("B is low");
+                        stateBBool = false;
                     }
                     else
                     {
-                        counterC -= 2.5f;
+                        Console.WriteLine("B is high");
+                        stateBBool = true;
                     }
-
-                    if (Math.Abs(counterC % 1) < 0.01)
-                    {
-                        Console.WriteLine($"Counter C: {counterC}");
-                    }
+                    //bool sequence = (stateABool ^ stateBBool) | stateBBool;
+                    //Console.WriteLine($"The direction is {sequence}");
                 }
-
                 lastStateA = stateA;
-                lastStateB = stateB;
-                lastStateC = stateC;
+                Thread.Sleep(TimeSpan.FromMilliseconds(1));
             }
+
+            //while (true)
+            //{
+
+            //    Thread.Sleep(TimeSpan.FromSeconds(0.001));
+
+            //    stateA = controller.Read(panSIB);
+            //    stateB = controller.Read(rotSIB);
+            //    stateC = controller.Read(tiltSIB);
+
+            //    if (stateA != lastStateA)
+            //    {
+            //        if (controller.Read(panSIA) != stateA)
+            //        {
+            //            counterA += 2.5f;
+            //        }
+            //        else
+            //        {
+            //            counterA -= 2.5f;
+            //        }
+
+            //        if (Math.Abs(counterA % 1) < 0.01)
+            //        {
+            //            Console.WriteLine($"Counter A: {counterA}");
+            //        }
+            //    }
+
+            //    if (stateB != lastStateB)
+            //    {
+            //        if (controller.Read(rotSIA) != stateB)
+            //        {
+            //            counterB += 2.5f;
+            //        }
+            //        else
+            //        {
+            //            counterB -= 2.5f;
+            //        }
+
+            //        if (Math.Abs(counterB % 1) < 0.01)
+            //        {
+            //            Console.WriteLine($"Counter B: {counterB}");
+            //        }
+            //    }
+
+            //    if (stateC != lastStateC)
+            //    {
+            //        if (controller.Read(tiltSIA) != stateC)
+            //        {
+            //            counterC += 2.5f;
+            //        }
+            //        else
+            //        {
+            //            counterC -= 2.5f;
+            //        }
+
+            //        if (Math.Abs(counterC % 1) < 0.01)
+            //        {
+            //            Console.WriteLine($"Counter C: {counterC}");
+            //        }
+            //    }
+
+            //    lastStateA = stateA;
+            //    lastStateB = stateB;
+            //    lastStateC = stateC;
+            //}
         }
 
         private static float A0;

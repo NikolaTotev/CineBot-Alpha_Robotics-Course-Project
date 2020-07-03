@@ -21,8 +21,7 @@ namespace Client_Test
         {
             client.RequestInput += Input;
             client.ClientNotification += DisplayMessage;
-             Start();
-            //Console.WriteLine($"{ConvertAngleToSteps(5)}");
+            Start();
         }
 
 

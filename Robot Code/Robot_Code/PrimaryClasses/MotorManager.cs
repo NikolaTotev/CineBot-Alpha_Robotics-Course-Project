@@ -91,13 +91,13 @@ namespace Motor_Control
 
             int counter = 0;
 
-            if (!direction)
+            if (direction)
             {
-                PinManager.GetInstance().Controller.Write(dirPin, PinValue.Low);
+                PinManager.GetInstance().Controller.Write(dirPin, PinValue.High);
             }
             else
             {
-                PinManager.GetInstance().Controller.Write(dirPin, PinValue.High);
+                PinManager.GetInstance().Controller.Write(dirPin, PinValue.Low);
             }
 
             while (counter < numberOfSteps)
@@ -201,6 +201,12 @@ namespace Motor_Control
             }
         }
 
+
+        /// <summary>
+        /// Returns target section to the home positions. (DONE)
+        /// </summary>
+        /// <param name="targetStepperMotor"></param>
+        /// <param name="useDebugMessages"></param>
         public void GoToHome(StepperMotorOptions targetStepperMotor, bool useDebugMessages)
         {
             int stepPin = 0;
@@ -259,8 +265,8 @@ namespace Motor_Control
                 Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
                 PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
                 Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
-                
-                    numberOfStepsToHome++;
+
+                numberOfStepsToHome++;
             }
 
             flags.StopFlag = true;
@@ -289,7 +295,7 @@ namespace Motor_Control
 
             hasReachedEndStop = true;
             Console.WriteLine($"[{DateTime.Now}] There were {numberOfStepsToHome} taken to get to home position on {targetStepperMotor} ");
-            
+
             PinManager.GetInstance().Controller.Write(dirPin, PinValue.Low);
 
             for (int i = 0; i < 20; i++)
@@ -308,20 +314,20 @@ namespace Motor_Control
             {
                 Console.WriteLine($"[{DateTime.Now}] <Motor Manager Jog Mode>: Motor {tParams.TargetStepperMotor}: Control thread started.");
                 int encoderSIA;
-                int enncoderSIB;
+                int encoderSIB;
                 int resetPin;
                 int emergencyButton = PinManager.GetInstance().EmergencyStop;
                 switch (tParams.TargetStepperMotor)
                 {
                     case StepperMotorOptions.motorA:
                         encoderSIA = PinManager.GetInstance().PanSIA;
-                        enncoderSIB = PinManager.GetInstance().PanSIB;
+                        encoderSIB = PinManager.GetInstance().PanSIB;
                         resetPin = PinManager.GetInstance().PanReset;
                         break;
 
                     case StepperMotorOptions.motorB:
                         encoderSIA = PinManager.GetInstance().RotSIA;
-                        enncoderSIB = PinManager.GetInstance().RotSIB;
+                        encoderSIB = PinManager.GetInstance().RotSIB;
                         resetPin = PinManager.GetInstance().RotReset;
                         break;
 
@@ -329,8 +335,8 @@ namespace Motor_Control
                         throw new ArgumentOutOfRangeException();
                 }
 
-                float encoderCounter = 0;
-                float previousCounterState = encoderCounter;
+                float stepsFromHome = 0;
+
                 PinValue encoderState;
                 PinValue encoderLastState;
                 encoderLastState = PinManager.GetInstance().Controller.Read(encoderSIA);
@@ -338,6 +344,10 @@ namespace Motor_Control
                 Thread collisionDetectorThread = new Thread(CollisionDetection);
                 collisionDetectorThread.Start(flags);
 
+                GoToHome(tParams.TargetStepperMotor, false);
+
+                PinValue SIAValue;
+                PinValue SIBValue;
                 while (!tParams.ShouldStop)
                 {
 
@@ -347,7 +357,6 @@ namespace Motor_Control
                         break;
                     }
 
-                    encoderState = PinManager.GetInstance().Controller.Read(encoderSIA);
 
                     if (PinManager.GetInstance().Controller.Read(resetPin) == PinValue.Low)
                     {
@@ -355,33 +364,59 @@ namespace Motor_Control
                         Thread.Sleep(TimeSpan.FromMilliseconds(45));
                     }
 
-                    if (encoderState != encoderLastState)
+
+
+                    SIAValue = PinManager.GetInstance().Controller.Read(encoderSIA);
+                    SIBValue = PinManager.GetInstance().Controller.Read(encoderSIB);
+
+
+                    if (SIAValue != encoderLastState)
                     {
-                        Console.WriteLine($"Encoder state for {tParams.TargetStepperMotor} has changed.");
-                        if (PinManager.GetInstance().Controller.Read(enncoderSIB) != encoderState)
+                        bool direction;
+
+                        //Console.WriteLine($"Encoder state for {tParams.TargetStepperMotor} has changed.");
+
+                        if (SIAValue == PinValue.High)
                         {
-                            previousCounterState = encoderCounter;
-                            encoderCounter += 0.5f;
+                            Console.WriteLine("SIA HIGH");
                         }
                         else
                         {
-                            previousCounterState = encoderCounter;
-                            encoderCounter -= 0.5f;
+                            Console.WriteLine("SIA LOW");
                         }
-                        if (Math.Abs(encoderCounter % 1) < 0.01)
+
+
+                        if (SIBValue == PinValue.High)
                         {
-                            int movementAngle = m_MinimumAngle * m_MovementSensitivity;
-                            float speed = m_MinimumSpeed * m_SpeedSensitivity;
-                            bool direction = previousCounterState < encoderCounter;
-                            MoveStepper(movementAngle, speed, tParams.TargetStepperMotor, direction, false, flags);
-                            Console.WriteLine($"Previous counter: {previousCounterState}, Current counter: {encoderCounter}");
-                            //Console.WriteLine($"[{DateTime.Now}] <Motor info>: Motor {tParams.TargetStepperMotor}: \n Moving {movementAngle} with speed {speed} and direction {direction}");
-                            Thread.Sleep(TimeSpan.FromMilliseconds(35));
+                            Console.WriteLine("SIB HIGH");
+                        }
+                        else
+                        {
+                            Console.WriteLine("SIB LOW");
+                        }
+                        if (SIAValue == SIBValue)
+                        {
+                            Console.WriteLine("CW ====================");
+                            direction = CW;
+                        }
+                        else
+                        {
+                            Console.WriteLine("CCW ###################");
+                            direction = CCW;
                         }
 
+                        int movementAngle = m_MinimumAngle * m_MovementSensitivity;
+                        float speed = m_MinimumSpeed * m_SpeedSensitivity;
+                        MoveStepper(movementAngle, speed, tParams.TargetStepperMotor, direction, false, flags);
 
+                        SIAValue = PinManager.GetInstance().Controller.Read(encoderSIA);
+                        SIBValue = PinManager.GetInstance().Controller.Read(encoderSIB);
+
+                        stepsFromHome++;
                     }
-                    encoderLastState = encoderState;
+                    encoderLastState = SIAValue;
+                    // Console.WriteLine($"Steps from home {stepsFromHome}");
+                    Thread.Sleep(TimeSpan.FromMilliseconds(1));
                 }
 
                 flags.StopFlag = true;
