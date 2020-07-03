@@ -50,7 +50,7 @@ namespace General_Testing
                         break;
                     case "Poly":
                         int counter = 0;
-                        while (counter < 100)
+                        while (counter < 1)
                         {
                             if (args.Length == 6)
                             {
@@ -60,7 +60,7 @@ namespace General_Testing
                             }
                             else
                             {
-                                PolyMotorControl();
+                               // PolyMotorControl();
                             }
 
                             counter++;
@@ -339,7 +339,9 @@ namespace General_Testing
         {
             return mapCoef * input + m_MinSpeed;
         }
-        static void PolyMotorControl(float maxSpeed = 0.003f, float minSpeed = 0.008f, float finalAngle=45f, float overAllTime = 5f, bool useB = false)
+//        static void PolyMotorControl(float maxSpeed = 0.003f, float minSpeed = 0.008f, float finalAngle=45f, float overAllTime = 5f, bool useB = false)
+        static void PolyMotorControl(float maxSpeed, float minSpeed, float finalAngle, float overAllTime, bool useB = false)
+
         {
             m_MaxSpeed = maxSpeed;
             m_MinSpeed = minSpeed;
@@ -360,7 +362,7 @@ namespace General_Testing
             CalcCoefs(m_OverallTime);
             float numberOfSteps = ConvertAngleToSteps((int)finalAngle);
             float eti = m_OverallTime / numberOfSteps;
-            float timeDivisionSize = 0.001f;
+            float timeDivisionSize = 0.0001f;
             float numberOfTimeDivisions = m_OverallTime / timeDivisionSize;
             float funcMaxSpeed = GetSpeed((numberOfTimeDivisions / 2) * timeDivisionSize);
             mapCoef = (maxSpeed-minSpeed) / funcMaxSpeed;

@@ -323,15 +323,38 @@ namespace Motor_Control
             }
         }
 
+        public void GoToHomeGimbal()
+        {
+            SerialComsManager.GetInstance().Write("P30");
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+            SerialComsManager.GetInstance().Write("P150");
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+            SerialComsManager.GetInstance().Write("P75");
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+
+
+            SerialComsManager.GetInstance().Write("R30");
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+            SerialComsManager.GetInstance().Write("R150");
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+            SerialComsManager.GetInstance().Write("R75");
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+
+            SerialComsManager.GetInstance().Write("T30");
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+            SerialComsManager.GetInstance().Write("T125");
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+            SerialComsManager.GetInstance().Write("T75");
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+        }
+
         public void JogMode(object threadParams)
         {
             if (threadParams is MotorThreadStartObj tParams)
             {
                 Console.WriteLine($"[{DateTime.Now}] <Motor Manager Jog Mode>: Motor {tParams.TargetStepperMotor}: Control thread started.");
-                int encoderSIA;
-                int encoderSIB;
                 Encoder currentEncoder;
-                int resetPin;
+           
                 int emergencyButton = PinManager.GetInstance().EmergencyStop;
                 switch (tParams.TargetStepperMotor)
                 {
@@ -348,10 +371,6 @@ namespace Motor_Control
                 }
 
                 float stepsFromHome = 0;
-
-                //PinValue encoderState;
-                //PinValue encoderLastState;
-                //encoderLastState = PinManager.GetInstance().Controller.Read(encoderSIA);
                 
                 FlagArgs flags = new FlagArgs(false, false, tParams.TargetStepperMotor);
                 Thread collisionDetectorThread = new Thread(CollisionDetection);
@@ -359,14 +378,13 @@ namespace Motor_Control
 
                 GoToHome(tParams.TargetStepperMotor, false);
 
-                //PinValue SIAValue;
-                //PinValue SIBValue;
                 while (!tParams.ShouldStop)
                 {
 
                     if (PinManager.GetInstance().Controller.Read(emergencyButton) == PinValue.Low)
                     {
                         Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
+                        PinManager.GetInstance().EmergencyStopLights();
                         break;
                     }
 
@@ -378,10 +396,6 @@ namespace Motor_Control
                         Thread.Sleep(TimeSpan.FromMilliseconds(45));
                     }
 
-
-
-                    //IAValue = PinManager.GetInstance().Controller.Read(encoderSIA);
-                    //SIBValue = PinManager.GetInstance().Controller.Read(encoderSIB);
                     currentEncoder.ReadSIA();
                     currentEncoder.ReadSIB();
 
@@ -424,15 +438,11 @@ namespace Motor_Control
                         float speed = m_MinimumSpeed * m_SpeedSensitivity;
                         MoveStepper(movementAngle, speed, tParams.TargetStepperMotor, direction, false, flags);
 
-                       // SIAValue = PinManager.GetInstance().Controller.Read(encoderSIA);
-                        //SIBValue = PinManager.GetInstance().Controller.Read(encoderSIB);
                         currentEncoder.ReadSIA();
                         currentEncoder.ReadSIB();
                         stepsFromHome++;
                     }
                     currentEncoder.SetLastState();
-                    //encoderLastState = SIAValue;
-                    // Console.WriteLine($"Steps from home {stepsFromHome}");
                     Thread.Sleep(TimeSpan.FromMilliseconds(1));
                 }
 
@@ -647,6 +657,19 @@ namespace Motor_Control
 
         public void RecordMotion()
         {
+            Encoder stepperAController = new Encoder(EncoderOptions.Pan);
+            Encoder stepperBController = new Encoder(EncoderOptions.Rotate);
+            Encoder controlEncoder = new Encoder(EncoderOptions.Tilt);
+
+            int stepperACounter = 0;
+            int stepperBCounter = 0;
+            int panCounter = 0;
+            int rotateCounter = 0;
+            int tiltCounter = 0;
+
+            GoToHome(StepperMotorOptions.motorA, false);
+            GoToHome(StepperMotorOptions.motorB, false);
+
 
         }
 

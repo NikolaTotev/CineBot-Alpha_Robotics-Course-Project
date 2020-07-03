@@ -50,6 +50,7 @@ namespace PrimaryClasses
             m_ListenerThread.Start(m_localEndPoint);
             ServerNotification?.Invoke($"[{DateTime.Now}] Status Update:  Server version {m_ServerVersion} started!");
             PinManager.GetInstance().ServerStarted();
+            SerialComsManager.GetInstance();
         }
 
 
@@ -218,6 +219,7 @@ namespace PrimaryClasses
 
                 case "SJ":
                     currentManager = new MotionManager(MotionModes.StepperJog);
+                    PinManager.GetInstance().ModeEntryLights(MotionModes.StepperJog);
                     currentManager.ExecuteCommand();
                     break;
 
@@ -236,8 +238,12 @@ namespace PrimaryClasses
                     currentManager.ExecuteCommand();
                     break;
                 case "HM":
-                        currentManager=new MotionManager(MotionModes.Home);
+                        currentManager=new MotionManager(MotionModes.StepperHome);
                         currentManager.ExecuteCommand();
+                    break;
+                case "GHM":
+                    currentManager = new MotionManager(MotionModes.GimbalHome);
+                    currentManager.ExecuteCommand();
                     break;
                 default:
                     ServerNotification?.Invoke($"\r\n[{DateTime.Now}] <ERROR> Wrong command passed to server. Unable to execute.");

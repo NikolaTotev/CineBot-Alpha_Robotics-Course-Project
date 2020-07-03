@@ -155,6 +155,74 @@ namespace PrimaryClasses
             return m_Instance ??= new PinManager();
         }
 
+        public void ModeEntryLights(MotionModes mode)
+        {
+            switch (mode)
+            {
+                case MotionModes.StepperJog:
+                    for (int i = 0; i < 2; i++)
+                    {
+                        m_Controller.Write(m_NotificationLight, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                        m_Controller.Write(m_NotificationLight, PinValue.Low);
+
+                        Thread.Sleep(TimeSpan.FromSeconds(0.5));
+
+                        m_Controller.Write(m_ErrorLight, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                        m_Controller.Write(m_ErrorLight, PinValue.Low);
+
+                        Thread.Sleep(TimeSpan.FromSeconds(0.5));
+
+                        m_Controller.Write(m_StatusPin, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                        m_Controller.Write(m_StatusPin, PinValue.Low);
+
+                        Thread.Sleep(TimeSpan.FromSeconds(0.5));
+                    }
+                    break;
+                case MotionModes.GimbalJog:
+                    break;
+                case MotionModes.ObjectTrack:
+                    break;
+                case MotionModes.PathFollow:
+                    break;
+                case MotionModes.TestMode:
+                    break;
+                case MotionModes.StepperHome:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+        }
+
+        public void EmergencyStopLights()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                m_Controller.Write(m_StatusPin, PinValue.High);
+                m_Controller.Write(m_ErrorLight, PinValue.High);
+                m_Controller.Write(m_NotificationLight, PinValue.High);
+
+                Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                m_Controller.Write(m_StatusPin, PinValue.Low);
+                m_Controller.Write(m_ErrorLight, PinValue.Low);
+                m_Controller.Write(m_NotificationLight, PinValue.Low);
+                Thread.Sleep(TimeSpan.FromSeconds(0.1));
+            }
+
+
+            m_Controller.Write(m_StatusPin, PinValue.High);
+            m_Controller.Write(m_ErrorLight, PinValue.High);
+            m_Controller.Write(m_NotificationLight, PinValue.High);
+
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+            m_Controller.Write(m_StatusPin, PinValue.Low);
+            m_Controller.Write(m_ErrorLight, PinValue.Low);
+            m_Controller.Write(m_NotificationLight, PinValue.Low);
+
+        }
+
         public bool SetupPin(int pin, PinMode pinMode)
         {
             Console.WriteLine($"\r\n[{DateTime.Now}] Pin Manager: Setup called on pin {pin}");
@@ -170,6 +238,12 @@ namespace PrimaryClasses
 
         public void DoublePulse()
         {
+            m_Controller.Write(m_NotificationLight, PinValue.High);
+            Thread.Sleep(TimeSpan.FromSeconds(0.1));
+            m_Controller.Write(m_NotificationLight, PinValue.Low);
+
+            Thread.Sleep(TimeSpan.FromSeconds(0.1));
+
             m_Controller.Write(m_ErrorLight, PinValue.High);
             Thread.Sleep(TimeSpan.FromSeconds(0.1));
             m_Controller.Write(m_ErrorLight, PinValue.Low);
@@ -200,10 +274,10 @@ namespace PrimaryClasses
 
         public void StartupError()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 10; i++)
             {
                 m_Controller.Write(m_ErrorLight, PinValue.High);
-                Thread.Sleep(TimeSpan.FromSeconds(0.5));
+                Thread.Sleep(TimeSpan.FromSeconds(2));
                 m_Controller.Write(m_ErrorLight, PinValue.Low);
                 Thread.Sleep(TimeSpan.FromSeconds(0.5));
             }
@@ -233,14 +307,17 @@ namespace PrimaryClasses
             {
                 m_Controller.Write(m_StatusPin, PinValue.High);
                 m_Controller.Write(m_ErrorLight, PinValue.High);
+                m_Controller.Write(m_NotificationLight, PinValue.High);
 
                 Thread.Sleep(TimeSpan.FromSeconds(0.2));
                 m_Controller.Write(m_StatusPin, PinValue.Low);
                 m_Controller.Write(m_ErrorLight, PinValue.Low);
+                m_Controller.Write(m_NotificationLight, PinValue.Low);
                 Thread.Sleep(TimeSpan.FromSeconds(0.3));
             }
             m_Controller.Write(m_StatusPin, PinValue.Low);
             m_Controller.Write(m_ErrorLight, PinValue.Low);
+            m_Controller.Write(m_NotificationLight, PinValue.Low);
         }
     }
 }

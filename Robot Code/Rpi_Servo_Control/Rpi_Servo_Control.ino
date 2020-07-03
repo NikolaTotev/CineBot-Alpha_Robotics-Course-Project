@@ -78,8 +78,12 @@ void showNewData() {
 
         if(targetServo == 'T')
         {
-              tiltServo.write(servoAngle);
-              Serial.print("T"); 
+          if(servoAngle > 125) 
+          {
+            servoAngle = 125;
+          }
+          tiltServo.write(servoAngle);
+          Serial.print("T"); 
         }
                
         gotTargetServo=false;
