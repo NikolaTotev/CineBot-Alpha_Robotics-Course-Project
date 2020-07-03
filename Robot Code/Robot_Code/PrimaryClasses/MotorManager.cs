@@ -114,7 +114,8 @@ namespace Motor_Control
                     break;
                 }
 
-                if (!flags.CollisionFlag && CanMove(direction, flags))
+                Console.WriteLine($"CAN MOVE RESULT = {CanMove(direction, flags)} {direction}");
+                if (CanMove(direction, flags))
                 {
                     PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
                     Thread.Sleep(TimeSpan.FromSeconds(speed));
@@ -122,21 +123,34 @@ namespace Motor_Control
                     Thread.Sleep(TimeSpan.FromSeconds(speed));
                     counter++;
                 }
+                else
+                {
+                    break;
+                }
             }
         }
 
-        //0 = CW, 1 = CCW
+        //1= CW, 0 = CCW
         private bool CanMove(bool directionFlag, FlagArgs collisionInfo)
         {
-            if (directionFlag)
+            if (collisionInfo.CollisionFlag)
             {
-                return !collisionInfo.bottomHit;
+                if (directionFlag == CCW && collisionInfo.topHit)
+                {
+                    return true;
+                }
+
+                if (directionFlag == CW && collisionInfo.bottomHit)
+                {
+                    return true;
+                }
+
+                return false;
             }
-            else
-            {
-                return !collisionInfo.topHit;
-            }
+
+            return true;
         }
+
         private void CollisionDetection(object boolObject)
         {
             Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Collision detection enabled.");
@@ -177,7 +191,7 @@ namespace Motor_Control
                         {
                             flags.EmergencyStopActive = true;
                         }
-                        Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Motor {flags.TargetStepperMotor} has reached an end-stop or the emergency switch as been activated..");
+                        // Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Motor {flags.TargetStepperMotor} has reached an end-stop or the emergency switch as been activated..");
                         flags.CollisionFlag = true;
                         if (topSensorSate == PinValue.Low)
                         {
@@ -361,6 +375,7 @@ namespace Motor_Control
                     if (PinManager.GetInstance().Controller.Read(resetPin) == PinValue.Low)
                     {
                         Console.WriteLine($"Go to home on motor {tParams.TargetStepperMotor} pressed.");
+                        GoToHome(tParams.TargetStepperMotor, false);
                         Thread.Sleep(TimeSpan.FromMilliseconds(45));
                     }
 
