@@ -16,6 +16,18 @@ using Encoder = PrimaryClasses.Encoder;
 
 namespace Motor_Control
 {
+    public class PathNode
+    {
+        public StepperMotorOptions TargetMotor { get; set; }
+        public int StepsFromHome { get; set; }
+
+        public PathNode(StepperMotorOptions targetMotor, int stepsFromHome)
+        {
+            TargetMotor = targetMotor;
+            StepsFromHome = stepsFromHome;
+        }
+    }
+
     public class MotorManager
     {
         private Dictionary<string, IMotor> m_RegisteredMotors;
@@ -696,10 +708,16 @@ namespace Motor_Control
             int rotateCounter = 0;
             int tiltCounter = 0;
 
+            int LED1 = PinManager.GetInstance().NotificaitonLight;
+            int LED2 = PinManager.GetInstance().ErrorLight;
+            int LED3 = PinManager.GetInstance().StatusLight;
+
+            bool hasLetGoOfButton = true;
+
             int stopButton = PinManager.GetInstance().EmergencyStop;
 
-            Dictionary<StepperMotorOptions, int> stepperMovementSequence = new Dictionary<StepperMotorOptions, int>();
-            Dictionary<ServoMotorOptions, int> servoMovementSequence = new Dictionary<ServoMotorOptions, int>();
+            Dictionary<int, PathNode> stepperMovementSequence = new Dictionary<int, PathNode>();
+            Dictionary<int, PathNode> servoMovementSequence = new Dictionary<int, PathNode>();
 
             GoToHome(StepperMotorOptions.motorA, false);
             GoToHome(StepperMotorOptions.motorB, false);
@@ -717,10 +735,17 @@ namespace Motor_Control
                     {
                         mode = RecordingModes.GimbalRecording;
                     }
-                    if (mode == RecordingModes.GimbalRecording)
+                    else
                     {
                         mode = RecordingModes.StepperRecording;
                     }
+
+                    Console.WriteLine($"[Info]: Mode has been changed to {mode}");
+                    PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
+                    PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                    Thread.Sleep(TimeSpan.FromSeconds(1));
+                    PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
+                    PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
                 }
 
                 if (mode == RecordingModes.StepperRecording)
@@ -747,19 +772,22 @@ namespace Motor_Control
                             direction = CCW;
                         }
 
-                        int movementAngle = m_MinimumAngle * m_MovementSensitivity;
+                        int numberOfSteps = ConvertAngleToSteps(m_MinimumAngle * m_MovementSensitivity);
+
                         float speed = m_MinimumSpeed * m_SpeedSensitivity;
 
                         if (direction)
                         {
                             PinManager.GetInstance().Controller.Write(stepperADirPin, PinValue.High);
+                            stepperACounter += numberOfSteps;
                         }
                         else
                         {
                             PinManager.GetInstance().Controller.Write(stepperADirPin, PinValue.Low);
+                            stepperACounter -= numberOfSteps;
                         }
 
-                        for (int i = 0; i < movementAngle; i++)
+                        for (int i = 0; i < numberOfSteps; i++)
                         {
                             PinManager.GetInstance().Controller.Write(stepperAStepPin, PinValue.High);
                             Thread.Sleep(TimeSpan.FromSeconds(speed));
@@ -770,7 +798,6 @@ namespace Motor_Control
 
                         stepperAController.ReadSIA();
                         stepperAController.ReadSIB();
-                        stepperACounter++;
                     }
                     stepperAController.SetLastState();
                     Thread.Sleep(TimeSpan.FromMilliseconds(1));
@@ -792,19 +819,24 @@ namespace Motor_Control
                             direction = CCW;
                         }
 
-                        int movementAngle = m_MinimumAngle * m_MovementSensitivity;
+                        int numberOfSteps = ConvertAngleToSteps(m_MinimumAngle * m_MovementSensitivity);
+
                         float speed = m_MinimumSpeed * m_SpeedSensitivity;
 
                         if (direction)
                         {
                             PinManager.GetInstance().Controller.Write(stepperBDirPin, PinValue.High);
+                            stepperBCounter += numberOfSteps;
                         }
+
                         else
                         {
                             PinManager.GetInstance().Controller.Write(stepperBDirPin, PinValue.Low);
+                            stepperBCounter -= numberOfSteps;
+
                         }
 
-                        for (int i = 0; i < movementAngle; i++)
+                        for (int i = 0; i < numberOfSteps; i++)
                         {
                             PinManager.GetInstance().Controller.Write(stepperBStepPin, PinValue.High);
                             Thread.Sleep(TimeSpan.FromSeconds(speed));
@@ -815,19 +847,76 @@ namespace Motor_Control
 
                         stepperBController.ReadSIA();
                         stepperBController.ReadSIB();
-                        stepperBCounter++;
                     }
                     stepperBController.SetLastState();
                     Thread.Sleep(TimeSpan.FromMilliseconds(1));
                     #endregion
+
+                    if (!hasLetGoOfButton)
+                    {
+                        if (stepperAController.ReadSwitch() != PinValue.Low && stepperBController.ReadSwitch() != PinValue.Low)
+                        {
+                            hasLetGoOfButton = true;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Please remove finger from save button!");
+                            for (int i = 0; i < 2; i++)
+                            {
+                                PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                                Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                                PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                                Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                                PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                                Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                                PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                                Thread.Sleep(TimeSpan.FromSeconds(0.5));
+                            }
+
+                            Thread.Sleep(TimeSpan.FromSeconds(1));
+                        }
+                    }
+
+
+                    if (stepperAController.ReadSwitch() == PinValue.Low && hasLetGoOfButton)
+                    {
+                        Console.WriteLine($"Path node added for {StepperMotorOptions.motorA} that is {stepperACounter} steps from the home position.");
+                        PathNode nodeToAdd = new PathNode(StepperMotorOptions.motorA, stepperACounter);
+                        stepperMovementSequence.Add(stepperMovementSequence.Count + 1, nodeToAdd);
+                        hasLetGoOfButton = false;
+                        PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(2));
+                        PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
+                    }
+
+                    if (stepperBController.ReadSwitch() == PinValue.Low && hasLetGoOfButton)
+                    {
+                        Console.WriteLine($"Path node added for {StepperMotorOptions.motorB} that is {stepperBCounter} steps from the home position.");
+                        PathNode nodeToAdd = new PathNode(StepperMotorOptions.motorB, stepperBCounter);
+                        stepperMovementSequence.Add(stepperMovementSequence.Count + 1, nodeToAdd);
+                        hasLetGoOfButton = false;
+                        PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(2));
+                        PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
+                    }
                 }
 
                 if (mode == RecordingModes.GimbalRecording)
                 {
 
                 }
-
             }
+            Console.WriteLine($"Recording complete. There are {stepperMovementSequence.Count} stepper motor nodes and \n" +
+                              $"{servoMovementSequence.Count} nodes.");
         }
 
         public void Dance()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Device.Gpio;
 using System.Device.Gpio.Drivers;
 using System.Threading;
+using Iot.Device.ExplorerHat;
 using Unosquare.RaspberryIO;
 using Unosquare.RaspberryIO.Abstractions;
 
@@ -14,7 +15,7 @@ namespace PrimaryClasses
         private GpioController m_Controller;
         private static PinManager m_Instance;
 
-        private readonly int m_StatusPin = 23;
+        private readonly int m_StatusLight = 23;
         private readonly int m_ErrorLight = 24;
         private readonly int m_NotificationLight = 5;
 
@@ -78,6 +79,10 @@ namespace PrimaryClasses
         public int RotReset { get => m_RotSwitch; }
         public int TiltReset { get => m_TiltSwitch; }
 
+        public int NotificaitonLight { get => m_NotificationLight; }
+        public int ErrorLight { get => m_ErrorLight; }
+        public int StatusLight { get => m_StatusLight; }
+
         //TODO Fix change button once solution for pull-up is found.
         public int EmergencyStop { get => m_EmergencyStop; }
 
@@ -95,7 +100,7 @@ namespace PrimaryClasses
             m_RegisteredPins = new Dictionary<int, PinMode>();
 
             m_Controller = new GpioController(numberingScheme: PinNumberingScheme.Logical);
-            SetupPin(m_StatusPin, PinMode.Output);
+            SetupPin(m_StatusLight, PinMode.Output);
             SetupPin(m_ErrorLight, PinMode.Output);
             SetupPin(m_NotificationLight, PinMode.Output);
 
@@ -133,10 +138,10 @@ namespace PrimaryClasses
             SetupPin(m_JointBDir, PinMode.Output);
             SetupPin(m_JointBStep, PinMode.Output);
 
-            m_Controller.Write(m_StatusPin, PinValue.High);
+            m_Controller.Write(m_StatusLight, PinValue.High);
             m_Controller.Write(m_ErrorLight, PinValue.High);
             Thread.Sleep(TimeSpan.FromSeconds(2));
-            m_Controller.Write(m_StatusPin, PinValue.Low);
+            m_Controller.Write(m_StatusLight, PinValue.Low);
             m_Controller.Write(m_ErrorLight, PinValue.Low);
 
             if (m_Controller != null && m_RegisteredPins != null)
@@ -174,9 +179,9 @@ namespace PrimaryClasses
 
                         Thread.Sleep(TimeSpan.FromSeconds(0.5));
 
-                        m_Controller.Write(m_StatusPin, PinValue.High);
+                        m_Controller.Write(m_StatusLight, PinValue.High);
                         Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                        m_Controller.Write(m_StatusPin, PinValue.Low);
+                        m_Controller.Write(m_StatusLight, PinValue.Low);
 
                         Thread.Sleep(TimeSpan.FromSeconds(0.5));
                     }
@@ -200,24 +205,24 @@ namespace PrimaryClasses
         {
             for (int i = 0; i < 5; i++)
             {
-                m_Controller.Write(m_StatusPin, PinValue.High);
+                m_Controller.Write(m_StatusLight, PinValue.High);
                 m_Controller.Write(m_ErrorLight, PinValue.High);
                 m_Controller.Write(m_NotificationLight, PinValue.High);
 
                 Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                m_Controller.Write(m_StatusPin, PinValue.Low);
+                m_Controller.Write(m_StatusLight, PinValue.Low);
                 m_Controller.Write(m_ErrorLight, PinValue.Low);
                 m_Controller.Write(m_NotificationLight, PinValue.Low);
                 Thread.Sleep(TimeSpan.FromSeconds(0.1));
             }
 
 
-            m_Controller.Write(m_StatusPin, PinValue.High);
+            m_Controller.Write(m_StatusLight, PinValue.High);
             m_Controller.Write(m_ErrorLight, PinValue.High);
             m_Controller.Write(m_NotificationLight, PinValue.High);
 
             Thread.Sleep(TimeSpan.FromSeconds(1));
-            m_Controller.Write(m_StatusPin, PinValue.Low);
+            m_Controller.Write(m_StatusLight, PinValue.Low);
             m_Controller.Write(m_ErrorLight, PinValue.Low);
             m_Controller.Write(m_NotificationLight, PinValue.Low);
 
@@ -250,26 +255,26 @@ namespace PrimaryClasses
 
             Thread.Sleep(TimeSpan.FromSeconds(0.1));
 
-            m_Controller.Write(m_StatusPin, PinValue.High);
+            m_Controller.Write(m_StatusLight, PinValue.High);
             Thread.Sleep(TimeSpan.FromSeconds(0.1));
-            m_Controller.Write(m_StatusPin, PinValue.Low);
+            m_Controller.Write(m_StatusLight, PinValue.Low);
 
             Thread.Sleep(TimeSpan.FromSeconds(0.1));
         }
 
         public void SetupLights()
         {
-            m_Controller.Write(m_StatusPin, PinValue.High);
+            m_Controller.Write(m_StatusLight, PinValue.High);
             Thread.Sleep(TimeSpan.FromSeconds(0.5));
 
             for (int i = 0; i < 4; i++)
             {
-                m_Controller.Write(m_StatusPin, PinValue.High);
+                m_Controller.Write(m_StatusLight, PinValue.High);
                 Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                m_Controller.Write(m_StatusPin, PinValue.Low);
+                m_Controller.Write(m_StatusLight, PinValue.Low);
                 Thread.Sleep(TimeSpan.FromSeconds(0.2));
             }
-            m_Controller.Write(m_StatusPin, PinValue.Low);
+            m_Controller.Write(m_StatusLight, PinValue.Low);
         }
 
         public void StartupError()
@@ -286,36 +291,36 @@ namespace PrimaryClasses
 
         public void ServerStarted()
         {
-            m_Controller.Write(m_StatusPin, PinValue.High);
+            m_Controller.Write(m_StatusLight, PinValue.High);
             Thread.Sleep(TimeSpan.FromSeconds(0.5));
-            m_Controller.Write(m_StatusPin, PinValue.Low);
+            m_Controller.Write(m_StatusLight, PinValue.Low);
             Thread.Sleep(TimeSpan.FromSeconds(0.5));
 
             for (int i = 0; i < 2; i++)
             {
-                m_Controller.Write(m_StatusPin, PinValue.High);
+                m_Controller.Write(m_StatusLight, PinValue.High);
                 Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                m_Controller.Write(m_StatusPin, PinValue.Low);
+                m_Controller.Write(m_StatusLight, PinValue.Low);
                 Thread.Sleep(TimeSpan.FromSeconds(0.3));
             }
-            m_Controller.Write(m_StatusPin, PinValue.Low);
+            m_Controller.Write(m_StatusLight, PinValue.Low);
         }
 
         public void ClientConnected()
         {
             for (int i = 0; i < 4; i++)
             {
-                m_Controller.Write(m_StatusPin, PinValue.High);
+                m_Controller.Write(m_StatusLight, PinValue.High);
                 m_Controller.Write(m_ErrorLight, PinValue.High);
                 m_Controller.Write(m_NotificationLight, PinValue.High);
 
                 Thread.Sleep(TimeSpan.FromSeconds(0.2));
-                m_Controller.Write(m_StatusPin, PinValue.Low);
+                m_Controller.Write(m_StatusLight, PinValue.Low);
                 m_Controller.Write(m_ErrorLight, PinValue.Low);
                 m_Controller.Write(m_NotificationLight, PinValue.Low);
                 Thread.Sleep(TimeSpan.FromSeconds(0.3));
             }
-            m_Controller.Write(m_StatusPin, PinValue.Low);
+            m_Controller.Write(m_StatusLight, PinValue.Low);
             m_Controller.Write(m_ErrorLight, PinValue.Low);
             m_Controller.Write(m_NotificationLight, PinValue.Low);
         }

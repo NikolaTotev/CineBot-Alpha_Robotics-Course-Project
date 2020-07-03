@@ -213,7 +213,7 @@ namespace PrimaryClasses
                     break;
 
                 case "GJ":
-                    currentManager= new MotionManager(MotionModes.GimbalJog);
+                    currentManager = new MotionManager(MotionModes.GimbalJog);
                     currentManager.ExecuteCommand();
                     break;
 
@@ -238,11 +238,15 @@ namespace PrimaryClasses
                     currentManager.ExecuteCommand();
                     break;
                 case "HM":
-                        currentManager=new MotionManager(MotionModes.StepperHome);
-                        currentManager.ExecuteCommand();
+                    currentManager = new MotionManager(MotionModes.StepperHome);
+                    currentManager.ExecuteCommand();
                     break;
                 case "GHM":
                     currentManager = new MotionManager(MotionModes.GimbalHome);
+                    currentManager.ExecuteCommand();
+                    break;
+                case "REC":
+                    currentManager = new MotionManager(MotionModes.RecordPath);
                     currentManager.ExecuteCommand();
                     break;
                 default:

@@ -15,7 +15,8 @@ namespace PrimaryClasses
         PathFollow,
         TestMode,
         StepperHome,
-        GimbalHome
+        GimbalHome,
+        RecordPath
     };
 
     public enum RecordingModes
@@ -93,11 +94,13 @@ namespace PrimaryClasses
                 case MotionModes.GimbalHome:
                     GimbalGoHome();
                     break;
+                case MotionModes.RecordPath:
+                    RecordPath();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
-
 
         public int StepperJog()
         {
@@ -125,7 +128,12 @@ namespace PrimaryClasses
 
         }
 
-
+        public int RecordPath()
+        {
+            MotorManager currentManager = new MotorManager();
+            currentManager.RecordMotion();
+            return 0;
+        }
         public int GimbalGoHome()
         {
             MotorManager currentManager = new MotorManager();
