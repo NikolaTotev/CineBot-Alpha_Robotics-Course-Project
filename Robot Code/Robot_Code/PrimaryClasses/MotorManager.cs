@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using PrimaryClasses;
 using Swan;
+using Swan.DependencyInjection;
 using Unosquare.RaspberryIO;
 using Unosquare.RaspberryIO.Abstractions;
 using UtilityClasses;
@@ -348,13 +349,35 @@ namespace Motor_Control
             Thread.Sleep(TimeSpan.FromSeconds(1));
         }
 
+        public void MoveServo(int angle, ServoMotorOptions targetServo)
+        {
+            string servoLetter;
+
+            switch (targetServo)
+            {
+                case ServoMotorOptions.pan:
+                    servoLetter = "P";
+                    break;
+                case ServoMotorOptions.rotate:
+                    servoLetter = "R";
+                    break;
+                case ServoMotorOptions.tilt:
+                    servoLetter = "T";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(targetServo), targetServo, null);
+            }
+            SerialComsManager.GetInstance().Write($"{servoLetter}{angle}");
+            Thread.Sleep(TimeSpan.FromSeconds(0.5));
+        }
+
         public void JogMode(object threadParams)
         {
             if (threadParams is MotorThreadStartObj tParams)
             {
                 Console.WriteLine($"[{DateTime.Now}] <Motor Manager Jog Mode>: Motor {tParams.TargetStepperMotor}: Control thread started.");
                 Encoder currentEncoder;
-           
+
                 int emergencyButton = PinManager.GetInstance().EmergencyStop;
                 switch (tParams.TargetStepperMotor)
                 {
@@ -371,7 +394,7 @@ namespace Motor_Control
                 }
 
                 float stepsFromHome = 0;
-                
+
                 FlagArgs flags = new FlagArgs(false, false, tParams.TargetStepperMotor);
                 Thread collisionDetectorThread = new Thread(CollisionDetection);
                 collisionDetectorThread.Start(flags);
@@ -661,16 +684,150 @@ namespace Motor_Control
             Encoder stepperBController = new Encoder(EncoderOptions.Rotate);
             Encoder controlEncoder = new Encoder(EncoderOptions.Tilt);
 
+            int stepperAStepPin = PinManager.GetInstance().JointAStep;
+            int stepperADirPin = PinManager.GetInstance().JointADir;
+
+            int stepperBStepPin = PinManager.GetInstance().JointBStep;
+            int stepperBDirPin = PinManager.GetInstance().JointBDir;
+
             int stepperACounter = 0;
             int stepperBCounter = 0;
             int panCounter = 0;
             int rotateCounter = 0;
             int tiltCounter = 0;
 
+            int stopButton = PinManager.GetInstance().EmergencyStop;
+
+            Dictionary<StepperMotorOptions, int> stepperMovementSequence = new Dictionary<StepperMotorOptions, int>();
+            Dictionary<ServoMotorOptions, int> servoMovementSequence = new Dictionary<ServoMotorOptions, int>();
+
             GoToHome(StepperMotorOptions.motorA, false);
             GoToHome(StepperMotorOptions.motorB, false);
+            GoToHomeGimbal();
+
+            RecordingModes mode = RecordingModes.StepperRecording;
+
+            Console.WriteLine($"[{DateTime.Now}] [INFO]: Entering recording mode. To complete a recording press the emergency stop button.");
+
+            while (PinManager.GetInstance().Controller.Read(stopButton) != PinValue.Low)
+            {
+                if (controlEncoder.ReadSwitch() == PinValue.Low)
+                {
+                    if (mode == RecordingModes.StepperRecording)
+                    {
+                        mode = RecordingModes.GimbalRecording;
+                    }
+                    if (mode == RecordingModes.GimbalRecording)
+                    {
+                        mode = RecordingModes.StepperRecording;
+                    }
+                }
+
+                if (mode == RecordingModes.StepperRecording)
+                {
+                    stepperAController.ReadSIA();
+                    stepperAController.ReadSIB();
+
+                    stepperBController.ReadSIA();
+                    stepperBController.ReadSIB();
+
+                    #region  Stepper A control logic
+                    if (stepperAController.SIAValue != stepperAController.LastSIAState)
+                    {
+                        bool direction;
+
+                        if (stepperAController.SIAValue == stepperAController.SIBValue)
+                        {
+                            Console.WriteLine("A CW  ====================");
+                            direction = CW;
+                        }
+                        else
+                        {
+                            Console.WriteLine("A CCW ###################");
+                            direction = CCW;
+                        }
+
+                        int movementAngle = m_MinimumAngle * m_MovementSensitivity;
+                        float speed = m_MinimumSpeed * m_SpeedSensitivity;
+
+                        if (direction)
+                        {
+                            PinManager.GetInstance().Controller.Write(stepperADirPin, PinValue.High);
+                        }
+                        else
+                        {
+                            PinManager.GetInstance().Controller.Write(stepperADirPin, PinValue.Low);
+                        }
+
+                        for (int i = 0; i < movementAngle; i++)
+                        {
+                            PinManager.GetInstance().Controller.Write(stepperAStepPin, PinValue.High);
+                            Thread.Sleep(TimeSpan.FromSeconds(speed));
+                            PinManager.GetInstance().Controller.Write(stepperAStepPin, PinValue.Low);
+                            Thread.Sleep(TimeSpan.FromSeconds(speed));
+                        }
 
 
+                        stepperAController.ReadSIA();
+                        stepperAController.ReadSIB();
+                        stepperACounter++;
+                    }
+                    stepperAController.SetLastState();
+                    Thread.Sleep(TimeSpan.FromMilliseconds(1));
+                    #endregion
+
+                    #region  Stepper B control logic
+                    if (stepperBController.SIAValue != stepperBController.LastSIAState)
+                    {
+                        bool direction;
+
+                        if (stepperBController.SIAValue == stepperBController.SIBValue)
+                        {
+                            Console.WriteLine("B CW  ====================");
+                            direction = CW;
+                        }
+                        else
+                        {
+                            Console.WriteLine("B CCW ###################");
+                            direction = CCW;
+                        }
+
+                        int movementAngle = m_MinimumAngle * m_MovementSensitivity;
+                        float speed = m_MinimumSpeed * m_SpeedSensitivity;
+
+                        if (direction)
+                        {
+                            PinManager.GetInstance().Controller.Write(stepperBDirPin, PinValue.High);
+                        }
+                        else
+                        {
+                            PinManager.GetInstance().Controller.Write(stepperBDirPin, PinValue.Low);
+                        }
+
+                        for (int i = 0; i < movementAngle; i++)
+                        {
+                            PinManager.GetInstance().Controller.Write(stepperBStepPin, PinValue.High);
+                            Thread.Sleep(TimeSpan.FromSeconds(speed));
+                            PinManager.GetInstance().Controller.Write(stepperBStepPin, PinValue.Low);
+                            Thread.Sleep(TimeSpan.FromSeconds(speed));
+                        }
+
+
+                        stepperBController.ReadSIA();
+                        stepperBController.ReadSIB();
+                        stepperBCounter++;
+                    }
+                    stepperBController.SetLastState();
+                    Thread.Sleep(TimeSpan.FromMilliseconds(1));
+                    #endregion
+                }
+
+                if (mode == RecordingModes.GimbalRecording)
+                {
+
+                }
+
+            }
         }
 
         public void Dance()

@@ -18,6 +18,12 @@ namespace PrimaryClasses
         GimbalHome
     };
 
+    public enum RecordingModes
+    {
+        StepperRecording,
+        GimbalRecording
+    }
+
     public enum StepperMotorOptions
     {
         motorA,
