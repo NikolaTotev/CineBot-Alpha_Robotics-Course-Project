@@ -192,7 +192,7 @@ Since this is quite a lengthy section I will provide skip links so that you can 
 
 ####	Base & base drive train
 Since this is a stationary robot, the base is a key part of the design and a good base is essential for the overall stability of the system. This section also also experiences the most loading and has to be designed with that in mind. I also want to cover the different adapters that are used to connect the arm sections to the base subassembly.
-* Base & base drive train iterations
+* ___Base & base drive train iterations___
 	* Iteraton 1
 		INSERT IMAGE
 		Initially I started off with this design. As you can see it is a simple and small gearbox and the larger gear has a hexagonal shaft. and it sits in a stand. The idea behind this was to have the rest of the robot be friction fit onto it, however there were many tolerance issues. Another significant issue with this base, it had a small footprint and once the robot was friction fit ontop  there was a lot of wobbling around and I abandoned the idea.
@@ -206,12 +206,37 @@ Since this is a stationary robot, the base is a key part of the design and a goo
 
 **Thigs I learned** - Its best to keep reducer mechanisms as simple as possible. It is important to consider the forces that will be exerted on a part, especially on the base of the robot. Bearings are something that should be used more often, they significantlly improve the final result and are a great addition to 3D printed mechanisms. 
 	
-* Base Adapter iterations
-	* Iteraton 1
-	* Iteraton 2
+* ___Base Adapter iterations___
+   This will just quickly cover the different adapters I made.
+	* __Iteraton 1__
+		INSERT IMAGE
+	Uses hexagonal friction fit on one side and screws for mounting the arm section. 
+		Cons - 
+		*	No cable management
+		*	Tolerance issues
+		*	Time-consuming to mount/unmount arm sections
+		*	Too thin for the loads it would experience
+	
+		Pros - 
+		* simple design
+		* quick to print.
+		
+	*  __Iteraton 2__
+		This  version as you can see it a bit better, but it still has the major issues of the previous one.
+	
+		 Pros - 
+		 *fixes thinness issue
+		 * adds some stability due to wider footprint
+		 
+		 Cons
+		 * still time-consuming to mount arm sections
+		 * still has tolerance issues
+		 
 	* Iteraton 3
-		* Rev 3.1
-		* Rev 3.2
+		This one solves all of the issues of the previous ones, but introduces some new ones. As you can see it is connected with screws to the gearbox, but those screws also hold the planet gears and carrier in alignment. This means that they can't be tightened too much as it will cause the gearbox to bind. Despite those problems, the easy swap functionality that comes from the use of a universal trapezoid mount allows for easy mounting of the other part of the robot. This base also has cabel management that feeds the cables out of the back.
+		
+* Iteration 3.1
+	The final iteration of this part is actually removing it altogether. See the last arm iteration to understand the whole idea.
 
 #### Arm sections
 * Iteraton 1
