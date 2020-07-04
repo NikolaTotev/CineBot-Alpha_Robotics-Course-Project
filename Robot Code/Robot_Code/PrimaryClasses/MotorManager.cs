@@ -98,9 +98,20 @@ namespace Motor_Control
             return stepsForInputAngle;
         }
 
-        public void MoveStepper(int angle, float speed, StepperMotorOptions stepperMotor, bool direction, bool useDebugMessages, FlagArgs flags)
+
+
+        public void MoveStepper(int angle, float speed, StepperMotorOptions stepperMotor, bool direction, bool useDebugMessages, FlagArgs flags, int steps = 0)
         {
-            int numberOfSteps = ConvertAngleToSteps(angle);
+            int numberOfSteps;
+            if (steps == 0)
+            {
+                numberOfSteps = ConvertAngleToSteps(angle);
+            }
+            else
+            {
+                numberOfSteps = steps;
+            }
+
             Console.WriteLine($"Number of steps = {numberOfSteps}");
             int stepPin = 0;
             int dirPin = 0;
@@ -735,11 +746,12 @@ namespace Motor_Control
             int LED3 = PinManager.GetInstance().StatusLight;
 
             bool hasLetGoOfButton = true;
-
+            int numberOfStepperNodes = 0;
+            int numberOfGimbalNodes = 0;
             int stopButton = PinManager.GetInstance().EmergencyStop;
 
             Dictionary<int, PathNode> movementSequence = new Dictionary<int, PathNode>();
-            
+
             GoToHome(StepperMotorOptions.motorA, false);
             GoToHome(StepperMotorOptions.motorB, false);
             GoToHomeGimbal();
@@ -815,7 +827,7 @@ namespace Motor_Control
                     if (stepperBController.CompareStates())
                     {
                         bool direction = stepperBController.GetDirection();
-                        
+
                         int numberOfSteps = ConvertAngleToSteps(m_MinimumAngle * m_MovementSensitivity);
 
                         float speed = m_MinimumSpeed * m_SpeedSensitivity;
@@ -890,6 +902,7 @@ namespace Motor_Control
                         PathNode nodeToAdd = new PathNode(PathNodeTypes.Stepper);
                         nodeToAdd.StepperPosition(StepperMotorOptions.motorA, stepperACounter);
                         movementSequence.Add(movementSequence.Count + 1, nodeToAdd);
+                        numberOfStepperNodes++;
                         hasLetGoOfButton = false;
                         PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
                         Thread.Sleep(TimeSpan.FromSeconds(2));
@@ -899,9 +912,10 @@ namespace Motor_Control
                     if (stepperBController.ReadSwitch() == PinValue.Low && hasLetGoOfButton)
                     {
                         Console.WriteLine($"Path node added for {StepperMotorOptions.motorB} that is {stepperBCounter} steps from the home position.");
-                        PathNode nodeToAdd = new PathNode( PathNodeTypes.Stepper);
+                        PathNode nodeToAdd = new PathNode(PathNodeTypes.Stepper);
                         nodeToAdd.StepperPosition(StepperMotorOptions.motorB, stepperBCounter);
                         movementSequence.Add(movementSequence.Count + 1, nodeToAdd);
+                        numberOfStepperNodes++;
                         hasLetGoOfButton = false;
                         PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
                         Thread.Sleep(TimeSpan.FromSeconds(2));
@@ -986,10 +1000,11 @@ namespace Motor_Control
 
                     if (stepperAController.ReadSwitch() == PinValue.Low && hasLetGoOfButton)
                     {
-                        Console.WriteLine($"Path node added for {StepperMotorOptions.motorA} that is {stepperACounter} steps from the home position.");
+                        Console.WriteLine($"Path node added for gimbal. Values are: Pan {panCounter} | Rot. {rotateCounter} | Tilt {tiltCounter}.");
                         PathNode nodeToAdd = new PathNode(PathNodeTypes.Servo);
-                        nodeToAdd.ServoPositions(panCounter,rotateCounter,tiltCounter);
+                        nodeToAdd.ServoPositions(panCounter, rotateCounter, tiltCounter);
                         movementSequence.Add(movementSequence.Count + 1, nodeToAdd);
+                        numberOfGimbalNodes++;
                         hasLetGoOfButton = false;
                         PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
                         PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
@@ -997,11 +1012,97 @@ namespace Motor_Control
                         PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
                         PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
                     }
-                    
+
                 }
             }
-            Console.WriteLine($"Recording complete. There are {movementSequence.Count} stepper motor nodes and \n" +
-                              $"{movementSequence.Count} nodes.");
+            Console.WriteLine($"Recording complete. There are {movementSequence.Count} path nodes. \n Stepper nodes: {numberOfStepperNodes} \n Gimbal nodes: {numberOfGimbalNodes}");
+            Console.WriteLine("The recorded path will now be replayed.");
+            Thread.Sleep(TimeSpan.FromSeconds(3));
+            GoToHome(StepperMotorOptions.motorA, false);
+            GoToHome(StepperMotorOptions.motorB, false);
+            GoToHomeGimbal();
+
+            FlagArgs Aflags = new FlagArgs(false, false, StepperMotorOptions.motorA);
+            Thread collisionDetectorThreadA = new Thread(CollisionDetection);
+            collisionDetectorThreadA.Start(Aflags);
+
+            FlagArgs Bflags = new FlagArgs(false, false, StepperMotorOptions.motorB);
+            Thread collisionDetectorThreadB = new Thread(CollisionDetection);
+            collisionDetectorThreadB.Start(Aflags);
+
+            int currentAStepperPosition = 0;
+            int currentBStepperPosition = 0;
+            bool stepperDir;
+            int stepADelta;
+            int stepBDelta;
+
+            float follwoSpeed = m_MinimumSpeed * m_SpeedSensitivity;
+
+            int emergencyButton = PinManager.GetInstance().EmergencyStop;
+
+            foreach (var pathNode in movementSequence)
+            {
+                if (PinManager.GetInstance().Controller.Read(emergencyButton) == PinValue.Low)
+                {
+                    Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
+                    PinManager.GetInstance().EmergencyStopLights();
+                    break;
+                }
+
+
+                if (pathNode.Value.NodeType == PathNodeTypes.Stepper)
+                {
+                    switch (pathNode.Value.TargetMotor)
+                    {
+                        case StepperMotorOptions.motorA:
+                            stepADelta = Math.Abs(pathNode.Value.StepsFromHome - currentAStepperPosition);
+                            if (pathNode.Value.StepsFromHome > currentAStepperPosition)
+                            {
+                                stepperDir = CCW;
+                                currentAStepperPosition += pathNode.Value.StepsFromHome;
+                            }
+                            else
+                            {
+                                stepperDir = CW;
+                                currentAStepperPosition -= pathNode.Value.StepsFromHome;
+                            }
+                            Console.WriteLine($"Moving motor {StepperMotorOptions.motorA} with delta {stepADelta} and direction {stepperDir}");
+                            MoveStepper(0, follwoSpeed, StepperMotorOptions.motorA, stepperDir, false, Aflags, stepADelta);
+                            break;
+                        case StepperMotorOptions.motorB:
+                            stepBDelta = Math.Abs(pathNode.Value.StepsFromHome - currentBStepperPosition);
+                            if (pathNode.Value.StepsFromHome > currentBStepperPosition)
+                            {
+                                stepperDir = CCW;
+                                currentBStepperPosition += pathNode.Value.StepsFromHome;
+                            }
+                            else
+                            {
+                                stepperDir = CW;
+                                currentBStepperPosition -= pathNode.Value.StepsFromHome;
+                            }
+
+                            Console.WriteLine($"Moving motor {StepperMotorOptions.motorB} with delta {stepBDelta} and direction {stepperDir}");
+                            MoveStepper(0, follwoSpeed, StepperMotorOptions.motorB, stepperDir, false, Bflags, stepBDelta);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+
+                if (pathNode.Value.NodeType == PathNodeTypes.Servo)
+                {
+                    Console.WriteLine($"Moving servos: \n Pan: {pathNode.Value.PanPosition} \n Rot: {pathNode.Value.RotatePosition} \n Tilt: {pathNode.Value.TiltPosition}");
+                    MoveServo(pathNode.Value.PanPosition, ServoMotorOptions.pan);
+                    Thread.Sleep(TimeSpan.FromMilliseconds(420));
+
+                    MoveServo(pathNode.Value.RotatePosition, ServoMotorOptions.rotate);
+                    Thread.Sleep(TimeSpan.FromMilliseconds(420));
+
+                    MoveServo(pathNode.Value.TiltPosition, ServoMotorOptions.tilt);
+                    Thread.Sleep(TimeSpan.FromMilliseconds(420));
+                }
+            }
         }
 
         public void Dance()
