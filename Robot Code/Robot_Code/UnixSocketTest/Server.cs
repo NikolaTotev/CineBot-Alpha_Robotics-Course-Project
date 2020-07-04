@@ -4,20 +4,39 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Device.Gpio;
+using System.IO.Ports;
 
 namespace UnixSocketTest
 {
-    class Server
+    public class Server
     {
         private UnixDomainSocketEndPoint m_UnixSocketEndpoint;
         private Socket m_Socket;
         private Socket m_Handler;
         private readonly string m_SocketPath = "/home/pi/socketTest.sock";
         private readonly string m_TestMessage = "Hello from the other side! I will be your server today.";
+
+        private readonly int m_StepMultiplier = 1;
+        private readonly int m_GearRatio = 9;
+        SerialPort serialPort = new SerialPort("/dev/ttyACM0", 9600); //Set the read/write timeouts    
+        int currentServoPos = 75;
+
+        public int ConvertAngleToSteps(int inputAngle)
+        {
+
+
+            int stepsForCarrierRevolution = 200 * m_StepMultiplier * m_GearRatio;
+            int partOfCircle = 360 / inputAngle;
+            int stepsForInputAngle = stepsForCarrierRevolution / partOfCircle;
+            return stepsForInputAngle;
+        }
+
         public Server()
         {
             Console.WriteLine("Starting stepper motor test.");
-
+            serialPort.ReadTimeout = 1500;
+            serialPort.WriteTimeout = 1500;
+            serialPort.Open();
             GpioController controller = new GpioController();
             int jointAStep = 13;
             int jointADir = 6;
@@ -42,6 +61,7 @@ namespace UnixSocketTest
                 Console.WriteLine("An error occured during socket binding.");
                 throw;
             }
+            serialPort.WriteLine("P75");
 
             int counter = 0;
             while (counter < 100)
@@ -86,9 +106,9 @@ namespace UnixSocketTest
             catch (Exception e)
             {
                 Console.WriteLine($"An exception with code {e.HResult} occured during socket disposal.");
-                
+
             }
-            
+
 
             try
             {
@@ -99,7 +119,7 @@ namespace UnixSocketTest
                 {
                     if (m_Handler.Available > 0)
                     {
-                        int numberOfBytes = m_Handler.Receive(response,18 , SocketFlags.None);
+                        int numberOfBytes = m_Handler.Receive(response, 18, SocketFlags.None);
                         try
                         {
                             string[] splitVariables = Encoding.ASCII.GetString(response).Split('#');
@@ -110,31 +130,38 @@ namespace UnixSocketTest
                             if (panMove > 0)
                             {
                                 controller.Write(jointADir, PinValue.Low);
+                                currentServoPos += (int) panMove;
                             }
 
                             else
                             {
                                 controller.Write(jointADir, PinValue.High);
+                                currentServoPos -= (int)panMove;
                             }
 
 
-                            for (int i = 0; i < Math.Abs(panMove) ; i++)
-                            {
+                            serialPort.WriteLine($"P{Math.Abs((int)panMove)}");
+                            Console.WriteLine($"Servo pos {(int)panMove},  {panMove}");
+                            Thread.Sleep(TimeSpan.FromMilliseconds(100));
 
-                                Console.WriteLine($"Write to A {i}");
-                                controller.Write(jointAStep, PinValue.High);
-                                Thread.Sleep(TimeSpan.FromSeconds(0.01));
-                                controller.Write(jointAStep, PinValue.Low);
-                                Thread.Sleep(TimeSpan.FromSeconds(0.01));
-                            }
-                            Console.WriteLine($"Pan value {panMove}, Tilt value {tiltMove}");
+
+                            //for (int i = 0; i < ConvertAngleToSteps((int)Math.Abs(panMove)); i++)
+                            //{
+
+                            //    Console.WriteLine($"Write to A {i}");
+                            //    controller.Write(jointAStep, PinValue.High);
+                            //    Thread.Sleep(TimeSpan.FromSeconds(0.01));
+                            //    controller.Write(jointAStep, PinValue.Low);
+                            //    Thread.Sleep(TimeSpan.FromSeconds(0.01));
+                            //}
+                            //Console.WriteLine($"Pan value {panMove}, Tilt value {tiltMove}");
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine($"Parsing fail {Encoding.ASCII.GetString(response)}");
                             Console.WriteLine($"Split {Encoding.ASCII.GetString(response).Split('#')[1]}");
                         }
-                        
+
 
                         //m_Handler.Send(Encoding.ASCII.GetBytes($"SERVER GOT - {Encoding.ASCII.GetString(response)} SERVER"));
                         waitingForMessage = true;
