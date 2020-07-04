@@ -17,6 +17,8 @@ using Encoder = PrimaryClasses.Encoder;
 namespace Motor_Control
 {
     public enum PathNodeTypes { Stepper, Servo }
+
+    
     public class PathNode
     {
         public PathNodeTypes NodeType { get; set; }
@@ -757,6 +759,66 @@ namespace Motor_Control
             GoToHomeGimbal();
 
             RecordingModes mode = RecordingModes.StepperRecording;
+            bool hasSelectedFile = false;
+            int saveFile = 0;
+
+            Console.WriteLine($"Please select a save file. Current selection is file number {saveFile}");
+            while (!hasSelectedFile)
+            {
+                switch (saveFile)
+                {
+                    case 0:
+                        PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
+                        PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                        break;
+                    case 1:
+                        PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
+                        PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                        break;
+                    case 2:
+                        PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                        break;
+                }
+                
+                if (controlEncoder.ReadSwitch() == PinValue.Low)
+                {
+                    hasSelectedFile = true;
+                }
+                controlEncoder.ReadSIA();
+                controlEncoder.ReadSIB();
+                if (controlEncoder.CompareStates())
+                {
+                    bool direction = controlEncoder.GetDirection();
+
+                    if (direction)
+                    {
+                        if (saveFile > 0)
+                        {
+                            saveFile -= 1;
+                        }
+                        
+                    }
+                    else
+                    {
+                        if (saveFile <= 1)
+                        {
+                            saveFile += 1;
+                        }
+                    }
+
+                    controlEncoder.ReadSIA();
+                    controlEncoder.ReadSIB();
+                }
+                controlEncoder.SetLastState();
+                Thread.Sleep(TimeSpan.FromMilliseconds(1));
+
+            }
+            Console.WriteLine($"Save file {saveFile} has been selected.");
+
 
             Console.WriteLine($"[{DateTime.Now}] [INFO]: Entering recording mode. To complete a recording press the emergency stop button.");
 
@@ -979,7 +1041,7 @@ namespace Motor_Control
                     {
                         bool direction = controlEncoder.GetDirection();
 
-                        if (direction)
+                        if (controlEncoder.GetDirection())
                         {
                             tiltCounter -= m_MinimumServoAngle;
                         }
@@ -997,6 +1059,41 @@ namespace Motor_Control
                     controlEncoder.SetLastState();
                     Thread.Sleep(TimeSpan.FromMilliseconds(1));
                     #endregion
+
+                    //TODO This can be in a separate function.
+                    if (!hasLetGoOfButton)
+                    {
+                        if (stepperAController.ReadSwitch() != PinValue.Low && stepperBController.ReadSwitch() != PinValue.Low)
+                        {
+                            hasLetGoOfButton = true;
+                        }
+                        else
+                        {
+
+                            Console.WriteLine("Please remove finger from save button!");
+                            for (int i = 0; i < 2; i++)
+                            {
+                                PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                                Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                                PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                                Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                                PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                                Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                                PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                                Thread.Sleep(TimeSpan.FromSeconds(0.5));
+                            }
+
+                            Thread.Sleep(TimeSpan.FromSeconds(1));
+                        }
+                    }
 
                     if (stepperAController.ReadSwitch() == PinValue.Low && hasLetGoOfButton)
                     {
@@ -1016,8 +1113,22 @@ namespace Motor_Control
                 }
             }
             Console.WriteLine($"Recording complete. There are {movementSequence.Count} path nodes. \n Stepper nodes: {numberOfStepperNodes} \n Gimbal nodes: {numberOfGimbalNodes}");
+            
+            SerializerManager.SaveMotionPath(movementSequence, saveFile);
+
             Console.WriteLine("The recorded path will now be replayed.");
             Thread.Sleep(TimeSpan.FromSeconds(3));
+            FollowPath(saveFile);
+        }
+
+        public void Dance()
+        {
+
+        }
+
+
+        public void FollowPath(int file)
+        {
             GoToHome(StepperMotorOptions.motorA, false);
             GoToHome(StepperMotorOptions.motorB, false);
             GoToHomeGimbal();
@@ -1039,6 +1150,14 @@ namespace Motor_Control
             float follwoSpeed = m_MinimumSpeed * m_SpeedSensitivity;
 
             int emergencyButton = PinManager.GetInstance().EmergencyStop;
+
+            Dictionary<int, PathNode> movementSequence = SerializerManager.GetMotionPath(file);
+
+            if (movementSequence.Count == 0)
+            {
+                PinManager.GetInstance().DoublePulse();
+                Console.WriteLine($"Motion path {file} is empty.");
+            }
 
             foreach (var pathNode in movementSequence)
             {
@@ -1104,12 +1223,6 @@ namespace Motor_Control
                 }
             }
         }
-
-        public void Dance()
-        {
-
-        }
-
         public void SetupMotors()
         {
             StringBuilder sb = new StringBuilder();
