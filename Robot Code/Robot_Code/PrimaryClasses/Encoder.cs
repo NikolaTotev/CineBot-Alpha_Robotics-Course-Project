@@ -68,5 +68,18 @@ namespace PrimaryClasses
         {
             LastSIAState = SIAValue;
         }
+
+        public bool CompareStates()
+        {
+            ReadSIA();
+            ReadSIB();
+            return SIAValue != LastSIAState;
+        }
+
+        public bool GetDirection()
+        {
+            return SIAValue == SIBValue;
+
+        }
     }
 }
