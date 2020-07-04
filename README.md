@@ -222,6 +222,7 @@ Since this is a stationary robot, the base is a key part of the design and a goo
 		* quick to print.
 		
 	*  __Iteraton 2__
+== INSERT IMAGE==
 		This  version as you can see it a bit better, but it still has the major issues of the previous one.
 	
 		 Pros - 
@@ -232,21 +233,39 @@ Since this is a stationary robot, the base is a key part of the design and a goo
 		 * still time-consuming to mount arm sections
 		 * still has tolerance issues
 		 
-	* Iteraton 3
-		This one solves all of the issues of the previous ones, but introduces some new ones. As you can see it is connected with screws to the gearbox, but those screws also hold the planet gears and carrier in alignment. This means that they can't be tightened too much as it will cause the gearbox to bind. Despite those problems, the easy swap functionality that comes from the use of a universal trapezoid mount allows for easy mounting of the other part of the robot. This base also has cabel management that feeds the cables out of the back.
+	* __Iteraton 3__
+	* == INSERT IMAGE==
+
+		This one solves all of the issues of the previous ones, but introduces some new ones. As you can see it is connected with screws to the gearbox, but those screws also hold the planet gears and carrier in alignment. This means that they can't be tightened too much as it will cause the gearbox to bind. Despite those problems, the easy swap functionality that comes from the use of a universal trapezoid mount allows for easy mounting of the other part of the robot. This base also has cable management that feeds the cables out of the back.
 		
 * Iteration 3.1
 	The final iteration of this part is actually removing it altogether. See the last arm iteration to understand the whole idea.
 
-#### Arm sections
+#### Arm section
+This is the most important part of the robot. It make up the majority of the assembly and without it the robot would not work. This part also transmits the most load and has to be made both light and strong. Many iterations were needed to get to the final version.
 * Iteraton 1
+==INSERT IMAGE==
+This was not thought trough very well. As previous first iterations it relies on friction fits and too many screws to be practical.
+
 * Iteraton 2
+==INSERT IMAGE==
+   This iteration is also poorly designed. While the shape is cool, it is too thin, too small and again relies on a friction fit.
+   
 * Iteraton 3
+==INSERT IMAGE==
+This version is a bit better, much stronger but still too small and once again it uses too many screws.
+
 * Iteraton 4
+ ==INSERT IMAGE==
+	  This iteration is where better design choices emerge. There is proper cabel management, it is light yet strong. Unfortunately, it is too complex and takes too long to print. It also uses too many screws.
 * Iteraton 5
- 	*	Rev 5.1
-	*	Rev 5.2
+ ==INSERT IMAGE==
+	This is the first iteration where a the universal connector is used. The shape is simplified and there is better cable management. This design goes through 2 updates to make it stronger it experienced a structural faliure once.
+* Iteration 5.1
+* Iteration 5.2
 * Iteraton 6
+==INSERT IMAGE==
+	For this iteration, the top arm section is the same, but the base arm section has been reworked due to the structural falire shown below. This change also comes from the redesign of the base drive train. As you can see, it still keeps the universal connector, it is also much more stable, compared to the previous arm sections.
 
 
 #### Arm Joint
