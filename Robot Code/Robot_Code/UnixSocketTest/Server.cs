@@ -139,11 +139,14 @@ namespace UnixSocketTest
                                 currentServoPos -= (int)panMove;
                             }
 
-
-                            serialPort.WriteLine($"P{Math.Abs((int)panMove)}");
-                            Console.WriteLine($"Servo pos {(int)panMove},  {panMove}");
-                            Thread.Sleep(TimeSpan.FromMilliseconds(100));
-
+                            if (panMove != 0 && tiltMove !=0)
+                            {
+                                serialPort.WriteLine($"P{Math.Abs((int)panMove)}");
+                                serialPort.WriteLine($"T{Math.Abs((int)tiltMove)}");
+                                Console.WriteLine($"Servo pos {(int)panMove},  {panMove}");
+                                Console.WriteLine($"Servo pos {(int)tiltMove},  {tiltMove}");
+                                Thread.Sleep(TimeSpan.FromMilliseconds(100));
+                            }
 
                             //for (int i = 0; i < ConvertAngleToSteps((int)Math.Abs(panMove)); i++)
                             //{
