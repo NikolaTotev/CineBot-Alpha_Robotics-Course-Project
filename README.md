@@ -193,14 +193,14 @@ Since this is quite a lengthy section I will provide skip links so that you can 
 ####	Base & base drive train
 Since this is a stationary robot, the base is a key part of the design and a good base is essential for the overall stability of the system. This section also also experiences the most loading and has to be designed with that in mind. I also want to cover the different adapters that are used to connect the arm sections to the base subassembly.
 * ___Base & base drive train iterations___
-	* Iteraton 1
+	* __Iteraton 1__
 		INSERT IMAGE
 		Initially I started off with this design. As you can see it is a simple and small gearbox and the larger gear has a hexagonal shaft. and it sits in a stand. The idea behind this was to have the rest of the robot be friction fit onto it, however there were many tolerance issues. Another significant issue with this base, it had a small footprint and once the robot was friction fit ontop  there was a lot of wobbling around and I abandoned the idea.
-	* Iteraton 2
+	* __Iteraton 2__
 	INSERT IMAGE
 	This iteration was inspired by the  first version of the arm joint planetary gears and then a smaller version of this base gear box was used in the final iteration of the arm joint. In theory this stetup should've been much more stable, but the way I chose to attach the base adapter created a lot of problems. This gearbox also had some binding issues in some spots,which resulted in irregular motion and the stepper motor loosing steps. The problems mentioned along with the arm section issues at the base of the robot made me rework the entire base.
 	
-	* Iteraton 3
+	* __Iteraton 3__
 	INSERT IMAGE
 	This is the final iteration. As you can see it quite different and uses a much simpler and adjustable drive train. In the base there are 2 75 mm *(outer diameter)* bearings that provide the structural stabilitiy and smooth rotational movement. This base fixes all of the issues that the previous ones had and helped solve the issues with the base arm section
 
@@ -266,29 +266,58 @@ This version is a bit better, much stronger but still too small and once again i
 * Iteraton 6
 ==INSERT IMAGE==
 	For this iteration, the top arm section is the same, but the base arm section has been reworked due to the structural falire shown below. This change also comes from the redesign of the base drive train. As you can see, it still keeps the universal connector, it is also much more stable, compared to the previous arm sections.
-
-
+	
 #### Arm Joint
+This part is the one and only "joint". I call it a joint because it connects two arm sections in a mobile way. This part of the robot had a couple of requiredments to meet:
+1. It needs to be strong enough (structurally) to lift the weight of the arm.
+2. Since the stepper motor can't lift the arm on its own the joint needs to be some kind of reducer with an appropriate gear ratio. The gears must also operat smoothly.
+3. It needs to implement a universal mounting system.
+		
 * Iteraton 1
-* Iteraton 2
+		== INSERT IMAGE ==
+	  In the very beginning since I had never worked with stepper motors I didn't know that they can't lift much on their own, and they require some kind of reduction mechanism.
+	  This is why the first iteration has no gears whatsoever.
+	  
+ * Iteraton 2
+==INSERT IMAGE==
+	 This iteration uses a very simple planetary gearbox with a 7:1 reduction ratio. Was able to move the arm, but as it relies on a friction fit it is not stable. Along with those issues, after the gimbal iterations it proved to be too weak.
 * Iteraton 3
-* Iteraton 4
+==INSERT IMAGE==
+In this version, I deicded to try to make a worm drive, but since it is a much harder reducer to make it had internal friction issues that caused it to be too weak.
 
-#### Joint to arm section interfaces
+* Iteraton 4
+==INSERT IMAGE==
+This is the final iteration and it is a smaller version of second iteration of the base gearbox.  It shares it's flaws, but they were not as pronounced due to the smaller foces exerted on it. Using this new gearbox allowed me to finally add the universal mounting bracket to it.
+
+#### Joint to arm section interfaces/adapters
 * Iteraton 1
+	==INSERT IMAGE==
+	As you can see there is more than one version, but I'm grouping them as the first iteration as they do not include any counterbalance. These are simple, they all do their job, but due to the weight of the gimbal, a counterbalance is requried.
 * Iteraton 2
+==INSERT IMAGE==
+As you can see on this version, at the back there is a mounting point for the counter balance mentioned above. This makes the job of the reducer much easier by balancing the forces.
 
 #### Counter balance 
 * Iteraton 1
+This part is pretty simple. Since I neede something to balnce the gimbal, and an arduino is needed to control the motors, I decied to combine the two and this is the result. The back has a tray for some metal weights and on the top there are mounting holes for the arduino. As mentioned above it connects to the second iteration of the arm joint adapter
 
 #### Gimbal
+This part also has a lot of iterations, as initially I didn't know what the best approach was. All of the axes are controled via servo motors.
 * Iteraton 1
+==INSERT IMAGE==
+ This looks like a standard gimbal, the rotation motor housing is quite big and it is really heavy. Along with that, the camera mount is weak and the tilt and pan arms are also flimsy.
 * Iteraton 2
+==INSERT IMAGE==
+The second version of the gimbal is very complex, and rather large. Due to this fact it is very unstable and I quickly abanoned it. 
 * Iteraton 3
+The third version is inspired by the second one, but attempts to minimize it by using smaller servos and smaller pieces. This design has major alignment issues. It is also very difficult to assemble and easy to break.
 * Iteraton 4
+==INSERT IMAGE==
+This final design is inspired by [a project I found on youtube](https://www.youtube.com/watch?v=wQypj7ti7Vw). I was already behind schedule and I thought that it's time to look for some help. I had to make the models from scratch, since I am using servo motors and the person in the video is using brushless gimbal motors.
 
 #### Limit switches
-* Iteraton 1
+These don't really have any iterations. I just bought a simple switch from the store and mounted it to the robot with two simple mounts. Despite their simplicity, these are critical parts as the allow the robot to "know" what position it is in. Please read [the improvemens section](#Possible-improvements) for more insight on the improvements I would make in the area of positional awareness. 
+
 
 
 
