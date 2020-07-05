@@ -15,6 +15,12 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 	* [Scope](#Scope)
 	* [Key features](#Key-features)
 	* [Initial design decisions](#Initial-design-decisions)
+* [Getting started ](#)   *(click here if you just want to setup the robot and learn how to use it)*
+	* [How to run client]()
+	* [How to run robot]()
+	* [Trouble shooting]()
+	* [User manual]()
+
 -  [Hardware](#Hardware)
 	* [Design constraints](#Design-constraints)
 		* [Actuators](#Actuators)
@@ -360,7 +366,27 @@ The electronics housing is not an essential part of the project, but it makes fo
 # Software 
 ## Software Requirements
 ### Safety requirements
+Since this is a simple robot, with limited functionality, I decided to make safety features as part of the functionality of the robot. There are two main safety features that are noteworthy:
+
+1. There is a physical emergency stop button that is monitored by processes that control the stepper motors or send commands to the arduino via serial port. If the button is switched on those processes immediately stop the movement and exit to a safe program state. This check is performed before any movement code is executed.
+
+2.  There are physial limit switches that limit the motion of the robot and protect it from entering into dangerous positions. These are also monitored by the processes that perform movements. The difference is, that if a limit is hit, the robot has the ability to move back into a safe position if such a command is given.
+
+These two safety critical checks run on a separate thread and for each motor at the same time. All of that said, it is important to consider the [platform](#Choosing-a-suitable-platform) and [programing language](#Programing-language-selection) being used, and the pros and cons associated with those decisions.
+
 ### Required modes of operation 
+Along with the safety features, the robot has a couple of different modes of operation:
+1. Simple jog mode - control one stepper motor at a time.
+2. Multithread jog mode - controll both stepper motors at the same time.
+3. Gimbal jog mode - control the gimbal - all axes at the same time.
+4. Record path - records a path, multithread stepper motor control and an option to switch to gimbal control. Path nodes are set by pressing the correct buttons for each mode. More info can be found in the [how to use section]()
+5. Replay path - Reads a saved file and replays the motion that was recorded.
+6. Face detection & tracking - tracks a detected face by attempting to keep it in the center of the frame  ***(only works for gimbal)***
+
+### User interface
+This is an imporant category, as it is the way for the user to know what mode the robot is in.
+This is done via 3 LED's mounted on the front of the electronics housing. The main way the user can interact with the system with via the client application which has both a GUI and console interface.
+
 
 ## Software Architecture 
 ### Choosing a suitable platform
