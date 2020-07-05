@@ -327,7 +327,7 @@ These don't really have any iterations. I just bought a simple switch from the s
 
 ### Electrical system
 #### Schematics
-<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Stepper%20Motor%20Connection%20Schematic.png?raw=true=" width="424.5" height="400.5">
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Stepper%20Motor%20Connection%20Schematic.png?raw=true=" width="849" height="801">
 #### Used components
 #### Electronics housing and connections to robot
 
