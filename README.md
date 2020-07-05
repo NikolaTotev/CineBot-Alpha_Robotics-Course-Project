@@ -334,7 +334,24 @@ These don't really have any iterations. I just bought a simple switch from the s
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Button%20and%20Encoder%20Connections%20Schematic.png?raw=true" width="707.5" height="667.5">
 
 #### Used components
+* __Stepper motor & stepper motor drivers__
+[A4988 Stepper Motor Driver Carrier](https://www.pololu.com/product/1182)
+[NEMA 14 Stepper motor](https://www.pololu.com/product/1208)
+* __Encoders__
+[Waveshare rotary encoder](https://www.waveshare.com/rotation-sensor.htm)
+* __Single-board computer & microcontroller__
+[Raspberry Pi 4 2GB](https://erelement.com/raspberry-pi-4-2gb) is used as the primary computer.
+[Arduino UNO](https://store.arduino.cc/arduino-uno-rev3) is used for servo control.
+
 #### Electronics housing and connections to robot
+==INSERT IMAGE==
+The electronics housing is not an essential part of the project, but it makes for a more complete and polished project. It also hides the mess of cables and provides an interface for the robot to connect to via standard ports. 
+
+**There are 4 ports:**
+1.	Stepper motor A
+2.	Stepper motor B
+3.	Servo power & limit switches for stepper A
+4.	I2C connection & limit switches for stepper B _(Unfortunately I2C is never used)_
 
 ### Possible improvements
 ###  Misc	
@@ -342,8 +359,8 @@ These don't really have any iterations. I just bought a simple switch from the s
 		
 # Software 
 ## Software Requirements
-	### Safety requirements
-	### Required modes of operation 
+### Safety requirements
+### Required modes of operation 
 
 ## Software Architecture 
 ### Choosing a suitable platform
