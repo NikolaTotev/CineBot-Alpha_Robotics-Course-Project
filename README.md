@@ -327,7 +327,11 @@ These don't really have any iterations. I just bought a simple switch from the s
 
 ### Electrical system
 #### Schematics
+* Stepper motor connection schematic [alternate link]([https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Stepper%20Motor%20Connection%20Schematic.png](https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Stepper%20Motor%20Connection%20Schematic.png))
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Stepper%20Motor%20Connection%20Schematic.png?raw=true=" width="707.5" height="667.5">
+
+* Encoder & switch connection schematic [alternate link]([https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Button%20and%20Encoder%20Connections%20Schematic.png](https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Button%20and%20Encoder%20Connections%20Schematic.png))
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Button%20and%20Encoder%20Connections%20Schematic.png?raw=true" width="707.5" height="667.5">
 #### Used components
 #### Electronics housing and connections to robot
 
