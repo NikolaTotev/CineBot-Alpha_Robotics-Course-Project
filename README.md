@@ -15,11 +15,12 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 	* [Scope](#Scope)
 	* [Key features](#Key-features)
 	* [Initial design decisions](#Initial-design-decisions)
-* [Getting started ](#)   *(click here if you just want to setup the robot and learn how to use it)*
-	* [How to run client]()
-	* [How to run robot]()
-	* [Trouble shooting]()
-	* [User manual]()
+	
+* [Getting started ](#Getting-started)   *(click here if you just want to setup the robot and learn how to use it)*
+	* [How to run client](#How-to-run-client)
+	* [How to run robot](#How-to-run-robot)
+	* [Trouble shooting](#Trouble-shooting)
+	* [User manual](#User-manual)
 
 -  [Hardware](#Hardware)
 	* [Design constraints](#Design-constraints)
@@ -125,6 +126,48 @@ Software tools
 - Flashprint (Slicer)
 
 ##### [Back to top](#Contents)
+
+# Getting started
+If you intend to build this robot, or even better, have already built it, this section is the one for you! The setup process isn't as straightforward as I would like, but considering the limited time I think this is pretty good.
+The system is divided into two parts 
+* Client
+* Server
+The server runs on the Raspberry Pi and the Client *(console version)* runs on any Windows or Linux machine.
+
+## Prerequisites 
+Here are a couple of things you will need in order to get started:
+* [Visual Studio 2019](https://visualstudio.microsoft.com/vs/community/)
+* [WinSCP](https://winscp.net/eng/download.php)
+* Command prompt or an SSH client such as [Putty](https://www.putty.org/) or [Solar Putty](https://www.solarwinds.com/free-tools/solar-putty) if you want a better GUI
+* A raspberry pi with the latest version of [Raspbiean ](https://www.raspberrypi.org/downloads/raspberry-pi-os/) (or as it is now called "Raspberry  Pi OS)*
+* [ .NET Core](https://github.com/dotnet/iot) needs to be installed on your raspberry
+* You will also need to install [OpenCV](https://qengineering.eu/install-opencv-4.3-on-raspberry-pi-4.html)
+#### For the builders
+* If you are starting to build this, I suggest looking at the [Fritzing connection schematics](https://github.com/NikolaTotev/Robotics-Course-Project/tree/master/Documentation/Schematics)
+* The [parts list](#used-components) is also something useful as well as the [STL Files](https://github.com/NikolaTotev/Robotics-Course-Project/tree/master/STL%20Files) may be useful for 3D printing.
+
+## How to run client
+I will describe how to run the client on windows, as that is the platform I have tested it on, but if you use the same steps used for [publishing the server](#publishing-code-from-visual-studio) you will be up and running in no time!
+
+1. Once you have cloned or downloaded the repo, navigate to 
+` Robotics-Course-Project > Robot Code > Robot_Code`
+and locate ` Robot_Code.sln` and launch it in Visual Studio. 
+2. When everything is loaded:
+	* if you want to use the `GUI Client`,  find `WindowsClientGUI` in the *solution explorer* and run it
+	* if you want to use the `Console client` locate the ConsoleClient in the *solution explorer*
+3. After that just press `Ctrl+F5` to run
+
+***[Helpful tip ]:***  *If you are new to Visual Studio, if the solution explorer is not visible you can search for it in the "Search" bar at the top of the IDE*
+
+
+## How to run robot
+### Publishing code from Visual Studo
+### Uploading with WinSCP & setting permissions
+### Running Server
+## Trouble shooting
+## User manual
+
+
 
 # Hardware
 
