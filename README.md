@@ -209,7 +209,10 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/11_Normal_Output.png?raw=true">
 
-### Uploading with WinSCP & setting permissions<br/>
+---
+### Uploading with WinSCP & setting permissions
+
+---
 ### Running Server<br/>
 ***1. Login to the Pi via SSH (you can also use a monitor or keyboard, SSH is just a bit more convenient)***
 
@@ -236,7 +239,13 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 
 ![Alt Text](https://media.giphy.com/media/Sr8YixXuJKgU7s2pBT/giphy.gif)
 
-## Trouble shooting
+### Trouble shooting
+There are some known errors that may occur during the starting of either the sever or client.
+1. Arduino not plugged in. This error looks like this and can easily be fixed by ensuring the Arduino is plugged in.
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/SSH%20Instructions/ERROR1_Arduino_Not_Connected.png?raw=true">
+
+---
 ## User manual
 
 
