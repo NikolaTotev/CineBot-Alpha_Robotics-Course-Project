@@ -588,6 +588,9 @@ The electronics housing is not an essential part of the project, but it makes fo
 ##### [Back to top](#Contents)
 ---		
 # Software 
+The software is the other big component of this process. It is responsible for the safe control of the robot. It is also the bridge with which the user interacts with the system. This is why I want to begin with some of the requirements that I decided are important for this project.
+
+---
 ## Software Requirements
 ### Safety requirements
 Since this is a simple robot, with limited functionality, I decided to make safety features as part of the functionality of the robot. There are two main safety features that are noteworthy:
@@ -598,7 +601,6 @@ Since this is a simple robot, with limited functionality, I decided to make safe
 
 These two safety critical checks run on a separate thread and for each motor at the same time. All of that said, it is important to consider the [platform](#Choosing-a-suitable-platform) and [programing language](#Programing-language-selection) being used, and the pros and cons associated with those decisions.
 
----
 
 ### Required modes of operation 
 Along with the safety features, the robot has a couple of different modes of operation:
@@ -609,8 +611,6 @@ Along with the safety features, the robot has a couple of different modes of ope
 5. Replay path - Reads a saved file and replays the motion that was recorded.
 6. Face detection & tracking - tracks a detected face by attempting to keep it in the center of the frame  ***(only works for gimbal)***
  
----
-
 ### User interface
 This is an imporant category, as it is the way for the user to know what mode the robot is in.
 This is done via 3 LED's mounted on the front of the electronics housing. The main way the user can interact with the system with via the client application which has both a GUI and console interface.
