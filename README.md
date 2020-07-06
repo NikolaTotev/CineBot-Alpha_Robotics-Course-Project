@@ -138,6 +138,7 @@ The server runs on the Raspberry Pi and the Client *(console version)* runs on a
 Here are a couple of things you will need in order to get started:
 * [Visual Studio 2019](https://visualstudio.microsoft.com/vs/community/)
 * [WinSCP](https://winscp.net/eng/download.php)
+* Basic linux knowledge & ability to work in a terminal
 * Command prompt or an SSH client such as [Putty](https://www.putty.org/) or [Solar Putty](https://www.solarwinds.com/free-tools/solar-putty) if you want a better GUI
 * A raspberry pi with the latest version of [Raspbiean ](https://www.raspberrypi.org/downloads/raspberry-pi-os/) (or as it is now called "Raspberry  Pi OS)*
 * [ .NET Core](https://github.com/dotnet/iot) needs to be installed on your raspberry
@@ -164,6 +165,13 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 ### Publishing code from Visual Studo
 ### Uploading with WinSCP & setting permissions
 ### Running Server
+1. Login to the Pi via SSH (you can also use a monitor or keyboard, SSH is just a bit more convenient)
+2. Enter your password
+3. Navigate to the directory containing the program
+4. Start the program
+5. If everything has started correctly, you should see this message:
+ and you should see the notification LED's blinking like this:
+<div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/UqNLz2RZyJh6CwNwc3" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen><div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/Sr8YixXuJKgU7s2pBT" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen><div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/Sr8YixXuJKgU7s2pBT" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/Sr8YixXuJKgU7s2pBT">via GIPHY</a></p>
 ## Trouble shooting
 ## User manual
 
