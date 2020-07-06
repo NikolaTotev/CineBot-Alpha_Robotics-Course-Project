@@ -161,9 +161,9 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 ***[Helpful tip ]:***  *If you are new to Visual Studio, if the solution explorer is not visible you can search for it in the "Search" bar at the top of the IDE*
 
 
-## How to run robot
+## How to run robot<br/>
 
-## Publishing code from Visual Studo
+### Publishing code from Visual Studo
 
 ***1. Locate the `Central_Control` project in the *solution explorer****
 
@@ -209,8 +209,8 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/11_Normal_Output.png?raw=true">
 
-## Uploading with WinSCP & setting permissions
-### Running Server
+### Uploading with WinSCP & setting permissions<br/>
+### Running Server<br/>
 ***1. Login to the Pi via SSH (you can also use a monitor or keyboard, SSH is just a bit more convenient)***
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/SSH%20Instructions/1_SSH_Cmd.png?raw=true">
