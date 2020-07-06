@@ -171,7 +171,9 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 4. Start the program
 5. If everything has started correctly, you should see this message:
  and you should see the notification LED's blinking like this:
-<div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/Sr8YixXuJKgU7s2pBT" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/Sr8YixXuJKgU7s2pBT">via GIPHY</a></p>
+
+![Alt Text](https://media.giphy.com/media/Sr8YixXuJKgU7s2pBT/giphy.gif)
+
 ## Trouble shooting
 ## User manual
 
