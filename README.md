@@ -60,11 +60,12 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
  	- [Choosing a suitable platform](#Choosing-a-suitable-platform)
 	- [Programing language selection](#Programing-language-selection)
 
-	- 
+---
 # ==== Disclaimer ====
 This project is for ***educational purposes only***. This is my ***first*** robotics project and there are certainly bad practices/decisions that could lead to injury or damage to components. 
 If you decide to recreate this please do so carefully. If any issues are discovered please put in an issue so I can fix it.
 
+---
 
 # Introduction
 ## Documentation structure
