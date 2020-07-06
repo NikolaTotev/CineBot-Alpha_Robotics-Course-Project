@@ -35,14 +35,14 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 		* [Other resource constraints regarding hardware development](#Other-resource-constraints-regarding-hardware-development)
 	
 	* [Hardware design decisions](#Hardware-design-decisions) 	
-		*	[Structure overview](#Structure-overview-(part-evolution-and-motivation-behind-the-design)) (part evolution and motivation behind the design)
+		*	[Structure overview](#Structure-overview) (part evolution and motivation behind the design)
 			*	[Base & base drive train](#Base-and-base-drive-train)
 			* [Arm section](#Arm-section)
 			* [Arm joint](#Arm-Joint) 
 			* [Counter balance](#Counter-balance)
 			* [Gimbal](#Gimbal)
 			* [Limit switches](#Limit-switches)
-			* [Electronics housing](#Electronics-housing-(design-aspects)) ***(design aspects)***
+			* [Electronics housing](#Electronics-housing) ***(design aspects)***
 			
 		* [Electrical system](#Electrical-system)
 			* [Schematics](#Schematics)
@@ -345,7 +345,7 @@ For the screw method, once the larger parts were connected, if something needed 
 
 ##### [Back to top](#Contents)
 ## Hardware design decisions
-### Structure overview (part evolution and motivation behind the design)
+### Structure overview 
 The structure of the robot is fairly simple. In the following points I'll describe each part and all of the itterations I had to go though. The general goals for the hardware can be divided into two sections:
 * Robot structure
 
@@ -516,7 +516,7 @@ These don't really have any iterations. I just bought a simple switch from the s
 
 
 
-#### Electronics housing ***(design aspects)***
+#### Electronics housing
 ##### [Back to top](#Contents)
 
 ### Electrical system
