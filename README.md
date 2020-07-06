@@ -212,39 +212,40 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 ---
 ### Uploading with WinSCP & setting permissions
 This section will not cover how to setup WinSCP, but it will show the basic upload procedure.
+
 ***1. On the RPi create a directory mine is `/home/pi/Documents/Robot_Code/Central_Control` In WinSCP navigate to that directory (the right section of the UI).  On the left side navigate to the publish directory you set in the [publish guide](#Publishing-from-Visual-Studio).***
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/WinSCP%20Instructions/1_WinSCP_StartScreen.png?raw=true">
 
-2. Select the publish folder and locate the `Upload` button. Then press it.
+***2. Select the publish folder and locate the `Upload` button. Then press it.***
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/WinSCP%20Instructions/Upload_Btn.png?raw=true">
 
-3. You will see the following screen, just press `Ok`
+***3. You will see the following screen, just press `Ok`***
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/WinSCP%20Instructions/Conf_Window.png?raw=true">
 
-4. Then you will see this window, I suggest setting the upload speed to `Unlimited` if it  isn't already.
+***4. Then you will see this window, I suggest setting the upload speed to `Unlimited` if it  isn't already.***
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/WinSCP%20Instructions/Speed_Setting.png?raw=true">
 
-5. Once uploaded the UI should look like this.
+***5. Once uploaded the UI should look like this.***
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/WinSCP%20Instructions/5_After_Transfer.png?raw=true">
 
-6. Now it is time to set the correct permissions. Open the publish folder and locate `Central_Control`
+***6. Now it is time to set the correct permissions. Open the publish folder and locate `Central_Control`***
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/WinSCP%20Instructions/6_R_Cl_Central_Ctrl.png?raw=true">
 
-7. Right-click and press the `Properties` option. 
+***7. Right-click and press the `Properties` option.*** 
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/WinSCP%20Instructions/7_Prop_Sel.png?raw=true">
 
-8. For simplicity, just check all of these boxes.
+***8. For simplicity, just check all of these boxes.***
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/WinSCP%20Instructions/8_Set_Prop.png?raw=true">
 
-9. Press Ok and you should be all set to run the server!
+***9. Press Ok and you should be all set to run the server!***
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/WinSCP%20Instructions/9_Perms_Set.png?raw=true"> 
 
