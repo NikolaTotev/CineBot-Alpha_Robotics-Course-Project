@@ -37,7 +37,7 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 	* [Hardware design decisions](#Hardware-design-decisions) 	
 		*	[Structure overview](#Structure-overview-(part-evolution-and-motivation-behind-the-design)) (part evolution and motivation behind the design)
 			*	[Base & base drive train](#Base-and-base-drive-train)
-			* [Arm section](# Arm-section)
+			* [Arm section](#Arm-section)
 			* [Arm joint](#Arm-Joint) 
 			* [Counter balance](#Counter-balance)
 			* [Gimbal](#Gimbal)
