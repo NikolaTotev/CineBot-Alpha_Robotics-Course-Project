@@ -212,7 +212,7 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 ---
 ### Uploading with WinSCP & setting permissions
 This section will not cover how to setup WinSCP, but it will show the basic upload procedure.
-1. On the RPi create a directory mine is `/home/pi/Documents/Robot_Code/Central_Control` In WinSCP navigate to that directory (the right section of the UI).  On the left side navigate to the publish directory you set in the [publish guide](#Publishing-from-Visual-Studio).
+***1. On the RPi create a directory mine is `/home/pi/Documents/Robot_Code/Central_Control` In WinSCP navigate to that directory (the right section of the UI).  On the left side navigate to the publish directory you set in the [publish guide](#Publishing-from-Visual-Studio).***
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/WinSCP%20Instructions/1_WinSCP_StartScreen.png?raw=true">
 
