@@ -177,7 +177,7 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/3_Initial_Pub_Screen.png?raw=true">
 
-***4. Select the desired publish path. Make sure it is easy to find, since you will use it when [uploading via WinSCP](#Uploading-with-WinSCP-&-setting-permissions). Press `Finish`***
+***4. Select the desired publish path. Make sure it is easy to find, since you will use it when [uploading via WinSCP](#Uploading-with-WinSCP). Press `Finish`***
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/4_Pub_Path_Sel.png?raw=true">
 
