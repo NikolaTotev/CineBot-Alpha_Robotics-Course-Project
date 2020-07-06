@@ -1,20 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Gpio;
-using System.Drawing.Text;
 using System.IO.Ports;
-using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
-using PrimaryClasses;
-using Swan;
-using Swan.DependencyInjection;
-using Unosquare.RaspberryIO;
-using Unosquare.RaspberryIO.Abstractions;
 using UtilityClasses;
-using Encoder = PrimaryClasses.Encoder;
 
-namespace Motor_Control
+namespace PrimaryClasses
 {
     public enum PathNodeTypes { Stepper, Servo }
 
@@ -55,7 +47,6 @@ namespace Motor_Control
     {
         private Dictionary<string, IMotor> m_RegisteredMotors;
 
-        private static MotorManager m_Instance;
         private bool m_UseJogMode = false;
         private readonly int m_StepsPerRevolution = 200;
         private readonly int m_StepMultiplier = 1;
@@ -81,11 +72,11 @@ namespace Motor_Control
 
         public void Initialize()
         {
-            StepperMotor MotorA = new StepperMotor(MotorTypes.Stepper, "A", 90, -90, 20, 23);
-            StepperMotor MotorB = new StepperMotor(MotorTypes.Stepper, "B", 90, -90, 25, 24);
+            StepperMotor motorA = new StepperMotor(MotorTypes.Stepper, "A", 90, -90, 20, 23);
+            StepperMotor motorB = new StepperMotor(MotorTypes.Stepper, "B", 90, -90, 25, 24);
             m_RegisteredMotors = new Dictionary<string, IMotor>();
-            m_RegisteredMotors.Add(MotorA.MotorId, MotorA);
-            m_RegisteredMotors.Add(MotorB.MotorId, MotorB);
+            m_RegisteredMotors.Add(motorA.MotorId, motorA);
+            m_RegisteredMotors.Add(motorB.MotorId, motorB);
             //SetupMotors();
             Console.WriteLine($"\r\n[{DateTime.Now}] Motor Manager: Initializing...");
         }
@@ -115,8 +106,8 @@ namespace Motor_Control
             }
 
             Console.WriteLine($"Number of steps = {numberOfSteps}");
-            int stepPin = 0;
-            int dirPin = 0;
+            int stepPin;
+            int dirPin;
 
             switch (stepperMotor)
             {
@@ -205,8 +196,8 @@ namespace Motor_Control
             Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Collision detection enabled.");
             if (boolObject is FlagArgs flags)
             {
-                int topSensor = 1;
-                int bottomSensor = 1;
+                int topSensor;
+                int bottomSensor;
                 int emergencyStop = PinManager.GetInstance().EmergencyStop;
 
                 switch (flags.TargetStepperMotor)
@@ -272,13 +263,11 @@ namespace Motor_Control
         /// <param name="useDebugMessages"></param>
         public void GoToHome(StepperMotorOptions targetStepperMotor, bool useDebugMessages)
         {
-            int stepPin = 0;
-            int dirPin = 0;
+            int stepPin;
+            int dirPin;
 
             int numberOfStepsToHome = 0;
             bool direction = false;
-            bool hasReachedEndStop = false;
-            bool hasCalculatedSteps = false;
 
             switch (targetStepperMotor)
             {
@@ -356,7 +345,6 @@ namespace Motor_Control
                 Console.WriteLine($"[{DateTime.Now}] <EXCEPTION>: An exception with code {e.HResult} occured during thread abortion.");
             }
 
-            hasReachedEndStop = true;
             Console.WriteLine($"[{DateTime.Now}] There were {numberOfStepsToHome} taken to get to home position on {targetStepperMotor} ");
 
             PinManager.GetInstance().Controller.Write(dirPin, PinValue.Low);
@@ -440,8 +428,6 @@ namespace Motor_Control
                         throw new ArgumentOutOfRangeException();
                 }
 
-                float stepsFromHome = 0;
-
                 FlagArgs flags = new FlagArgs(false, false, tParams.TargetStepperMotor);
                 Thread collisionDetectorThread = new Thread(CollisionDetection);
                 collisionDetectorThread.Start(flags);
@@ -510,7 +496,6 @@ namespace Motor_Control
 
                         currentEncoder.ReadSIA();
                         currentEncoder.ReadSIB();
-                        stepsFromHome++;
                     }
                     currentEncoder.SetLastState();
                     Thread.Sleep(TimeSpan.FromMilliseconds(1));
@@ -540,14 +525,6 @@ namespace Motor_Control
                     Console.WriteLine($"[{DateTime.Now}] <EXCEPTION>: An exception with code {e.HResult} occured during thread abortion.");
                 }
             }
-        }
-
-        private void SingleStep(int pin)
-        {
-            PinManager.GetInstance().Controller.Write(pin, PinValue.High);
-            Thread.Sleep(TimeSpan.FromSeconds(0.0001));
-            PinManager.GetInstance().Controller.Write(pin, PinValue.Low);
-            Thread.Sleep(TimeSpan.FromSeconds(0.0001));
         }
 
 
@@ -581,9 +558,9 @@ namespace Motor_Control
             int resetRot = PinManager.GetInstance().RotReset;
             int resetTilt = PinManager.GetInstance().TiltReset;
 
-            float PanCounter = 75;
-            float RotCounter = 80;
-            float TiltCounter = 80;
+            float panCounter = 75;
+            float rotCounter = 80;
+            float tiltCounter = 80;
 
             PinValue PanState;
             PinValue PanLastState;
@@ -602,22 +579,22 @@ namespace Motor_Control
             {
                 if (PinManager.GetInstance().Controller.Read(resetPan) == PinValue.Low)
                 {
-                    PanCounter = 75;
-                    serialPort.WriteLine($"P{PanCounter}");
+                    panCounter = 75;
+                    serialPort.WriteLine($"P{panCounter}");
                     Thread.Sleep(TimeSpan.FromMilliseconds(45));
                 }
 
                 if (PinManager.GetInstance().Controller.Read(resetRot) == PinValue.Low)
                 {
-                    RotCounter = 80;
-                    serialPort.WriteLine($"R{RotCounter}");
+                    rotCounter = 80;
+                    serialPort.WriteLine($"R{rotCounter}");
                     Thread.Sleep(TimeSpan.FromMilliseconds(45));
                 }
 
                 if (PinManager.GetInstance().Controller.Read(resetTilt) == PinValue.Low)
                 {
-                    TiltCounter = 80;
-                    serialPort.WriteLine($"T{TiltCounter}");
+                    tiltCounter = 80;
+                    serialPort.WriteLine($"T{tiltCounter}");
                     Thread.Sleep(TimeSpan.FromMilliseconds(45));
                 }
 
@@ -632,23 +609,23 @@ namespace Motor_Control
                 {
                     if (PinManager.GetInstance().Controller.Read(panSib) != PanState)
                     {
-                        PanCounter += 2.5f;
+                        panCounter += 2.5f;
                     }
                     else
                     {
-                        PanCounter -= 2.5f;
+                        panCounter -= 2.5f;
                     }
 
-                    if (Math.Abs(PanCounter % 1) < 0.01)
+                    if (Math.Abs(panCounter % 1) < 0.01)
                     {
-                        Console.WriteLine($"Step: P{PanCounter}");
-                        serialPort.WriteLine($"P{PanCounter}");
+                        Console.WriteLine($"Step: P{panCounter}");
+                        serialPort.WriteLine($"P{panCounter}");
                         Thread.Sleep(TimeSpan.FromMilliseconds(35));
                     }
 
-                    if (Math.Abs(PanCounter - 360) < 0.0001 || Math.Abs(PanCounter - (-360)) < 0.0001)
+                    if (Math.Abs(panCounter - 360) < 0.0001 || Math.Abs(panCounter - (-360)) < 0.0001)
                     {
-                        PanCounter = 0;
+                        panCounter = 0;
                     }
                 }
 
@@ -657,23 +634,23 @@ namespace Motor_Control
                 {
                     if (PinManager.GetInstance().Controller.Read(rotSib) != RotState)
                     {
-                        RotCounter += 2.5f;
+                        rotCounter += 2.5f;
                     }
                     else
                     {
-                        RotCounter -= 2.5f;
+                        rotCounter -= 2.5f;
                     }
 
-                    if (Math.Abs(RotCounter % 1) < 0.01)
+                    if (Math.Abs(rotCounter % 1) < 0.01)
                     {
-                        Console.WriteLine($"Step: R{RotCounter}");
-                        serialPort.WriteLine($"R{RotCounter}");
+                        Console.WriteLine($"Step: R{rotCounter}");
+                        serialPort.WriteLine($"R{rotCounter}");
                         Thread.Sleep(TimeSpan.FromMilliseconds(35));
                     }
 
-                    if (Math.Abs(RotCounter - 360) < 0.0001 || Math.Abs(RotCounter - (-360)) < 0.0001)
+                    if (Math.Abs(rotCounter - 360) < 0.0001 || Math.Abs(rotCounter - (-360)) < 0.0001)
                     {
-                        RotCounter = 0;
+                        rotCounter = 0;
                     }
                 }
 
@@ -682,23 +659,23 @@ namespace Motor_Control
                 {
                     if (PinManager.GetInstance().Controller.Read(tiltSib) != TiltState)
                     {
-                        TiltCounter += 2.5f;
+                        tiltCounter += 2.5f;
                     }
                     else
                     {
-                        TiltCounter -= 2.5f;
+                        tiltCounter -= 2.5f;
                     }
 
-                    if (Math.Abs(TiltCounter % 1) < 0.01)
+                    if (Math.Abs(tiltCounter % 1) < 0.01)
                     {
-                        Console.WriteLine($"Step: T{TiltCounter}");
-                        serialPort.WriteLine($"T{TiltCounter}");
+                        Console.WriteLine($"Step: T{tiltCounter}");
+                        serialPort.WriteLine($"T{tiltCounter}");
                         Thread.Sleep(TimeSpan.FromMilliseconds(35));
                     }
 
-                    if (Math.Abs(TiltCounter - 360) < 0.0001 || Math.Abs(TiltCounter - (-360)) < 0.0001)
+                    if (Math.Abs(tiltCounter - 360) < 0.0001 || Math.Abs(tiltCounter - (-360)) < 0.0001)
                     {
-                        TiltCounter = 0;
+                        tiltCounter = 0;
                     }
                 }
 
@@ -743,9 +720,9 @@ namespace Motor_Control
             int rotateCounter = 75;
             int tiltCounter = 75;
 
-            int LED1 = PinManager.GetInstance().NotificaitonLight;
-            int LED2 = PinManager.GetInstance().ErrorLight;
-            int LED3 = PinManager.GetInstance().StatusLight;
+            int led1 = PinManager.GetInstance().NotificaitonLight;
+            int led2 = PinManager.GetInstance().ErrorLight;
+            int led3 = PinManager.GetInstance().StatusLight;
 
             bool hasLetGoOfButton = true;
             int numberOfStepperNodes = 0;
@@ -768,19 +745,19 @@ namespace Motor_Control
                 switch (saveFile)
                 {
                     case 0:
-                        PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
-                        PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
-                        PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(led1, PinValue.High);
+                        PinManager.GetInstance().Controller.Write(led2, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(led3, PinValue.Low);
                         break;
                     case 1:
-                        PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
-                        PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
-                        PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(led1, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(led2, PinValue.High);
+                        PinManager.GetInstance().Controller.Write(led3, PinValue.Low);
                         break;
                     case 2:
-                        PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
-                        PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
-                        PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                        PinManager.GetInstance().Controller.Write(led1, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(led2, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(led3, PinValue.High);
                         break;
                 }
                 
@@ -836,11 +813,11 @@ namespace Motor_Control
                     }
 
                     Console.WriteLine($"[Info]: Mode has been changed to {mode}");
-                    PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
-                    PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                    PinManager.GetInstance().Controller.Write(led1, PinValue.High);
+                    PinManager.GetInstance().Controller.Write(led3, PinValue.High);
                     Thread.Sleep(TimeSpan.FromSeconds(1));
-                    PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
-                    PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                    PinManager.GetInstance().Controller.Write(led1, PinValue.Low);
+                    PinManager.GetInstance().Controller.Write(led3, PinValue.Low);
                 }
 
                 if (mode == RecordingModes.StepperRecording)
@@ -935,21 +912,21 @@ namespace Motor_Control
                             Console.WriteLine("Please remove finger from save button!");
                             for (int i = 0; i < 2; i++)
                             {
-                                PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
-                                PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
-                                PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(led1, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(led2, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(led3, PinValue.High);
                                 Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                                PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
-                                PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
-                                PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(led1, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(led2, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(led3, PinValue.Low);
                                 Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                                PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
-                                PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
-                                PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(led1, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(led2, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(led3, PinValue.High);
                                 Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                                PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
-                                PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
-                                PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(led1, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(led2, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(led3, PinValue.Low);
                                 Thread.Sleep(TimeSpan.FromSeconds(0.5));
                             }
 
@@ -966,9 +943,9 @@ namespace Motor_Control
                         movementSequence.Add(movementSequence.Count + 1, nodeToAdd);
                         numberOfStepperNodes++;
                         hasLetGoOfButton = false;
-                        PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
+                        PinManager.GetInstance().Controller.Write(led1, PinValue.High);
                         Thread.Sleep(TimeSpan.FromSeconds(2));
-                        PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(led1, PinValue.Low);
                     }
 
                     if (stepperBController.ReadSwitch() == PinValue.Low && hasLetGoOfButton)
@@ -979,9 +956,9 @@ namespace Motor_Control
                         movementSequence.Add(movementSequence.Count + 1, nodeToAdd);
                         numberOfStepperNodes++;
                         hasLetGoOfButton = false;
-                        PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
+                        PinManager.GetInstance().Controller.Write(led2, PinValue.High);
                         Thread.Sleep(TimeSpan.FromSeconds(2));
-                        PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(led2, PinValue.Low);
                     }
                 }
 
@@ -1039,8 +1016,6 @@ namespace Motor_Control
                     #region Tilt
                     if (controlEncoder.CompareStates())
                     {
-                        bool direction = controlEncoder.GetDirection();
-
                         if (controlEncoder.GetDirection())
                         {
                             tiltCounter -= m_MinimumServoAngle;
@@ -1073,21 +1048,21 @@ namespace Motor_Control
                             Console.WriteLine("Please remove finger from save button!");
                             for (int i = 0; i < 2; i++)
                             {
-                                PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
-                                PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
-                                PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(led1, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(led2, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(led3, PinValue.High);
                                 Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                                PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
-                                PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
-                                PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(led1, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(led2, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(led3, PinValue.Low);
                                 Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                                PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
-                                PinManager.GetInstance().Controller.Write(LED2, PinValue.High);
-                                PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(led1, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(led2, PinValue.High);
+                                PinManager.GetInstance().Controller.Write(led3, PinValue.High);
                                 Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                                PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
-                                PinManager.GetInstance().Controller.Write(LED2, PinValue.Low);
-                                PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(led1, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(led2, PinValue.Low);
+                                PinManager.GetInstance().Controller.Write(led3, PinValue.Low);
                                 Thread.Sleep(TimeSpan.FromSeconds(0.5));
                             }
 
@@ -1103,11 +1078,11 @@ namespace Motor_Control
                         movementSequence.Add(movementSequence.Count + 1, nodeToAdd);
                         numberOfGimbalNodes++;
                         hasLetGoOfButton = false;
-                        PinManager.GetInstance().Controller.Write(LED1, PinValue.High);
-                        PinManager.GetInstance().Controller.Write(LED3, PinValue.High);
+                        PinManager.GetInstance().Controller.Write(led1, PinValue.High);
+                        PinManager.GetInstance().Controller.Write(led3, PinValue.High);
                         Thread.Sleep(TimeSpan.FromSeconds(2));
-                        PinManager.GetInstance().Controller.Write(LED1, PinValue.Low);
-                        PinManager.GetInstance().Controller.Write(LED3, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(led1, PinValue.Low);
+                        PinManager.GetInstance().Controller.Write(led3, PinValue.Low);
                     }
 
                 }

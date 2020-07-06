@@ -2,7 +2,7 @@
 using PrimaryClasses;
 using UtilityClasses;
 
-namespace Client_Test
+namespace ConsoleClient
 {
     class Program
     {
