@@ -388,7 +388,8 @@ Since this is a stationary robot, the base is a key part of the design and a goo
 
 **Thigs I learned** - Its best to keep reducer mechanisms as simple as possible. It is important to consider the forces that will be exerted on a part, especially on the base of the robot. Bearings are something that should be used more often, they significantlly improve the final result and are a great addition to 3D printed mechanisms. 
 	
-	
+##### [Back to top](#Contents)	
+---	
 * ___Base Adapter iterations___
    This will just quickly cover the different adapters I made.
 	* __Iteraton 1__
@@ -424,6 +425,7 @@ Since this is a stationary robot, the base is a key part of the design and a goo
 * Iteration 3.1
 	The final iteration of this part is actually removing it altogether. See the last arm iteration to understand the whole idea.
 
+##### [Back to top](#Contents)
 ---
 
 #### Arm section
@@ -452,6 +454,7 @@ This version is a bit better, much stronger but still too small and once again i
 ==INSERT IMAGE==
 	For this iteration, the top arm section is the same, but the base arm section has been reworked due to the structural falire shown below. This change also comes from the redesign of the base drive train. As you can see, it still keeps the universal connector, it is also much more stable, compared to the previous arm sections.
 
+##### [Back to top](#Contents)
 ---	
 
 #### Arm Joint
@@ -475,7 +478,7 @@ In this version, I deicded to try to make a worm drive, but since it is a much h
 * Iteraton 4
 ==INSERT IMAGE==
 This is the final iteration and it is a smaller version of second iteration of the base gearbox.  It shares it's flaws, but they were not as pronounced due to the smaller foces exerted on it. Using this new gearbox allowed me to finally add the universal mounting bracket to it.
-
+##### [Back to top](#Contents)
 ----
 
 #### Joint to arm section interfaces/adapters
@@ -486,12 +489,14 @@ This is the final iteration and it is a smaller version of second iteration of t
 ==INSERT IMAGE==
 As you can see on this version, at the back there is a mounting point for the counter balance mentioned above. This makes the job of the reducer much easier by balancing the forces.
 
+##### [Back to top](#Contents)
 ---
 
 #### Counter balance 
 * Iteraton 1
 This part is pretty simple. Since I neede something to balnce the gimbal, and an arduino is needed to control the motors, I decied to combine the two and this is the result. The back has a tray for some metal weights and on the top there are mounting holes for the arduino. As mentioned above it connects to the second iteration of the arm joint adapter
 
+##### [Back to top](#Contents)
 ---
 
 #### Gimbal
@@ -508,13 +513,14 @@ The third version is inspired by the second one, but attempts to minimize it by 
 ==INSERT IMAGE==
 This final design is inspired by [a project I found on youtube](https://www.youtube.com/watch?v=wQypj7ti7Vw). I was already behind schedule and I thought that it's time to look for some help. I had to make the models from scratch, since I am using servo motors and the person in the video is using brushless gimbal motors.
 
+##### [Back to top](#Contents)
 ---
 
 #### Limit switches
 These don't really have any iterations. I just bought a simple switch from the store and mounted it to the robot with two simple mounts. Despite their simplicity, these are critical parts as the allow the robot to "know" what position it is in. Please read [the improvemens section](#Possible-improvements) for more insight on the improvements I would make in the area of positional awareness. 
 
-
-
+##### [Back to top](#Contents)
+---
 
 #### Electronics housing
 ##### [Back to top](#Contents)
@@ -531,6 +537,8 @@ The schematics are very useful for anyone trying to make this exact robot. Pleas
 * ___Encoder & switch connection schematic___ [_alternate link_](https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Button%20and%20Encoder%20Connections%20Schematic.png) 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Button%20and%20Encoder%20Connections%20Schematic.png?raw=true" width="707.5" height="667.5">
 
+---
+
 #### Used components
 * __Stepper motor & stepper motor drivers__
 [A4988 Stepper Motor Driver Carrier](https://www.pololu.com/product/1182)
@@ -541,6 +549,8 @@ The schematics are very useful for anyone trying to make this exact robot. Pleas
 [Raspberry Pi 4 2GB](https://erelement.com/raspberry-pi-4-2gb) is used as the primary computer.
 [Arduino UNO](https://store.arduino.cc/arduino-uno-rev3) is used for servo control.
 
+---
+
 #### Electronics housing and connections to robot
 ==INSERT IMAGE==
 The electronics housing is not an essential part of the project, but it makes for a more complete and polished project. It also hides the mess of cables and provides an interface for the robot to connect to via standard ports. 
@@ -550,6 +560,8 @@ The electronics housing is not an essential part of the project, but it makes fo
 2.	Stepper motor B
 3.	Servo power & limit switches for stepper A
 4.	I2C connection & limit switches for stepper B _(Unfortunately I2C is never used)_
+
+---
 
 ### Possible improvements
 ###  Misc	
