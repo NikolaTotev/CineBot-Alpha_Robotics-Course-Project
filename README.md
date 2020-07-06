@@ -609,6 +609,41 @@ This is done via 3 LED's mounted on the front of the electronics housing. The ma
 
 ## Software Architecture 
 ### Choosing a suitable platform
+Due to my limited budget and experience, the most reasonable platform was the Raspberry Pi and the Arduino UNO. Considering my fairly light requirements these two devices are more than capable to meet the requirements and perform well.
 ### Programing language selection
+My initial choice was Python, but it was lacking TCP pending functionality that prevents blocking of the main thread while the server awaits a connection. I am sure there are options that allow for this functionality, but I was not able to get something to work. This issue combined with my lack of Python experience made me look for alternatives.
+Since I have previous experience with C# and since the Raspberry Pi is essentially running linux my dad suggested that I look into .NET Core which can be run on Linux. After a bit of research I discoved the .NET IoT Core library by Microsoft. It was easy to setup and quickly test and that is why the majority of the software is written in C#.
+
+***Note:*** 
+*1.  I am aware that C# is not the best language for a robotics project, but since I had so many other things to figure out, I decied that it was best to have at least one thing that I shouldn't worry about.*
+
+*2. I am also aware of [ROS](https://www.ros.org/), but I found out about it too late into the project for it to be possible to switch.*
+*3. Despite the cons, for this current project, C# is more than capable of delivering good performance. This has been determined by simply working with and on the system over the course of 5 months*
+
+---
+### Diagrams
+Due to the relative complexity of the system, I will not write too much text to explain it. Instead I will use the things I learned in my Software Architectures course this semester to create diagrams for my system.
+
 ##### [Back to top](#Contents)
-##Assembly Information
+
+---
+
+### System modules
+
+##### [Back to top](#Contents)
+
+---
+### Deployment Structure
+
+##### [Back to top](#Contents)
+
+---
+
+### Process Flow
+
+##### [Back to top](#Contents)
+
+---
+
+
+## Assembly Information
