@@ -166,10 +166,21 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 ### Uploading with WinSCP & setting permissions
 ### Running Server
 1. Login to the Pi via SSH (you can also use a monitor or keyboard, SSH is just a bit more convenient)
+<img src="<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/SSH%20Instructions/1_SSH_Cmd.png?raw=true">
+
+
 2. Enter your password
+<img src="<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/SSH%20Instructions/2_SSH_Pass.png?raw=true">
+
 3. Navigate to the directory containing the program
+<img src="<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/SSH%20Instructions/3_SSH_Logged_In.png?raw=true">
+
 4. Start the program
+<img src="<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/SSH%20Instructions/4_Run_Server.png?raw=true">
+
 5. If everything has started correctly, you should see this message:
+<img src="<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/SSH%20Instructions/5_Server_Started.png?raw=true">
+
  and you should see the notification LED's blinking like this:
 
 ![Alt Text](https://media.giphy.com/media/Sr8YixXuJKgU7s2pBT/giphy.gif)
