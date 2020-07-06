@@ -35,14 +35,14 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 		* [Other resource constraints regarding hardware development](#Other-resource-constraints-regarding-hardware-development)
 	
 	* [Hardware design decisions](#Hardware-design-decisions) 	
-		*	[Structure overview](#Structure-overview) (part evolution and motivation behind the design)
-			*	[Base & base drive train](#Base-&-base-drive-train)
-			* [Arm sections](#Arm-sections)
-			* [Reducer mechanisms](#Reducer-mechanisms) 
+		*	[Structure overview](#Structure-overview-(part-evolution-and-motivation-behind-the-design)) (part evolution and motivation behind the design)
+			*	[Base & base drive train](#Base-and-base-drive-train)
+			* [Arm section](# Arm-section)
+			* [Arm joint](#Arm-Joint) 
 			* [Counter balance](#Counter-balance)
 			* [Gimbal](#Gimbal)
 			* [Limit switches](#Limit-switches)
-			* [Electronics housing](#Electronics-housing) ***(design aspects)***
+			* [Electronics housing](#Electronics-housing-(design-aspects)) ***(design aspects)***
 			
 		* [Electrical system](#Electrical-system)
 			* [Schematics](#Schematics)
