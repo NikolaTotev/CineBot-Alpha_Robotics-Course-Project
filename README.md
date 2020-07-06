@@ -18,7 +18,10 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 	
 * [Getting started ](#Getting-started)   *(click here if you just want to setup the robot and learn how to use it)*
 	* [How to run client](#How-to-run-client)
-	* [How to run robot](#How-to-run-robot)
+	* [How to run  server (robot)](#How-to-run-robot)
+		* [Publishing from Visual Studio](#Publishing-from-Visual-Studio)
+		* [Uploading via WinSCP](#Uploading-via-WinSCP)
+		* [Running Server](#Running-server)
 	* [Trouble shooting](#Trouble-shooting)
 	* [User manual](#User-manual)
 
@@ -161,7 +164,7 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 ***[Helpful tip ]:***  *If you are new to Visual Studio, if the solution explorer is not visible you can search for it in the "Search" bar at the top of the IDE*
 
 
-## How to run robot<br/>
+## How to run robot
 
 ### Publishing from Visual Studio
 
@@ -177,7 +180,7 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/3_Initial_Pub_Screen.png?raw=true">
 
-***4. Select the desired publish path. Make sure it is easy to find, since you will use it when [uploading via WinSCP](#Uploading-with-WinSCP). Press `Finish`***
+***4. Select the desired publish path. Make sure it is easy to find, since you will use it when [uploading via WinSCP](#Uploading-via-WinSCP). Press `Finish`***
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/4_Pub_Path_Sel.png?raw=true">
 
@@ -209,8 +212,10 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/11_Normal_Output.png?raw=true">
 
+##### [Back to top](#Contents)
+
 ---
-### Uploading with WinSCP & setting permissions
+### Uploading via WinSCP
 This section will not cover how to setup WinSCP, but it will show the basic upload procedure.
 
 ***1. On the RPi create a directory mine is `/home/pi/Documents/Robot_Code/Central_Control` In WinSCP navigate to that directory (the right section of the UI).  On the left side navigate to the publish directory you set in the [publish guide](#Publishing-from-Visual-Studio).***
@@ -249,6 +254,8 @@ This section will not cover how to setup WinSCP, but it will show the basic uplo
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/WinSCP%20Instructions/9_Perms_Set.png?raw=true"> 
 
+##### [Back to top](#Contents)
+
 ---
 ### Running Server
 ***1. Login to the Pi via SSH (you can also use a monitor or keyboard, SSH is just a bit more convenient)***
@@ -281,6 +288,9 @@ There are some known errors that may occur during the starting of either the sev
 1. Arduino not plugged in. This error looks like this and can easily be fixed by ensuring the Arduino is plugged in.
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/SSH%20Instructions/ERROR1_Arduino_Not_Connected.png?raw=true">
+
+
+##### [Back to top](#Contents)
 
 ---
 ## User manual
@@ -484,7 +494,6 @@ This final design is inspired by [a project I found on youtube](https://www.yout
 
 #### Limit switches
 These don't really have any iterations. I just bought a simple switch from the store and mounted it to the robot with two simple mounts. Despite their simplicity, these are critical parts as the allow the robot to "know" what position it is in. Please read [the improvemens section](#Possible-improvements) for more insight on the improvements I would make in the area of positional awareness. 
-
 
 
 
