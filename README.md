@@ -295,7 +295,7 @@ There are some known errors that may occur during the starting of either the sev
 ---
 ## User manual
 
-
+---
 
 # Hardware
 
@@ -311,6 +311,8 @@ The printer I chose for this project as mentioned in the tools section is the Fl
 #### Material choice
 Due to the fact that all of the printing would be happening in my room, I decided to go for **PLA** as it does not emit toxic odors and it is significantly easier to print with. The strength of the material is adequate and is suitable for relatively small forces involved.
 
+---
+
 ### Actuators
 For the primary actuators I decides to use two NEMA 14 35x28 stepper motors and for the gimbal actuators I use two micro [servos with metal gears]([https://erelement.com/servos/feetech-ft90m](https://erelement.com/servos/feetech-ft90m)) for the rotate and tilt axes and a [larger servo with plastic gears ](https://www.robotev.com/product_info.php?cPath=1_40_45&products_id=205(https://www.robotev.com/product_info.php?cPath=1_40_45&products_id=205)) for the pan axis.
 
@@ -318,6 +320,7 @@ For the primary actuators I decides to use two NEMA 14 35x28 stepper motors and 
 
 Since these motors lack the holding torque to hold the arm of the robot horizontal or to even lift it, [reducer mechanisms](#Reducer-mechanisms)  had to be implemented
 
+---
 
 ### Assembly methods
 As I am using 3D printing for the making all of the parts I need to take into account the weaknesses and strengths of additive manufacturing in order to print good parts. 
@@ -367,6 +370,8 @@ The structure of the robot is fairly simple. In the following points I'll descri
 I have decided to go through all of the itterations because I think it is important for me to show the whole process. That away I can describe the things I've learned along the way and it is a great section for beginners to see the mistakes I've made so they don't make them as well. 
 Since this is quite a lengthy section I will provide skip links so that you can only see the final design or so you can skip directly to the [software part](#Software) of the project. 
 
+---
+
 ####	Base & base drive train
 Since this is a stationary robot, the base is a key part of the design and a good base is essential for the overall stability of the system. This section also also experiences the most loading and has to be designed with that in mind. I also want to cover the different adapters that are used to connect the arm sections to the base subassembly.
 * ___Base & base drive train iterations___
@@ -382,6 +387,7 @@ Since this is a stationary robot, the base is a key part of the design and a goo
 	This is the final iteration. As you can see it quite different and uses a much simpler and adjustable drive train. In the base there are 2 75 mm *(outer diameter)* bearings that provide the structural stabilitiy and smooth rotational movement. This base fixes all of the issues that the previous ones had and helped solve the issues with the base arm section
 
 **Thigs I learned** - Its best to keep reducer mechanisms as simple as possible. It is important to consider the forces that will be exerted on a part, especially on the base of the robot. Bearings are something that should be used more often, they significantlly improve the final result and are a great addition to 3D printed mechanisms. 
+	
 	
 * ___Base Adapter iterations___
    This will just quickly cover the different adapters I made.
@@ -418,6 +424,8 @@ Since this is a stationary robot, the base is a key part of the design and a goo
 * Iteration 3.1
 	The final iteration of this part is actually removing it altogether. See the last arm iteration to understand the whole idea.
 
+---
+
 #### Arm section
 This is the most important part of the robot. It make up the majority of the assembly and without it the robot would not work. This part also transmits the most load and has to be made both light and strong. Many iterations were needed to get to the final version.
 * Iteraton 1
@@ -443,7 +451,9 @@ This version is a bit better, much stronger but still too small and once again i
 * Iteraton 6
 ==INSERT IMAGE==
 	For this iteration, the top arm section is the same, but the base arm section has been reworked due to the structural falire shown below. This change also comes from the redesign of the base drive train. As you can see, it still keeps the universal connector, it is also much more stable, compared to the previous arm sections.
-	
+
+---	
+
 #### Arm Joint
 This part is the one and only "joint". I call it a joint because it connects two arm sections in a mobile way. This part of the robot had a couple of requiredments to meet:
 1. It needs to be strong enough (structurally) to lift the weight of the arm.
@@ -466,6 +476,8 @@ In this version, I deicded to try to make a worm drive, but since it is a much h
 ==INSERT IMAGE==
 This is the final iteration and it is a smaller version of second iteration of the base gearbox.  It shares it's flaws, but they were not as pronounced due to the smaller foces exerted on it. Using this new gearbox allowed me to finally add the universal mounting bracket to it.
 
+----
+
 #### Joint to arm section interfaces/adapters
 * Iteraton 1
 	==INSERT IMAGE==
@@ -474,9 +486,13 @@ This is the final iteration and it is a smaller version of second iteration of t
 ==INSERT IMAGE==
 As you can see on this version, at the back there is a mounting point for the counter balance mentioned above. This makes the job of the reducer much easier by balancing the forces.
 
+---
+
 #### Counter balance 
 * Iteraton 1
 This part is pretty simple. Since I neede something to balnce the gimbal, and an arduino is needed to control the motors, I decied to combine the two and this is the result. The back has a tray for some metal weights and on the top there are mounting holes for the arduino. As mentioned above it connects to the second iteration of the arm joint adapter
+
+---
 
 #### Gimbal
 This part also has a lot of iterations, as initially I didn't know what the best approach was. All of the axes are controled via servo motors.
@@ -492,6 +508,8 @@ The third version is inspired by the second one, but attempts to minimize it by 
 ==INSERT IMAGE==
 This final design is inspired by [a project I found on youtube](https://www.youtube.com/watch?v=wQypj7ti7Vw). I was already behind schedule and I thought that it's time to look for some help. I had to make the models from scratch, since I am using servo motors and the person in the video is using brushless gimbal motors.
 
+---
+
 #### Limit switches
 These don't really have any iterations. I just bought a simple switch from the store and mounted it to the robot with two simple mounts. Despite their simplicity, these are critical parts as the allow the robot to "know" what position it is in. Please read [the improvemens section](#Possible-improvements) for more insight on the improvements I would make in the area of positional awareness. 
 
@@ -503,8 +521,12 @@ These don't really have any iterations. I just bought a simple switch from the s
 
 ### Electrical system
 #### Schematics
+The schematics are very useful for anyone trying to make this exact robot. Please make sure to safely handle compoents and double check connections before powering on the system. ***NEVER plug or unplug anything from the  RPi or Arduino while they are working. ***
+
 * ___Stepper motor connection schematic___ [_alternate link_](https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Stepper%20Motor%20Connection%20Schematic.png)
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Stepper%20Motor%20Connection%20Schematic.png?raw=true=" width="707.5" height="667.5">
+
+---
 
 * ___Encoder & switch connection schematic___ [_alternate link_](https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Button%20and%20Encoder%20Connections%20Schematic.png) 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Button%20and%20Encoder%20Connections%20Schematic.png?raw=true" width="707.5" height="667.5">
