@@ -523,7 +523,18 @@ These don't really have any iterations. I just bought a simple switch from the s
 ---
 
 #### Electronics housing
+This is a pretty simple part of the whole project. Its main goal is to make the project a bit more complete and polished. It also ensures, that once all of the cables are connected in a working that they stay that way. The case also provides active cooling because it has two 95mm fans on one side.
+
+***Possible improvements***
+* This housing it a bit large for the amount of components inside, but since it was my first attempt at such a thing, I decided to leave enough space to work inside.
+
+* It also has a tendency to tip forward as it isn't really well balanced, so some legs or a flatter bottom might be a nice improvement. 
+* Internal cable management can be improved
+
+* External cable management, such as ports for USB cables, ethernet and so on. At  the moment, all of those cables go directly out through the back opening. Ideally it would have some sort of panel with the right kind of holes.
 ##### [Back to top](#Contents)
+
+---
 
 ### Electrical system
 #### Schematics
@@ -541,13 +552,13 @@ The schematics are very useful for anyone trying to make this exact robot. Pleas
 
 #### Used components
 * __Stepper motor & stepper motor drivers__
-[A4988 Stepper Motor Driver Carrier](https://www.pololu.com/product/1182)
-[NEMA 14 Stepper motor](https://www.pololu.com/product/1208)
+	* [A4988 Stepper Motor Driver Carrier](https://www.pololu.com/product/1182)
+	* [NEMA 14 Stepper motor](https://www.pololu.com/product/1208)
 * __Encoders__
-[Waveshare rotary encoder](https://www.waveshare.com/rotation-sensor.htm)
+	* [Waveshare rotary encoder](https://www.waveshare.com/rotation-sensor.htm)
 * __Single-board computer & microcontroller__
-[Raspberry Pi 4 2GB](https://erelement.com/raspberry-pi-4-2gb) is used as the primary computer.
-[Arduino UNO](https://store.arduino.cc/arduino-uno-rev3) is used for servo control.
+	* [Raspberry Pi 4 2GB](https://erelement.com/raspberry-pi-4-2gb) is used as the primary computer.
+	* [Arduino UNO](https://store.arduino.cc/arduino-uno-rev3) is used for servo control.
 
 ---
 
@@ -564,9 +575,12 @@ The electronics housing is not an essential part of the project, but it makes fo
 ---
 
 ### Possible improvements
-###  Misc	
+* Putting everything on one PCB
+* Increasing modularity by using even more universal plugs for other components.
+* Adding microstepping control to the stepper drivers
+* Utilizing the available I2C connection.
 ##### [Back to top](#Contents)
-		
+---		
 # Software 
 ## Software Requirements
 ### Safety requirements
