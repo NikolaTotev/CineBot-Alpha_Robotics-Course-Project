@@ -59,6 +59,11 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 	- [Software Architecture](#Software-Architecture)
  	- [Choosing a suitable platform](#Choosing-a-suitable-platform)
 	- [Programing language selection](#Programing-language-selection)
+	- [Diagrams](#Diagrams)
+		- [System Modules](#System-Modules)
+		- [Deployment Structure](#Deployment-Structure)
+		- [Process Flow](#Process-Flow)
+
 
 ---
 # ==== Disclaimer ====
