@@ -171,8 +171,9 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 4. Start the program
 5. If everything has started correctly, you should see this message:
  and you should see the notification LED's blinking like this:
-https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Gifs/Server_Listen_Gif.gif?raw=true
-<iframe src="https://giphy.com/embed/Sr8YixXuJKgU7s2pBT" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/Sr8YixXuJKgU7s2pBT">via GIPHY</a></p>
+
+![Alt Text](https://media.giphy.com/media/Sr8YixXuJKgU7s2pBT/giphy.gif)
+
 ## Trouble shooting
 ## User manual
 
