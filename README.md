@@ -163,6 +163,50 @@ and locate ` Robot_Code.sln` and launch it in Visual Studio.
 
 ## How to run robot
 ### Publishing code from Visual Studo
+***1. Locate the `Central_Control` project in the *solution explorer****
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/1_Select_Central.png?raw=true">
+
+***2. Right click and find the `Publish` option.***
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/2_Publish_Btn.png?raw=true">
+
+***3. Once you press it, you will see this screen. Select the `Folder` option. Press `Next`***
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/3_Initial_Pub_Screen.png?raw=true">
+
+***4. Select the desired publish path. Make sure it is easy to find, since you will use it when [uploading via WinSCP](#Uploading-with-WinSCP-&-setting-permissions). Press `Finish`***
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/4_Pub_Path_Sel.png?raw=true">
+
+***5. You will now be shown this screen. Before publishing the configuration needs to be edited. Press the edit button.***
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/5_Edit_Pub_Config.png?raw=true">
+
+***6. This window will open and here you need to change the `Deployment Mode` and `Target Runtime` if you don't, it will not run on the Raspberry Pi.***
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/6_Pub_Config_Edits.png?raw=true">
+
+***7. `Deployment Mode` must be set to `Self-Containted`***
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/7_Depl_Mode_Sel.png?raw=true">
+
+***8. `Target Mode` must be set to `linux-arm`***
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/8_Targ_RT_Sel.png?raw=true">
+
+***9. The configuration window should look like this once you are done.***
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/9_Final_Pub_Settings.png?raw=true">
+
+***10. After that you are ready to publish by pressing the `Publish` button.***
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/10_Pub_Btn.png?raw=true">
+
+***11. This is how the output should look like if everything has been published correctly.***
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Getting%20Started%20Images/Publish%20Instructions/11_Normal_Output.png?raw=true">
+
 ### Uploading with WinSCP & setting permissions
 ### Running Server
 ***1. Login to the Pi via SSH (you can also use a monitor or keyboard, SSH is just a bit more convenient)***
