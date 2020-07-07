@@ -10,7 +10,7 @@ namespace PrimaryClasses
 {
     public enum PathNodeTypes { Stepper, Servo }
 
-    
+
     public class PathNode
     {
         public PathNodeTypes NodeType { get; set; }
@@ -50,16 +50,44 @@ namespace PrimaryClasses
         private bool m_UseJogMode = false;
         private readonly int m_StepsPerRevolution = 200;
         private readonly int m_StepMultiplier = 1;
-        private readonly int m_GearRatio = 7;
+        private readonly int m_JointBGearRatio = 7;
+        private readonly int m_BaseGearRatio = 9;
         private readonly int m_MinimumAngle = 2;
         private readonly int m_MinimumServoAngle = 5;
-        private readonly float m_MinimumSpeed = 0.01f;
         private readonly float m_SpeedSensitivity = 1;
         private readonly float m_CollisionDetectionFrequency = 0.01f;
         private int m_MovementSensitivity = 1;
         private int m_StepsInRange = 0;
-        public readonly bool CW = true;
-        public readonly bool CCW = false;
+        public readonly bool Cw = true;
+        public readonly bool Ccw = false;
+
+        private float m_OverallTime = 0;
+        private float m_DefaultMaxSpeed = 0.002f;
+        private float m_DefaultMinSpeed = 0.008f;
+
+        // Poly motion variables 
+
+        private float m_A0;
+        private float m_A1;
+        private float m_A2;
+        private float m_A3;
+        private float m_A4;
+        private float m_A5;
+        private float m_StartAngle = 0;
+        private float m_FinalAngle = 0;
+        private float m_StartVelocity = 0;
+        private float m_FinalVelocity = 0;
+        private float m_StartAcceleration = 0;
+        private float m_FinalAcceleration = 0;
+        private float m_ValueMapCoef;
+
+
+        float m_Eti = 0;
+        private readonly float m_TimeDivisionSize = 0.0001f;
+
+        // =====================
+
+
         public bool JogModeFlag
         {
             get => m_UseJogMode;
@@ -81,28 +109,104 @@ namespace PrimaryClasses
             Console.WriteLine($"\r\n[{DateTime.Now}] Motor Manager: Initializing...");
         }
 
-
-        public int ConvertAngleToSteps(int inputAngle)
+        //ToDo add proper ratio selection based on used motor.
+        public int ConvertAngleToSteps(int inputAngle, StepperMotorOptions targetMotor)
         {
+            int ratioToUse;
+            switch (targetMotor)
+            {
+                case StepperMotorOptions.motorA:
+                    ratioToUse = m_BaseGearRatio;
+                    break;
+                case StepperMotorOptions.motorB:
+                    ratioToUse = m_JointBGearRatio;
+                    break;
+                default:
+                    ratioToUse = m_JointBGearRatio;
+                    break;
+                    ;
+            }
 
-            int stepsForCarrierRevolution = m_StepsPerRevolution * m_StepMultiplier * m_GearRatio;
+            int stepsForCarrierRevolution = m_StepsPerRevolution * m_StepMultiplier * ratioToUse;
             int partOfCircle = 360 / inputAngle;
             int stepsForInputAngle = stepsForCarrierRevolution / partOfCircle;
             return stepsForInputAngle;
         }
 
 
-
-        public void MoveStepper(int angle, float speed, StepperMotorOptions stepperMotor, bool direction, bool useDebugMessages, FlagArgs flags, int steps = 0)
+        private void CalcCoefs(float motionTime)
         {
-            int numberOfSteps;
-            if (steps == 0)
+            m_A0 = m_StartAngle;
+            m_A1 = m_StartVelocity;
+            m_A2 = m_StartAcceleration / 2f;
+            m_A3 = -1 * (20 * m_StartAngle - 20 * m_FinalAngle + 12 * motionTime * m_StartVelocity + 8 * motionTime * m_FinalVelocity + 3 * m_StartAcceleration * motionTime * motionTime - m_FinalAcceleration * motionTime * motionTime) / (2 * motionTime * motionTime * motionTime);
+            m_A4 = (30f * m_StartAngle - 30f * m_FinalAngle + 16f * motionTime * m_StartVelocity + 14f * motionTime * m_FinalVelocity + 3f * m_StartAcceleration * motionTime * motionTime - 2f * m_FinalAcceleration * motionTime * motionTime) / (2f * motionTime * motionTime * motionTime * motionTime);
+            m_A5 = -1f * (12f * m_StartAngle - 12f * m_FinalAngle + 6f * motionTime * m_StartVelocity + 6f * motionTime * m_FinalVelocity + m_StartAcceleration * motionTime * motionTime - m_FinalAcceleration * motionTime * motionTime) / (2f * motionTime * motionTime * motionTime * motionTime * motionTime);
+            if (float.IsNaN(m_A0))//make sure it is not undefined
             {
-                numberOfSteps = ConvertAngleToSteps(angle);
+                m_A0 = 0;
+            }
+            if (float.IsNaN(m_A1))//make sure it is not undefined
+            {
+                m_A1 = 0;
+            }
+            if (float.IsNaN(m_A2))//make sure it is not undefined
+            {
+                m_A2 = 0;
+            }
+            if (float.IsNaN(m_A3))//make sure it is not undefined
+            {
+                m_A3 = 0;
+            }
+            if (float.IsNaN(m_A4))//make sure it is not undefined
+            {
+                m_A4 = 0;
+            }
+            if (float.IsNaN(m_A5))//make sure it is not undefined
+            {
+                m_A5 = 0;
+            }
+        }
+
+        private float GetSpeed(float currentTime)
+        {
+            return m_A5 * 5 * (float)Math.Pow(currentTime, 4) + m_A4 * 4 * (float)Math.Pow(currentTime, 3) + m_A3 * 3 * (float)Math.Pow(currentTime, 2) + m_A2 * 2 * (float)Math.Pow(currentTime, 1) + m_A1;
+        }
+
+        private void InitMapCoef(StepperMotorOptions targetMotor)
+        {
+            float numberOfSteps = ConvertAngleToSteps((int)m_FinalAngle, targetMotor);
+            float eti = m_OverallTime / numberOfSteps;
+            float numberOfTimeDivisions = m_OverallTime / m_TimeDivisionSize;
+            float funcMaxSpeed = GetSpeed((numberOfTimeDivisions / 2) * m_TimeDivisionSize);
+            m_ValueMapCoef = (m_DefaultMaxSpeed - m_DefaultMinSpeed) / funcMaxSpeed;
+        }
+
+        private float mapValue(float input)
+        {
+            return m_ValueMapCoef * input + m_DefaultMinSpeed;
+        }
+
+        public void MoveStepper(int angle, float speed, StepperMotorOptions stepperMotor, bool direction,
+            bool useDebugMessages, FlagArgs flags, int steps = 0, bool usePoly = false)
+        {
+            int numberOfSteps =0 ;
+            if (usePoly)
+            {
+                m_FinalAngle = angle;
+                CalcCoefs(m_OverallTime);
+                InitMapCoef(stepperMotor);
             }
             else
             {
-                numberOfSteps = steps;
+                if (steps == 0)
+                {
+                    numberOfSteps = ConvertAngleToSteps(angle, stepperMotor);
+                }
+                else
+                {
+                    numberOfSteps = steps;
+                }
             }
 
             Console.WriteLine($"Number of steps = {numberOfSteps}");
@@ -140,32 +244,49 @@ namespace PrimaryClasses
                 PinManager.GetInstance().Controller.Write(dirPin, PinValue.Low);
             }
 
-            while (counter < numberOfSteps)
+
+            if (usePoly)
             {
-                if (useDebugMessages)
+                for (float i = 0; i <= m_OverallTime; i += (m_Eti))
                 {
-                    Console.WriteLine($"Moving {stepperMotor}, currently on step {counter}");
-                }
-
-                if (flags.EmergencyStopActive)
-                {
-                    Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
-                    flags.StopFlag = true;
-                    break;
-                }
-
-                Console.WriteLine($"CAN MOVE RESULT = {CanMove(direction, flags)} {direction}");
-                if (CanMove(direction, flags))
-                {
+                    float stepperSpeed = mapValue(GetSpeed(i));
                     PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
-                    Thread.Sleep(TimeSpan.FromSeconds(speed));
+                    Thread.Sleep(TimeSpan.FromSeconds(stepperSpeed));
                     PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
-                    Thread.Sleep(TimeSpan.FromSeconds(speed));
+                    Thread.Sleep(TimeSpan.FromSeconds(stepperSpeed));
                     counter++;
                 }
-                else
+
+            }
+            else
+            {
+                while (counter < numberOfSteps)
                 {
-                    break;
+                    if (useDebugMessages)
+                    {
+                        Console.WriteLine($"Moving {stepperMotor}, currently on step {counter}");
+                    }
+
+                    if (flags.EmergencyStopActive)
+                    {
+                        Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
+                        flags.StopFlag = true;
+                        break;
+                    }
+
+                    Console.WriteLine($"CAN MOVE RESULT = {CanMove(direction, flags)} {direction}");
+                    if (CanMove(direction, flags))
+                    {
+                        PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(speed));
+                        PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
+                        Thread.Sleep(TimeSpan.FromSeconds(speed));
+                        counter++;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -175,12 +296,12 @@ namespace PrimaryClasses
         {
             if (collisionInfo.CollisionFlag)
             {
-                if (directionFlag == CCW && collisionInfo.topHit)
+                if (directionFlag == Ccw && collisionInfo.topHit)
                 {
                     return true;
                 }
 
-                if (directionFlag == CW && collisionInfo.bottomHit)
+                if (directionFlag == Cw && collisionInfo.bottomHit)
                 {
                     return true;
                 }
@@ -314,9 +435,9 @@ namespace PrimaryClasses
                     break;
                 }
                 PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
-                Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
+                Thread.Sleep(TimeSpan.FromSeconds(m_DefaultMinSpeed));
                 PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
-                Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
+                Thread.Sleep(TimeSpan.FromSeconds(m_DefaultMinSpeed));
 
                 numberOfStepsToHome++;
             }
@@ -352,9 +473,9 @@ namespace PrimaryClasses
             for (int i = 0; i < 20; i++)
             {
                 PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
-                Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
+                Thread.Sleep(TimeSpan.FromSeconds(m_DefaultMinSpeed));
                 PinManager.GetInstance().Controller.Write(stepPin, PinValue.Low);
-                Thread.Sleep(TimeSpan.FromSeconds(m_MinimumSpeed));
+                Thread.Sleep(TimeSpan.FromSeconds(m_DefaultMinSpeed));
                 Console.WriteLine("Move back");
             }
         }
@@ -482,16 +603,16 @@ namespace PrimaryClasses
                         if (currentEncoder.SIAValue == currentEncoder.SIBValue)
                         {
                             Console.WriteLine("CW ====================");
-                            direction = CW;
+                            direction = Cw;
                         }
                         else
                         {
                             Console.WriteLine("CCW ###################");
-                            direction = CCW;
+                            direction = Ccw;
                         }
 
                         int movementAngle = m_MinimumAngle * m_MovementSensitivity;
-                        float speed = m_MinimumSpeed * m_SpeedSensitivity;
+                        float speed = m_DefaultMinSpeed * m_SpeedSensitivity;
                         MoveStepper(movementAngle, speed, tParams.TargetStepperMotor, direction, false, flags);
 
                         currentEncoder.ReadSIA();
@@ -760,7 +881,7 @@ namespace PrimaryClasses
                         PinManager.GetInstance().Controller.Write(led3, PinValue.High);
                         break;
                 }
-                
+
                 if (controlEncoder.ReadSwitch() == PinValue.Low)
                 {
                     hasSelectedFile = true;
@@ -777,7 +898,7 @@ namespace PrimaryClasses
                         {
                             saveFile -= 1;
                         }
-                        
+
                     }
                     else
                     {
@@ -828,9 +949,9 @@ namespace PrimaryClasses
                     {
                         bool direction = stepperAController.GetDirection();
 
-                        int numberOfSteps = ConvertAngleToSteps(m_MinimumAngle * m_MovementSensitivity);
+                        int numberOfSteps = ConvertAngleToSteps(m_MinimumAngle * m_MovementSensitivity, StepperMotorOptions.motorA);
 
-                        float speed = m_MinimumSpeed * m_SpeedSensitivity;
+                        float speed = m_DefaultMinSpeed * m_SpeedSensitivity;
 
                         if (direction)
                         {
@@ -867,9 +988,9 @@ namespace PrimaryClasses
                     {
                         bool direction = stepperBController.GetDirection();
 
-                        int numberOfSteps = ConvertAngleToSteps(m_MinimumAngle * m_MovementSensitivity);
+                        int numberOfSteps = ConvertAngleToSteps(m_MinimumAngle * m_MovementSensitivity, StepperMotorOptions.motorB );
 
-                        float speed = m_MinimumSpeed * m_SpeedSensitivity;
+                        float speed = m_DefaultMinSpeed * m_SpeedSensitivity;
 
                         if (direction)
                         {
@@ -1088,7 +1209,7 @@ namespace PrimaryClasses
                 }
             }
             Console.WriteLine($"Recording complete. There are {movementSequence.Count} path nodes. \n Stepper nodes: {numberOfStepperNodes} \n Gimbal nodes: {numberOfGimbalNodes}");
-            
+
             SerializerManager.SaveMotionPath(movementSequence, saveFile);
 
             Console.WriteLine("The recorded path will now be replayed.");
@@ -1122,7 +1243,7 @@ namespace PrimaryClasses
             int stepADelta;
             int stepBDelta;
 
-            float follwoSpeed = m_MinimumSpeed * m_SpeedSensitivity;
+            float follwoSpeed = m_DefaultMinSpeed * m_SpeedSensitivity;
 
             int emergencyButton = PinManager.GetInstance().EmergencyStop;
 
@@ -1152,32 +1273,32 @@ namespace PrimaryClasses
                             stepADelta = Math.Abs(pathNode.Value.StepsFromHome - currentAStepperPosition);
                             if (pathNode.Value.StepsFromHome > currentAStepperPosition)
                             {
-                                stepperDir = CCW;
+                                stepperDir = Ccw;
                                 currentAStepperPosition += pathNode.Value.StepsFromHome;
                             }
                             else
                             {
-                                stepperDir = CW;
+                                stepperDir = Cw;
                                 currentAStepperPosition -= pathNode.Value.StepsFromHome;
                             }
                             Console.WriteLine($"Moving motor {StepperMotorOptions.motorA} with delta {stepADelta} and direction {stepperDir}");
-                            MoveStepper(0, follwoSpeed, StepperMotorOptions.motorA, stepperDir, false, Aflags, stepADelta);
+                            MoveStepper(0, follwoSpeed, StepperMotorOptions.motorA, stepperDir, false, Aflags, stepADelta,true);
                             break;
                         case StepperMotorOptions.motorB:
                             stepBDelta = Math.Abs(pathNode.Value.StepsFromHome - currentBStepperPosition);
                             if (pathNode.Value.StepsFromHome > currentBStepperPosition)
                             {
-                                stepperDir = CCW;
+                                stepperDir = Ccw;
                                 currentBStepperPosition += pathNode.Value.StepsFromHome;
                             }
                             else
                             {
-                                stepperDir = CW;
+                                stepperDir = Cw;
                                 currentBStepperPosition -= pathNode.Value.StepsFromHome;
                             }
 
                             Console.WriteLine($"Moving motor {StepperMotorOptions.motorB} with delta {stepBDelta} and direction {stepperDir}");
-                            MoveStepper(0, follwoSpeed, StepperMotorOptions.motorB, stepperDir, false, Bflags, stepBDelta);
+                            MoveStepper(0, follwoSpeed, StepperMotorOptions.motorB, stepperDir, false, Bflags, stepBDelta, true);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
