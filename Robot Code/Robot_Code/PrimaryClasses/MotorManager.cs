@@ -61,7 +61,7 @@ namespace PrimaryClasses
         public readonly bool Cw = true;
         public readonly bool Ccw = false;
 
-        private float m_OverallTime = 0;
+        private float m_OverallTime = 25;
         private float m_DefaultMaxSpeed = 0.002f;
         private float m_DefaultMinSpeed = 0.008f;
 
@@ -74,7 +74,7 @@ namespace PrimaryClasses
         private float m_A4;
         private float m_A5;
         private float m_StartAngle = 0;
-        private float m_FinalAngle = 0;
+        private float m_FinalAngle ;
         private float m_StartVelocity = 0;
         private float m_FinalVelocity = 0;
         private float m_StartAcceleration = 0;
@@ -112,6 +112,11 @@ namespace PrimaryClasses
         //ToDo add proper ratio selection based on used motor.
         public int ConvertAngleToSteps(int inputAngle, StepperMotorOptions targetMotor)
         {
+            if (inputAngle == 0)
+            {
+                return 0;
+            }
+
             int ratioToUse;
             switch (targetMotor)
             {
@@ -124,11 +129,18 @@ namespace PrimaryClasses
                 default:
                     ratioToUse = m_JointBGearRatio;
                     break;
-                    ;
+                    
             }
 
             int stepsForCarrierRevolution = m_StepsPerRevolution * m_StepMultiplier * ratioToUse;
             int partOfCircle = 360 / inputAngle;
+
+            if (partOfCircle == 0)
+            {
+                return 0;
+
+            }
+
             int stepsForInputAngle = stepsForCarrierRevolution / partOfCircle;
             return stepsForInputAngle;
         }
@@ -175,11 +187,30 @@ namespace PrimaryClasses
 
         private void InitMapCoef(StepperMotorOptions targetMotor)
         {
-            float numberOfSteps = ConvertAngleToSteps((int)m_FinalAngle, targetMotor);
-            float eti = m_OverallTime / numberOfSteps;
+            
+            //float numberOfSteps = ConvertAngleToSteps((int)m_FinalAngle, targetMotor);
+
+            if (Math.Abs(m_FinalAngle) > 0.01)
+            {
+                m_Eti = m_OverallTime / m_FinalAngle; 
+            }
+            else
+            {
+                Console.WriteLine("Error in Map Coef. initialization! (# of steps = 0)");
+            }
+
             float numberOfTimeDivisions = m_OverallTime / m_TimeDivisionSize;
             float funcMaxSpeed = GetSpeed((numberOfTimeDivisions / 2) * m_TimeDivisionSize);
-            m_ValueMapCoef = (m_DefaultMaxSpeed - m_DefaultMinSpeed) / funcMaxSpeed;
+            if (funcMaxSpeed!=0)
+            {
+                m_ValueMapCoef = (m_DefaultMaxSpeed - m_DefaultMinSpeed) / funcMaxSpeed; 
+            }
+            else
+            {
+                Console.WriteLine("Error in Map Coef. initialization! (funcMaxSpeed = 0)");
+                
+            }
+            Console.WriteLine($"Number of time divisions {numberOfTimeDivisions} \n funcMaxSpeed {funcMaxSpeed} \n Eti {m_Eti} \n Final Angle {m_FinalAngle}");
         }
 
         private float mapValue(float input)
@@ -191,25 +222,22 @@ namespace PrimaryClasses
             bool useDebugMessages, FlagArgs flags, int steps = 0, bool usePoly = false)
         {
             int numberOfSteps =0 ;
-            if (usePoly)
+            if (steps == 0)
             {
-                m_FinalAngle = angle;
-                CalcCoefs(m_OverallTime);
-                InitMapCoef(stepperMotor);
+                numberOfSteps = ConvertAngleToSteps(angle, stepperMotor);
             }
             else
             {
-                if (steps == 0)
-                {
-                    numberOfSteps = ConvertAngleToSteps(angle, stepperMotor);
-                }
-                else
-                {
-                    numberOfSteps = steps;
-                }
+                numberOfSteps = steps;
             }
-
-            Console.WriteLine($"Number of steps = {numberOfSteps}");
+            if (usePoly)
+            {
+                m_FinalAngle = numberOfSteps;
+                CalcCoefs(m_OverallTime);
+                InitMapCoef(stepperMotor);
+            }
+            
+                Console.WriteLine($"Number of steps = {numberOfSteps}");
             int stepPin;
             int dirPin;
 
@@ -249,6 +277,18 @@ namespace PrimaryClasses
             {
                 for (float i = 0; i <= m_OverallTime; i += (m_Eti))
                 {
+                    if (useDebugMessages)
+                    {
+                        Console.WriteLine($"Moving {stepperMotor}, currently on step {counter}");
+                    }
+
+                    if (flags.EmergencyStopActive)
+                    {
+                        Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
+                        flags.StopFlag = true;
+                        break;
+                    }
+
                     float stepperSpeed = mapValue(GetSpeed(i));
                     PinManager.GetInstance().Controller.Write(stepPin, PinValue.High);
                     Thread.Sleep(TimeSpan.FromSeconds(stepperSpeed));
@@ -1274,12 +1314,12 @@ namespace PrimaryClasses
                             if (pathNode.Value.StepsFromHome > currentAStepperPosition)
                             {
                                 stepperDir = Ccw;
-                                currentAStepperPosition += pathNode.Value.StepsFromHome;
+                                currentAStepperPosition += stepADelta;
                             }
                             else
                             {
                                 stepperDir = Cw;
-                                currentAStepperPosition -= pathNode.Value.StepsFromHome;
+                                currentAStepperPosition -= stepADelta;
                             }
                             Console.WriteLine($"Moving motor {StepperMotorOptions.motorA} with delta {stepADelta} and direction {stepperDir}");
                             MoveStepper(0, follwoSpeed, StepperMotorOptions.motorA, stepperDir, false, Aflags, stepADelta,true);

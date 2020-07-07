@@ -248,6 +248,10 @@ namespace PrimaryClasses
                     currentManager = new MotionManager(MotionModes.RecordPath);
                     currentManager.ExecuteCommand();
                     break;
+                case "RPL":
+                    currentManager = new MotionManager(MotionModes.Replay);
+                    currentManager.ExecuteCommand();
+                    break;
                 default:
                     ServerNotification?.Invoke($"\r\n[{DateTime.Now}] <ERROR> Wrong command passed to server. Unable to execute.");
                     break;

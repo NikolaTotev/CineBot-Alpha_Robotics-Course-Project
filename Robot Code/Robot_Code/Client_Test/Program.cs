@@ -60,7 +60,6 @@ namespace ConsoleClient
 
         }
 
-
         public static void DisplayMessage(string message)
         {
             Console.WriteLine(message);

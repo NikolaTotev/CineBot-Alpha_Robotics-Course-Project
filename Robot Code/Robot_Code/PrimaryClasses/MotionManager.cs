@@ -15,7 +15,8 @@ namespace PrimaryClasses
         TestMode,
         StepperHome,
         GimbalHome,
-        RecordPath
+        RecordPath,
+        Replay
     };
 
     public enum RecordingModes
@@ -96,6 +97,9 @@ namespace PrimaryClasses
                 case MotionModes.RecordPath:
                     RecordPath();
                     break;
+                case MotionModes.Replay:
+                    PathFollow(1);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -144,8 +148,10 @@ namespace PrimaryClasses
             return 0; 
         }
 
-        public int PathFollow(string nCodeFile)
+        public int PathFollow(int nCodeFile)
         {
+            MotorManager currentManager = new MotorManager();
+            currentManager.FollowPath(nCodeFile);
             return 0;
         }
 
