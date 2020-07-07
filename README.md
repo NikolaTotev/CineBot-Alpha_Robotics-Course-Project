@@ -631,6 +631,33 @@ Since I have previous experience with C# and since the Raspberry Pi is essential
 *3. Despite the cons, for this current project, C# is more than capable of delivering good performance. This has been determined by simply working with and on the system over the course of 5 months*
 
 ---
+### Software motor control
+This is a separate section because there is more to it than turning the motor on and off.
+The standard way of moving a stepper motor with the `A4988` driver is by pulsing the step pin at a given speed. For simple applications this is more than enough, but since this is a robot and since there is a considerable amount of mass that needs to be moved, simply moving the motor from 0 to full speed is not possible. There are a couple of  unwanted side effects of such instant acceleration:
+* The stepper motor losing steps
+* Extreme stresses that can lead to structural faliures like this:
+== INSERT IMAGE==
+* Unnecessary wear on components.
+
+A common approach that is used in larger robots is by using a [polynomial trajectory](https://www.youtube.com/watch?time_continue=8&v=HqQBL6xcj4w&feature=emb_logo) to ensure that the robot moves from one position to another smoothly over time. By using such a trajectory we can imagine the position, velocity and acceleration curves looking something like this:
+== INSERT IMAGE == 
+==insert data==
+This is done by using this kind of a quintic polynomial equation:
+
+where the function iteself gives us the change in position, the first derivative gives us the velocity curve and the thrid derivative  gives us the acceleration curve. All of these curves are given for a set period of time.
+If it takes more time to move the curves will look like this:
+==INSERT IMAGE==
+if it takes less time, they would look like this :
+==INSERT IMAGE==
+
+After doing some research on the topic, I decied to try to implement this. Luckily for me such a project has already been attemped and I am very grateful to Joseph Q. Oberhauser for the work he has done on his [master thesis ](https://etd.ohiolink.edu/!etd.send_file?accession=ohiou1460045979&disposition=inline) which has a part that covers this exact topic. I am also grateful that he has uploaded his C# code to his [dropbox](https://www.dropbox.com/sh/l5rgy7s7osya5vz/AABrLWKVYxZhbu4hxOwEMSMZa?dl=0) and still has it available at the time of writing this documentation.
+Even though it doesn't cover everything I needed, with the help of his work I was able to implement a working polynomial trajectory for my robot.
+It is not the smoothest operation, but that is mostly due to the fact that I am not using micro stepping and because my stepper motors only have 200 steps per revolution. Those two things result in quite a bit of noise, but overall everything works as intended and there is a visible improvement in performance as the stepper motor doesn't skip steps and there is less force exerted on the structure.
+
+
+##### [Back to top](#Contents)
+
+---
 ### Diagrams
 Due to the relative complexity of the system, I will not write too much text to explain it. Instead I will use the things I learned in my Software Architectures course this semester to create diagrams for my system.
 
@@ -657,3 +684,4 @@ Due to the relative complexity of the system, I will not write too much text to 
 
 
 ## Assembly Information
+
