@@ -510,17 +510,21 @@ This part is pretty simple. Since I neede something to balnce the gimbal, and an
 ---
 
 #### Gimbal
+
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Gimbal_Full_Left.jpg?raw=true" width="729.5" height="892" alt="Gimbal_Full_Left"/>
+
 This part also has a lot of iterations, as initially I didn't know what the best approach was. All of the axes are controled via servo motors.
-* Iteraton 1
-==INSERT IMAGE==
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Gimbal_Evolution.png?raw=true" width="615.38" height="322.58" alt="Gimbal_Evolution"/>
+
+* __Iteraton 1__
  This looks like a standard gimbal, the rotation motor housing is quite big and it is really heavy. Along with that, the camera mount is weak and the tilt and pan arms are also flimsy.
-* Iteraton 2
-==INSERT IMAGE==
+* __Iteraton 2__
 The second version of the gimbal is very complex, and rather large. Due to this fact it is very unstable and I quickly abanoned it. 
-* Iteraton 3
+* __Iteraton 3__
 The third version is inspired by the second one, but attempts to minimize it by using smaller servos and smaller pieces. This design has major alignment issues. It is also very difficult to assemble and easy to break.
-* Iteraton 4
-==INSERT IMAGE==
+* __Iteraton 4__
 This final design is inspired by [a project I found on youtube](https://www.youtube.com/watch?v=wQypj7ti7Vw). I was already behind schedule and I thought that it's time to look for some help. I had to make the models from scratch, since I am using servo motors and the person in the video is using brushless gimbal motors.
 
 ##### [Back to top](#Contents)
