@@ -440,29 +440,25 @@ Since this is a stationary robot, the base is a key part of the design and a goo
 
 #### Arm section
 This is the most important part of the robot. It make up the majority of the assembly and without it the robot would not work. This part also transmits the most load and has to be made both light and strong. Many iterations were needed to get to the final version.
-* Iteraton 1
-==INSERT IMAGE==
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Arm_Evolution_Diagram.png?raw=true" width="800" height="400" alt="Arm_Evolution"/>		
+* __Iteraton 1__
 This was not thought trough very well. As previous first iterations it relies on friction fits and too many screws to be practical.
 
-* Iteraton 2
-==INSERT IMAGE==
-   This iteration is also poorly designed. While the shape is cool, it is too thin, too small and again relies on a friction fit.
+* __Iteraton 2__
+ This iteration is also poorly designed. While the shape is cool, it is too thin, too small and again relies on a friction fit.
    
-* Iteraton 3
-==INSERT IMAGE==
+* __Iteraton 3__
 This version is a bit better, much stronger but still too small and once again it uses too many screws.
 
-* Iteraton 4
- ==INSERT IMAGE==
-	  This iteration is where better design choices emerge. There is proper cabel management, it is light yet strong. Unfortunately, it is too complex and takes too long to print. It also uses too many screws.
-* Iteraton 5
- ==INSERT IMAGE==
-	This is the first iteration where a the universal connector is used. The shape is simplified and there is better cable management. This design goes through 2 updates to make it stronger it experienced a structural faliure once.
-* Iteration 5.1
-* Iteration 5.2
-* Iteraton 6
-==INSERT IMAGE==
-	For this iteration, the top arm section is the same, but the base arm section has been reworked due to the structural falire shown below. This change also comes from the redesign of the base drive train. As you can see, it still keeps the universal connector, it is also much more stable, compared to the previous arm sections.
+* __Iteraton 4__
+This iteration is where better design choices emerge. There is proper cabel management, it is light yet strong. Unfortunately, it is too complex and takes too long to print. It also uses too many screws.
+	  
+* __Iteraton 5__
+This is the first iteration where a the universal connector is used. The shape is simplified and there is better cable management. This design goes through 2 updates to make it stronger because it experienced a structural faliure once. These updates just make the walls thicker.
+
+* __Iteraton 6__
+For this iteration, the top arm section is the same, but the base arm section has been reworked due to the structural falire shown below. This change also comes from the redesign of the base drive train. As you can see, it still keeps the universal connector, it is also much more stable, compared to the previous arm sections.
 
 ##### [Back to top](#Contents)
 ---	
@@ -475,17 +471,17 @@ This part is the one and only "joint". I call it a joint because it connects tw 
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Joint_Evolution.png?raw=true" width="800" height="400" alt="Arm_Joint_Evolution"/>		
 
-* Iteraton 1
-	  In the very beginning since I had never worked with stepper motors I didn't know that they can't lift much on their own, and they require some kind of reduction mechanism.
-	  This is why the first iteration has no gears whatsoever.
+* __Iteraton 1__
+ In the very beginning since I had never worked with stepper motors I didn't know that they can't lift much on their own, and they require some kind of reduction mechanism.
+This is why the first iteration has no gears whatsoever.
 	  
- * Iteraton 2
-	 This iteration uses a very simple planetary gearbox with a 7:1 reduction ratio. Was able to move the arm, but as it relies on a friction fit it is not stable. Along with those issues, after the gimbal iterations it proved to be too weak.
+ * __Iteraton 2__
+This iteration uses a very simple planetary gearbox with a 7:1 reduction ratio. Was able to move the arm, but as it relies on a friction fit it is not stable. Along with those issues, after the gimbal iterations it proved to be too weak.
 	 
-* Iteraton 3
+* __Iteraton 3__
 In this version, I deicded to try to make a worm drive, but since it is a much harder reducer to make it had internal friction issues that caused it to be too weak.
 
-* Iteraton 4
+* __Iteraton 4__
 This is the final iteration and it is a smaller version of second iteration of the base gearbox.  It shares it's flaws, but they were not as pronounced due to the smaller foces exerted on it. Using this new gearbox allowed me to finally add the universal mounting bracket to it.
 
 ##### [Back to top](#Contents)
@@ -519,10 +515,13 @@ This part also has a lot of iterations, as initially I didn't know what the best
 
 * __Iteraton 1__
  This looks like a standard gimbal, the rotation motor housing is quite big and it is really heavy. Along with that, the camera mount is weak and the tilt and pan arms are also flimsy.
+
 * __Iteraton 2__
 The second version of the gimbal is very complex, and rather large. Due to this fact it is very unstable and I quickly abanoned it. 
+
 * __Iteraton 3__
 The third version is inspired by the second one, but attempts to minimize it by using smaller servos and smaller pieces. This design has major alignment issues. It is also very difficult to assemble and easy to break.
+
 * __Iteraton 4__
 This final design is inspired by [a project I found on youtube](https://www.youtube.com/watch?v=wQypj7ti7Vw). I was already behind schedule and I thought that it's time to look for some help. I had to make the models from scratch, since I am using servo motors and the person in the video is using brushless gimbal motors.
 
