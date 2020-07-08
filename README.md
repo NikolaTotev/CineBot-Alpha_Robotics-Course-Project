@@ -528,7 +528,7 @@ This final design is inspired by [a project I found on youtube](https://www.yout
 
 #### Limit switches
 
-<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Limit_Switch.jpg?raw=true" width="956" height="562.66" alt="Limit_Switch"/>
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Limit_Switch.jpg?raw=true" width="717" height="422" alt="Limit_Switch"/>
 
 These don't really have any iterations. I just bought a simple switch from the store and mounted it to the robot with two simple mounts. Despite their simplicity, these are critical parts as the allow the robot to "know" what position it is in. Please read [the improvemens section](#Possible-improvements) for more insight on the improvements I would make in the area of positional awareness. 
 
