@@ -385,21 +385,24 @@ Since this is quite a lengthy section I will provide skip links so that you can 
 ####	Base & base drive train
 Since this is a stationary robot, the base is a key part of the design and a good base is essential for the overall stability of the system. This section also also experiences the most loading and has to be designed with that in mind. I also want to cover the different adapters that are used to connect the arm sections to the base subassembly.
 * ___Base & base drive train iterations___
-	* __Iteraton 1__
-		INSERT IMAGE
-		Initially I started off with this design. As you can see it is a simple and small gearbox and the larger gear has a hexagonal shaft. and it sits in a stand. The idea behind this was to have the rest of the robot be friction fit onto it, however there were many tolerance issues. Another significant issue with this base, it had a small footprint and once the robot was friction fit ontop  there was a lot of wobbling around and I abandoned the idea.
-	* __Iteraton 2__
-	INSERT IMAGE
-	This iteration was inspired by the  first version of the arm joint planetary gears and then a smaller version of this base gear box was used in the final iteration of the arm joint. In theory this stetup should've been much more stable, but the way I chose to attach the base adapter created a lot of problems. This gearbox also had some binding issues in some spots,which resulted in irregular motion and the stepper motor loosing steps. The problems mentioned along with the arm section issues at the base of the robot made me rework the entire base.
-	
-	* __Iteraton 3__
-	INSERT IMAGE
-	This is the final iteration. As you can see it quite different and uses a much simpler and adjustable drive train. In the base there are 2 75 mm *(outer diameter)* bearings that provide the structural stabilitiy and smooth rotational movement. This base fixes all of the issues that the previous ones had and helped solve the issues with the base arm section
+
+<img src="hhttps://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Base_Gearbox_Evolution.png?raw=true" width="800" height="400" alt="Base_Gearbox_Evolution"/>	
+
+* __Iteraton 1__
+Initially I started off with this design. As you can see it is a simple and small gearbox and the larger gear has a hexagonal shaft. and it sits in a stand. The idea behind this was to have the rest of the robot be friction fit onto it, however there were many tolerance issues. Another significant issue with this base, it had a small footprint and once the robot was friction fit ontop  there was a lot of wobbling around and I abandoned the idea.
+
+* __Iteraton 2__
+This iteration was inspired by the  first version of the arm joint planetary gears and then a smaller version of this base gear box was used in the final iteration of the arm joint. In theory this stetup should've been much more stable, but the way I chose to attach the base adapter created a lot of problems. This gearbox also had some binding issues in some spots,which resulted in irregular motion and the stepper motor loosing steps. The problems mentioned along with the arm section issues at the base of the robot made me rework the entire base.
+
+* __Iteraton 3__
+This is the final iteration. As you can see it quite different and uses a much simpler and adjustable drive train. In the base there are 2 75 mm *(outer diameter)* bearings that provide the structural stabilitiy and smooth rotational movement. This base fixes all of the issues that the previous ones had and helped solve the issues with the base arm section
 
 **Thigs I learned** - Its best to keep reducer mechanisms as simple as possible. It is important to consider the forces that will be exerted on a part, especially on the base of the robot. Bearings are something that should be used more often, they significantlly improve the final result and are a great addition to 3D printed mechanisms. 
 	
 ##### [Back to top](#Contents)	
+
 ---	
+	
 * ___Base Adapter iterations___
    This will just quickly cover the different adapters I made.
 	* __Iteraton 1__
@@ -441,7 +444,8 @@ Since this is a stationary robot, the base is a key part of the design and a goo
 #### Arm section
 This is the most important part of the robot. It make up the majority of the assembly and without it the robot would not work. This part also transmits the most load and has to be made both light and strong. Many iterations were needed to get to the final version.
 
-<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Arm_Evolution_Diagram.png?raw=true" width="800" height="400" alt="Arm_Evolution"/>		
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Arm_Evolution_Diagram.png?raw=true" width="800" height="400" alt="Arm_Evolution"/>	
+	
 * __Iteraton 1__
 This was not thought trough very well. As previous first iterations it relies on friction fits and too many screws to be practical.
 
