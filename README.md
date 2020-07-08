@@ -512,11 +512,11 @@ This part is pretty simple. Since I neede something to balnce the gimbal, and an
 #### Gimbal
 
 
-<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Gimbal_Full_Left.jpg?raw=true" width="729.5" height="892" alt="Gimbal_Full_Left"/>
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Gimbal_Full_Left.jpg?raw=true" width="583.6" height="717.2" alt="Gimbal_Full_Left"/>
 
 This part also has a lot of iterations, as initially I didn't know what the best approach was. All of the axes are controled via servo motors.
 
-<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Gimbal_Evolution.png?raw=true" width="615.38" height="322.58" alt="Gimbal_Evolution"/>
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Gimbal_Evolution.png?raw=true" width="800" height="400" alt="Gimbal_Evolution"/>
 
 * __Iteraton 1__
  This looks like a standard gimbal, the rotation motor housing is quite big and it is really heavy. Along with that, the camera mount is weak and the tilt and pan arms are also flimsy.
