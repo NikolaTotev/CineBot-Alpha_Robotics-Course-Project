@@ -3,7 +3,7 @@
 This is the documentation for my Robotics Course Project created during my second year, second semester in FMI for the course Practical Robotics and Smart "Things". 
 
 <p align="center">
-<img src="https://github.com/NikolaTotev/Robotics-Course-		Project/blob/master/Documentation/Images/Robot%20Images/Photos/Robot_Full.jpg?		raw=true" width="562.66" height="660.16"/>
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Robot_Full.jpg?raw=true" width="562.66" height="660.16" alt="Robot_Full"/>
 </p>
 
 ## *Acknowledgements*
