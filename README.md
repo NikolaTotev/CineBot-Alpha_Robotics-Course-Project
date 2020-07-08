@@ -382,11 +382,11 @@ Since this is quite a lengthy section I will provide skip links so that you can 
 
 ---
 
-####	Base & base drive train
+####	Base and base drive train
 Since this is a stationary robot, the base is a key part of the design and a good base is essential for the overall stability of the system. This section also also experiences the most loading and has to be designed with that in mind. I also want to cover the different adapters that are used to connect the arm sections to the base subassembly.
 * ___Base & base drive train iterations___
 
-<img src="hhttps://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Base_Gearbox_Evolution.png?raw=true" width="800" height="400" alt="Base_Gearbox_Evolution"/>	
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Base_Gearbox_Evolution.png?raw=true" width="800" height="400" alt="Base_Gearbox_Evolution"/>	
 
 * __Iteraton 1__
 Initially I started off with this design. As you can see it is a simple and small gearbox and the larger gear has a hexagonal shaft. and it sits in a stand. The idea behind this was to have the rest of the robot be friction fit onto it, however there were many tolerance issues. Another significant issue with this base, it had a small footprint and once the robot was friction fit ontop  there was a lot of wobbling around and I abandoned the idea.
