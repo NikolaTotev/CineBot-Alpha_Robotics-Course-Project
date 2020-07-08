@@ -512,7 +512,7 @@ This part is pretty simple. Since I neede something to balnce the gimbal, and an
 #### Gimbal
 
 
-<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Gimbal_Full_Left.jpg?raw=true" width="583.6" height="717.2" alt="Gimbal_Full_Left"/>
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Gimbal_Full_Left.jpg?raw=true" width="486.33" height="597.66" alt="Gimbal_Full_Left"/>
 
 This part also has a lot of iterations, as initially I didn't know what the best approach was. All of the axes are controled via servo motors.
 
