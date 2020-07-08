@@ -533,6 +533,9 @@ These don't really have any iterations. I just bought a simple switch from the s
 ---
 
 #### Electronics housing
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Housing_Wide.jpg?raw=true" width="646.16" height="509.66" alt="Electronics_Housing_Wide"/>
+
 This is a pretty simple part of the whole project. Its main goal is to make the project a bit more complete and polished. It also ensures, that once all of the cables are connected in a working that they stay that way. The case also provides active cooling because it has two 95mm fans on one side.
 
 ***Possible improvements***
