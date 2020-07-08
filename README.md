@@ -468,26 +468,26 @@ This version is a bit better, much stronger but still too small and once again i
 ---	
 
 #### Arm Joint
-This part is the one and only "joint". I call it a joint because it connects two arm sections in a mobile way. This part of the robot had a couple of requiredments to meet:
+This part is the one and only "joint". I call it a joint because it connects tw arm sections in a mobile way. This part of the robot had a couple of requiredments to meet:
 1. It needs to be strong enough (structurally) to lift the weight of the arm.
 2. Since the stepper motor can't lift the arm on its own the joint needs to be some kind of reducer with an appropriate gear ratio. The gears must also operat smoothly.
 3. It needs to implement a universal mounting system.
-		
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Joint_Evolution.png?raw=true" width="800" height="400" alt="Arm_Joint_Evolution"/>		
+
 * Iteraton 1
-		== INSERT IMAGE ==
 	  In the very beginning since I had never worked with stepper motors I didn't know that they can't lift much on their own, and they require some kind of reduction mechanism.
 	  This is why the first iteration has no gears whatsoever.
 	  
  * Iteraton 2
-==INSERT IMAGE==
 	 This iteration uses a very simple planetary gearbox with a 7:1 reduction ratio. Was able to move the arm, but as it relies on a friction fit it is not stable. Along with those issues, after the gimbal iterations it proved to be too weak.
+	 
 * Iteraton 3
-==INSERT IMAGE==
 In this version, I deicded to try to make a worm drive, but since it is a much harder reducer to make it had internal friction issues that caused it to be too weak.
 
 * Iteraton 4
-==INSERT IMAGE==
 This is the final iteration and it is a smaller version of second iteration of the base gearbox.  It shares it's flaws, but they were not as pronounced due to the smaller foces exerted on it. Using this new gearbox allowed me to finally add the universal mounting bracket to it.
+
 ##### [Back to top](#Contents)
 ----
 
@@ -510,7 +510,6 @@ This part is pretty simple. Since I neede something to balnce the gimbal, and an
 ---
 
 #### Gimbal
-
 
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Gimbal_Full_Left.jpg?raw=true" width="486.33" height="597.66" alt="Gimbal_Full_Left"/>
 
