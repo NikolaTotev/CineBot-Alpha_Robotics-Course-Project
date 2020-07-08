@@ -2,7 +2,7 @@
 
 This is the documentation for my Robotics Course Project created during my second year, second semester in FMI for the course Practical Robotics and Smart "Things". 
 
-<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Robot_Full.jpg?raw=true" width="562.66" height="660.16" >
+<img align="center" src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Robot_Full.jpg?raw=true" width="562.66" height="660.16">
 
 ## *Acknowledgements*
 Before I begin, I would like to acknowledge my parents, for their constant love and encouragement, not only for this project, but for all of my previous and current envdeavours. Without them this project would not be the same.
