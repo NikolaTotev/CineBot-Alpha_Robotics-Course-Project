@@ -585,7 +585,6 @@ The schematics are very useful for anyone trying to make this exact robot. Pleas
 ---
 
 #### Electronics housing and connections to robot
-==INSERT IMAGE==
 The electronics housing is not an essential part of the project, but it makes for a more complete and polished project. It also hides the mess of cables and provides an interface for the robot to connect to via standard ports. 
 
 **There are 4 ports:**
@@ -593,6 +592,10 @@ The electronics housing is not an essential part of the project, but it makes fo
 2.	Stepper motor B
 3.	Servo power & limit switches for stepper A
 4.	I2C connection & limit switches for stepper B _(Unfortunately I2C is never used)_
+
+<p align="center">
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Robot_Ports.jpg?raw=true" width="50%" height="50%">
+</p>
 
 ---
 
