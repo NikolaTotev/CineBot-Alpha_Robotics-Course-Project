@@ -670,7 +670,7 @@ where the function iteself gives us the change in position, the first derivative
 
 Lets imagine we want to rotate the base of the robot from 0 to 42 degrees. There are a couple of options:
 
-* If it takes ~ 0 seconds to move from 0 to 42 degrees, the curves would look something like this:
+If it takes ~ 0 seconds to move from 0 to 42 degrees, the curves would look something like this:
 <p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/InstantAcceleration.png?raw=true" width="80%" height="80%">
 </p>
