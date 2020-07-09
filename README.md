@@ -653,6 +653,8 @@ The standard way of moving a stepper motor with the `A4988` driver is by pulsing
 * The stepper motor losing steps
 * Extreme stresses that can lead to structural faliures like this:
 == INSERT IMAGE==
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Struc_Faliure.jpg?raw=true" width="270" height="480">
+
 * Unnecessary wear on components.
 
 A common approach that is used in larger robots is by using a [polynomial trajectory](https://www.youtube.com/watch?time_continue=8&v=HqQBL6xcj4w&feature=emb_logo) to ensure that the robot moves from one position to another smoothly over time. By using such a trajectory we can imagine the position, velocity and acceleration curves looking something like this:
