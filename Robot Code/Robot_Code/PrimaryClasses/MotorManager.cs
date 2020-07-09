@@ -601,7 +601,7 @@ namespace PrimaryClasses
                     if (PinManager.GetInstance().Controller.Read(emergencyButton) == PinValue.Low)
                     {
                         Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
-                        PinManager.GetInstance().EmergencyStopLights();
+                        NotificationManager.EmergencyStopLights();
                         break;
                     }
 
@@ -1291,7 +1291,7 @@ namespace PrimaryClasses
 
             if (movementSequence.Count == 0)
             {
-                PinManager.GetInstance().DoublePulse();
+                NotificationManager.DoublePulse();
                 Console.WriteLine($"Motion path {file} is empty.");
             }
 
@@ -1300,7 +1300,7 @@ namespace PrimaryClasses
                 if (PinManager.GetInstance().Controller.Read(emergencyButton) == PinValue.Low)
                 {
                     Console.WriteLine($"[{DateTime.Now}] <EMERGENCY>: Emergency button activated. Aborting Execution.");
-                    PinManager.GetInstance().EmergencyStopLights();
+                    NotificationManager.EmergencyStopLights();
                     break;
                 }
 

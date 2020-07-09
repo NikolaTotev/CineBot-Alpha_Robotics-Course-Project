@@ -97,7 +97,7 @@ namespace PrimaryClasses
             for (int i = 0; i < 10; i++)
             {
                 m_Controller.Write(m_ErrorLight, PinValue.High);
-                Thread.Sleep(TimeSpan.FromSeconds(2));
+                Thread.Sleep(TimeSpan.FromSeconds(0.5));
                 m_Controller.Write(m_ErrorLight, PinValue.Low);
                 Thread.Sleep(TimeSpan.FromSeconds(0.5));
             }

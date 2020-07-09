@@ -31,6 +31,9 @@ namespace PrimaryClasses
             ServerNotification?.Invoke($"[{DateTime.Now}]: Server version {m_ServerVersion} created. Preparing to start.");
         }
 
+        /// <summary>
+        /// Starts the server. Flag & listener thread setup and start.
+        /// </summary>
         public void StartServer()
         {
             if (m_ListenerThread != null)
@@ -61,6 +64,11 @@ namespace PrimaryClasses
         }
 
 
+        /// <summary>
+        /// Runs on listener thread. Accepts state which is the TCP endpoint the listener listens on.
+        /// If no connection detected sleeps for 1 second.
+        /// </summary>
+        /// <param name="state"></param>
         public void AwaitConnection(object state)
         {
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Awaiting connection. Starting listener");
@@ -92,6 +100,12 @@ namespace PrimaryClasses
 
             while (!m_StopFlag)
             {
+                if (PinManager.GetInstance().Controller.Read(PinManager.GetInstance().EmergencyStop) == PinValue.Low)
+                {
+                    StopServer();
+                    break;
+                }
+
                 try
                 {
                     if (listener.Pending())
@@ -168,6 +182,10 @@ namespace PrimaryClasses
             }
         }
 
+        /// <summary>
+        /// Handles client once connected. Does not run on own thread, that way if client disconnects server can go back to listening.
+        /// </summary>
+        /// <returns></returns>
         public int ClientHandler()
         {
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Starting client handler. ");
@@ -188,6 +206,13 @@ namespace PrimaryClasses
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Starting coms. loop.");
             while (!m_StopFlag)
             {
+
+                if (PinManager.GetInstance().Controller.Read(PinManager.GetInstance().EmergencyStop) == PinValue.Low) 
+                {
+                    StopServer();
+                    break;
+                }
+
                 try
                 {
                     while (IsSocketConnected(m_ControlClient) && !m_StopFlag)
@@ -205,6 +230,13 @@ namespace PrimaryClasses
                             else
                             {
                                 bool result = ExecutionHandler(clientInstructions);
+
+                                if (PinManager.GetInstance().Controller.Read(PinManager.GetInstance().EmergencyStop) == PinValue.Low)
+                                {
+                                    StopServer();
+                                    break;
+                                }
+
                                 string textResult = result ? "success" : "failure";
                                 string responseMessage = $"Execution of {clientInstructions} was a {textResult}.";
                                 writer.WriteLine(responseMessage);
@@ -245,6 +277,12 @@ namespace PrimaryClasses
             return 0;
         }
 
+
+        /// <summary>
+        /// Checks if socket that is pass is still connected.
+        /// </summary>
+        /// <param name="socketToCheck"></param>
+        /// <returns></returns>
         public bool IsSocketConnected(Socket socketToCheck)
         {
             bool part1 = socketToCheck.Poll(1000, SelectMode.SelectRead);
@@ -252,6 +290,11 @@ namespace PrimaryClasses
             return !part1 || !part2;
         }
 
+        /// <summary>
+        /// Parses input from client. Starts motion manager for each mode.
+        /// </summary>
+        /// <param name="executionCode"></param>
+        /// <returns></returns>
         public bool ExecutionHandler(string executionCode)
         {
             MotionManager currentManager;
@@ -305,9 +348,13 @@ namespace PrimaryClasses
                     ServerNotification?.Invoke($"\r\n[{DateTime.Now}] <ERROR> Wrong command passed to server. Unable to execute.");
                     break;
             }
+            ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Execution of command {executionCode} completed.");
             return true;
         }
 
+        /// <summary>
+        /// Handles server stop sequence.
+        /// </summary>
         public void StopServer()
         {
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Calling stop command. ");
