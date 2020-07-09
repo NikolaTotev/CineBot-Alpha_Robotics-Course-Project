@@ -139,6 +139,34 @@ namespace PrimaryClasses
             m_Controller.Write(m_ErrorLight, PinValue.Low);
             m_Controller.Write(m_NotificationLight, PinValue.Low);
         }
+
+        public static void Exception()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                m_Controller.Write(m_StatusLight, PinValue.High);
+                m_Controller.Write(m_ErrorLight, PinValue.High);
+                m_Controller.Write(m_NotificationLight, PinValue.High);
+
+                Thread.Sleep(TimeSpan.FromSeconds(0.2));
+
+                m_Controller.Write(m_StatusLight, PinValue.Low);
+                m_Controller.Write(m_ErrorLight, PinValue.Low);
+                m_Controller.Write(m_NotificationLight, PinValue.Low);
+                Thread.Sleep(TimeSpan.FromSeconds(0.2));
+
+                m_Controller.Write(m_StatusLight, PinValue.High);
+                m_Controller.Write(m_ErrorLight, PinValue.High);
+                m_Controller.Write(m_NotificationLight, PinValue.High);
+
+                Thread.Sleep(TimeSpan.FromSeconds(0.2));
+
+                m_Controller.Write(m_StatusLight, PinValue.Low);
+                m_Controller.Write(m_ErrorLight, PinValue.Low);
+                m_Controller.Write(m_NotificationLight, PinValue.Low);
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+            }
+        }
     }
 }
 
