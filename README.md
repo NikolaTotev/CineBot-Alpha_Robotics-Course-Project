@@ -672,11 +672,11 @@ Lets imagine we want to rotate the base of the robot from 0 to 42 degrees. There
 
 * If it takes ~ 0 seconds to move from 0 to 42 degrees, the curves would look something like this:
 <p align="center">
-<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/InstantAcceleration.png?raw=true" width="20%" height="20%">
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/InstantAcceleration.png?raw=true" width="90%" height="90%">
 </p>
 
 <p align="center">
-<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/InstantVelocity.png?raw=true" width="20%" height="20%">
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/InstantVelocity.png?raw=true" width="90%" height="90%">
 </p>
 
 ***Note:The Y axis values are the value from the function and to not represent actual velocity or acceleration metrics***
@@ -688,7 +688,7 @@ As you can see, both acceleration and velocity almost instantly shoot up, this c
 On the other hand, if we use a polynomial trajectory, the curves look something like this:
 
 <p align="center">
-<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/Poly_10sec.png?raw=true">
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/Poly_10sec.png?raw=true" width="90%" height="90%">
 
 </p>
 As you can see here, the acceleration is less and the curve is much more gentle.
