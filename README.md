@@ -660,8 +660,9 @@ The standard way of moving a stepper motor with the `A4988` driver is by pulsing
 * Unnecessary wear on components.
 
 A common approach that is used in larger robots is by using a [polynomial trajectory](https://www.youtube.com/watch?time_continue=8&v=HqQBL6xcj4w&feature=emb_logo) to ensure that the robot moves from one position to another smoothly over time. By using such a trajectory we can imagine the position, velocity and acceleration curves looking something like this:
-
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/SuperSmooth.png?raw=true">
+</p>
 
 This is done by using this kind of a quintic polynomial equation:
 
@@ -670,10 +671,13 @@ where the function iteself gives us the change in position, the first derivative
 Lets imagine we want to rotate the base of the robot from 0 to 42 degrees. There are a couple of options:
 
 * If it takes ~ 0 seconds to move from 0 to 42 degrees, the curves would look something like this:
-* 
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/InstantAcceleration.png?raw=true" width="474" height="214.5">
+</p>
 
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/InstantVelocity.png?raw=true"  width="468" height="226">
+</p>
 
 ***Note:The Y axis values are the value from the function and to not represent actual velocity or acceleration metrics***
 
