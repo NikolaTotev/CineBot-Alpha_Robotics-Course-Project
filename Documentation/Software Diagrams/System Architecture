@@ -1,1 +1,52 @@
-<mxfile host="app.diagrams.net" modified="2020-07-06T18:50:48.175Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36" version="13.3.0" etag="q7Wcq8KtBoYv2ZnCqEeS" type="github"><diagram id="SX7susGIlQd8THx0TDW9">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2020-07-09T18:23:40.330Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36" etag="C7HjgXwoGveHZlqFf0x0" version="13.3.0" type="github">
+  <diagram id="SX7susGIlQd8THx0TDW9" name="Page-1">
+    <mxGraphModel dx="1422" dy="882" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="w15eYL35gYHp-AciI6QY-1" value="Console Client" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="200" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-2" value="GUI Client" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-3" value="Robot Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="240" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-4" value="Robot Manager" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="240" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-5" value="Console Client" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="560" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-6" value="GUI Client" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="680" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-7" value="Robot Server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="560" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-8" value="Robot Manager" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="560" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-9" value="Motion Manager" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="560" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-10" value="Pin Manager" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="750" y="560" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-11" value="Motor Manager" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="690" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-12" value="Serialization &lt;br&gt;Manager" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="690" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-13" value="SerialComs &lt;br&gt;Manager" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="750" y="690" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="w15eYL35gYHp-AciI6QY-14" value="Control Client" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="690" width="120" height="120" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
