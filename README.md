@@ -386,7 +386,9 @@ Since this is quite a lengthy section I will provide skip links so that you can 
 Since this is a stationary robot, the base is a key part of the design and a good base is essential for the overall stability of the system. This section also also experiences the most loading and has to be designed with that in mind. I also want to cover the different adapters that are used to connect the arm sections to the base subassembly.
 * ___Base & base drive train iterations___
 
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Base_Gearbox_Evolution.png?raw=true" width="800" height="400" alt="Base_Gearbox_Evolution"/>	
+</p>
 
 * __Iteraton 1__
 Initially I started off with this design. As you can see it is a simple and small gearbox and the larger gear has a hexagonal shaft. and it sits in a stand. The idea behind this was to have the rest of the robot be friction fit onto it, however there were many tolerance issues. Another significant issue with this base, it had a small footprint and once the robot was friction fit ontop  there was a lot of wobbling around and I abandoned the idea.
@@ -406,8 +408,7 @@ This is the final iteration. As you can see it quite different and uses a much s
 * ___Base Adapter iterations___
    This will just quickly cover the different adapters I made.
 	* __Iteraton 1__
-		INSERT IMAGE
-	Uses hexagonal friction fit on one side and screws for mounting the arm section. 
+		Uses hexagonal friction fit on one side and screws for mounting the arm section. 
 		Cons - 
 		*	No cable management
 		*	Tolerance issues
@@ -419,20 +420,17 @@ This is the final iteration. As you can see it quite different and uses a much s
 		* quick to print.
 		
 	*  __Iteraton 2__
-== INSERT IMAGE==
-		This  version as you can see it a bit better, but it still has the major issues of the previous one.
-	
+		This  version as you can see it a bit better, but it still has the major issues of the previous 		 		    	    one.	
+		
 		 Pros - 
-		 *fixes thinness issue
+		 * fixes thinness issue
 		 * adds some stability due to wider footprint
 		 
 		 Cons
 		 * still time-consuming to mount arm sections
 		 * still has tolerance issues
 		 
-	* __Iteraton 3__
-	* == INSERT IMAGE==
-
+	* __Iteraton 3__	
 		This one solves all of the issues of the previous ones, but introduces some new ones. As you can see it is connected with screws to the gearbox, but those screws also hold the planet gears and carrier in alignment. This means that they can't be tightened too much as it will cause the gearbox to bind. Despite those problems, the easy swap functionality that comes from the use of a universal trapezoid mount allows for easy mounting of the other part of the robot. This base also has cable management that feeds the cables out of the back.
 		
 * Iteration 3.1
@@ -444,8 +442,10 @@ This is the final iteration. As you can see it quite different and uses a much s
 #### Arm section
 This is the most important part of the robot. It make up the majority of the assembly and without it the robot would not work. This part also transmits the most load and has to be made both light and strong. Many iterations were needed to get to the final version.
 
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Arm_Evolution_Diagram.png?raw=true" width="800" height="400" alt="Arm_Evolution"/>	
-	
+</p>	
+
 * __Iteraton 1__
 This was not thought trough very well. As previous first iterations it relies on friction fits and too many screws to be practical.
 
@@ -473,7 +473,9 @@ This part is the one and only "joint". I call it a joint because it connects tw 
 2. Since the stepper motor can't lift the arm on its own the joint needs to be some kind of reducer with an appropriate gear ratio. The gears must also operat smoothly.
 3. It needs to implement a universal mounting system.
 
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Joint_Evolution.png?raw=true" width="800" height="400" alt="Arm_Joint_Evolution"/>		
+</p>
 
 * __Iteraton 1__
  In the very beginning since I had never worked with stepper motors I didn't know that they can't lift much on their own, and they require some kind of reduction mechanism.
@@ -510,8 +512,9 @@ This part is pretty simple. Since I neede something to balnce the gimbal, and an
 ---
 
 #### Gimbal
-
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Gimbal_Full_Left.jpg?raw=true" width="486.33" height="597.66" alt="Gimbal_Full_Left"/>
+</p>
 
 This part also has a lot of iterations, as initially I didn't know what the best approach was. All of the axes are controled via servo motors.
 
@@ -570,7 +573,8 @@ The schematics are very useful for anyone trying to make this exact robot. Pleas
 ---
 
 * ___Encoder & switch connection schematic___ [_alternate link_](https://github.com/NikolaTotev/Robotics-Course-Project/tree/master/Documentation/Images/Electronic%20Schematics)
-<p align="center>
+
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Electronic%20Schematics/Button%20and%20Encoder%20Connections%20Schematic.png?raw=true" width="707.5" height="667.5">
 </p>
 
