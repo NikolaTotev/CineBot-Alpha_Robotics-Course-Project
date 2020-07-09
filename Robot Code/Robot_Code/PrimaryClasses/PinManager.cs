@@ -58,35 +58,94 @@ namespace PrimaryClasses
         public int JointBTop => m_JointBTopStop;
         public int JointBBottom => m_JointBBottomStop;
 
-        public int JogCW { get => m_PanSwitch; }
-        public int JogCCW { get => m_RotSwitch; }
+        public int JogCW
+        {
+            get => m_PanSwitch;
+        }
 
-        public int SelectA { get => m_TiltSwitch; }
+        public int JogCCW
+        {
+            get => m_RotSwitch;
+        }
+
+        public int SelectA
+        {
+            get => m_TiltSwitch;
+        }
         //public int SelectB { get => m_SelectB; }
 
 
-        public int PanSIA { get => m_PanSIA; }
-        public int PanSIB { get => m_PanSIB; }
+        public int PanSIA
+        {
+            get => m_PanSIA;
+        }
 
-        public int RotSIA { get => m_RotSIA; }
-        public int RotSIB { get => m_RotSIB; }
+        public int PanSIB
+        {
+            get => m_PanSIB;
+        }
+
+        public int RotSIA
+        {
+            get => m_RotSIA;
+        }
+
+        public int RotSIB
+        {
+            get => m_RotSIB;
+        }
 
 
-        public int TiltSIA { get => m_TiltSIA; }
-        public int TiltSIB { get => m_TiltSIB; }
+        public int TiltSIA
+        {
+            get => m_TiltSIA;
+        }
 
-        public int PanReset { get => m_PanSwitch; }
-        public int RotReset { get => m_RotSwitch; }
-        public int TiltReset { get => m_TiltSwitch; }
+        public int TiltSIB
+        {
+            get => m_TiltSIB;
+        }
 
-        public int NotificaitonLight { get => m_NotificationLight; }
-        public int ErrorLight { get => m_ErrorLight; }
-        public int StatusLight { get => m_StatusLight; }
+        public int PanReset
+        {
+            get => m_PanSwitch;
+        }
+
+        public int RotReset
+        {
+            get => m_RotSwitch;
+        }
+
+        public int TiltReset
+        {
+            get => m_TiltSwitch;
+        }
+
+        public int NotificaitonLight
+        {
+            get => m_NotificationLight;
+        }
+
+        public int ErrorLight
+        {
+            get => m_ErrorLight;
+        }
+
+        public int StatusLight
+        {
+            get => m_StatusLight;
+        }
 
         //TODO Fix change button once solution for pull-up is found.
-        public int EmergencyStop { get => m_EmergencyStop; }
+        public int EmergencyStop
+        {
+            get => m_EmergencyStop;
+        }
 
-        public GpioController Controller { get => m_Controller; }
+        public GpioController Controller
+        {
+            get => m_Controller;
+        }
 
         private PinManager()
         {
@@ -146,11 +205,11 @@ namespace PrimaryClasses
 
             if (m_Controller != null && m_RegisteredPins != null)
             {
-                SetupLights();
+                NotificationManager.SetupLights();
             }
             else
             {
-                StartupError();
+                NotificationManager.SetupLights();
             }
         }
 
@@ -185,6 +244,7 @@ namespace PrimaryClasses
 
                         Thread.Sleep(TimeSpan.FromSeconds(0.5));
                     }
+
                     break;
                 case MotionModes.GimbalJog:
                     break;
@@ -201,32 +261,6 @@ namespace PrimaryClasses
             }
         }
 
-        public void EmergencyStopLights()
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                m_Controller.Write(m_StatusLight, PinValue.High);
-                m_Controller.Write(m_ErrorLight, PinValue.High);
-                m_Controller.Write(m_NotificationLight, PinValue.High);
-
-                Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                m_Controller.Write(m_StatusLight, PinValue.Low);
-                m_Controller.Write(m_ErrorLight, PinValue.Low);
-                m_Controller.Write(m_NotificationLight, PinValue.Low);
-                Thread.Sleep(TimeSpan.FromSeconds(0.1));
-            }
-
-
-            m_Controller.Write(m_StatusLight, PinValue.High);
-            m_Controller.Write(m_ErrorLight, PinValue.High);
-            m_Controller.Write(m_NotificationLight, PinValue.High);
-
-            Thread.Sleep(TimeSpan.FromSeconds(1));
-            m_Controller.Write(m_StatusLight, PinValue.Low);
-            m_Controller.Write(m_ErrorLight, PinValue.Low);
-            m_Controller.Write(m_NotificationLight, PinValue.Low);
-
-        }
 
         public bool SetupPin(int pin, PinMode pinMode)
         {
@@ -238,91 +272,8 @@ namespace PrimaryClasses
                 Console.WriteLine($"\r\n[{DateTime.Now}] Pin Manager: Pin {pin} is open.");
                 return true;
             }
+
             return false;
-        }
-
-        public void DoublePulse()
-        {
-            m_Controller.Write(m_NotificationLight, PinValue.High);
-            Thread.Sleep(TimeSpan.FromSeconds(0.1));
-            m_Controller.Write(m_NotificationLight, PinValue.Low);
-
-            Thread.Sleep(TimeSpan.FromSeconds(0.1));
-
-            m_Controller.Write(m_ErrorLight, PinValue.High);
-            Thread.Sleep(TimeSpan.FromSeconds(0.1));
-            m_Controller.Write(m_ErrorLight, PinValue.Low);
-
-            Thread.Sleep(TimeSpan.FromSeconds(0.1));
-
-            m_Controller.Write(m_StatusLight, PinValue.High);
-            Thread.Sleep(TimeSpan.FromSeconds(0.1));
-            m_Controller.Write(m_StatusLight, PinValue.Low);
-
-            Thread.Sleep(TimeSpan.FromSeconds(0.1));
-        }
-
-        public void SetupLights()
-        {
-            m_Controller.Write(m_StatusLight, PinValue.High);
-            Thread.Sleep(TimeSpan.FromSeconds(0.5));
-
-            for (int i = 0; i < 4; i++)
-            {
-                m_Controller.Write(m_StatusLight, PinValue.High);
-                Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                m_Controller.Write(m_StatusLight, PinValue.Low);
-                Thread.Sleep(TimeSpan.FromSeconds(0.2));
-            }
-            m_Controller.Write(m_StatusLight, PinValue.Low);
-        }
-
-        public void StartupError()
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                m_Controller.Write(m_ErrorLight, PinValue.High);
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-                m_Controller.Write(m_ErrorLight, PinValue.Low);
-                Thread.Sleep(TimeSpan.FromSeconds(0.5));
-            }
-            m_Controller.Write(m_ErrorLight, PinValue.Low);
-        }
-
-        public void ServerStarted()
-        {
-            m_Controller.Write(m_StatusLight, PinValue.High);
-            Thread.Sleep(TimeSpan.FromSeconds(0.5));
-            m_Controller.Write(m_StatusLight, PinValue.Low);
-            Thread.Sleep(TimeSpan.FromSeconds(0.5));
-
-            for (int i = 0; i < 2; i++)
-            {
-                m_Controller.Write(m_StatusLight, PinValue.High);
-                Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                m_Controller.Write(m_StatusLight, PinValue.Low);
-                Thread.Sleep(TimeSpan.FromSeconds(0.3));
-            }
-            m_Controller.Write(m_StatusLight, PinValue.Low);
-        }
-
-        public void ClientConnected()
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                m_Controller.Write(m_StatusLight, PinValue.High);
-                m_Controller.Write(m_ErrorLight, PinValue.High);
-                m_Controller.Write(m_NotificationLight, PinValue.High);
-
-                Thread.Sleep(TimeSpan.FromSeconds(0.2));
-                m_Controller.Write(m_StatusLight, PinValue.Low);
-                m_Controller.Write(m_ErrorLight, PinValue.Low);
-                m_Controller.Write(m_NotificationLight, PinValue.Low);
-                Thread.Sleep(TimeSpan.FromSeconds(0.3));
-            }
-            m_Controller.Write(m_StatusLight, PinValue.Low);
-            m_Controller.Write(m_ErrorLight, PinValue.Low);
-            m_Controller.Write(m_NotificationLight, PinValue.Low);
         }
     }
 }

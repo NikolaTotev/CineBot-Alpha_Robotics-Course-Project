@@ -48,7 +48,7 @@ namespace PrimaryClasses
 
             m_ListenerThread.Start(m_localEndPoint);
             ServerNotification?.Invoke($"[{DateTime.Now}] Status Update:  Server version {m_ServerVersion} started!");
-            PinManager.GetInstance().ServerStarted();
+            NotificationManager.ServerStarted();
             SerialComsManager.GetInstance();
         }
 
@@ -91,7 +91,7 @@ namespace PrimaryClasses
                         ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Connected to Client!");
                         ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Switching listener thread name to control thread");
                         listener.Stop();
-                        PinManager.GetInstance().ClientConnected();
+                        NotificationManager.ClientConnected();
 
                         int handlerResult = ClientHandler();
                         if (handlerResult == 0)
@@ -107,7 +107,7 @@ namespace PrimaryClasses
                     else
                     {
                         ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Awaiting connection...");
-                        PinManager.GetInstance().DoublePulse();
+                        NotificationManager.DoublePulse();
                         Thread.Sleep(1000);
                     }
                 }
