@@ -411,7 +411,7 @@ This is the final iteration. As you can see it quite different and uses a much s
    This will just quickly cover the different adapters I made.
  
 <p align="center">
-<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Base_Gearbox_Evolution.png?raw=true" width="800" height="400" alt="Base_Gearbox_Evolution"/>	
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Base_Adapter_Evolution.png?raw=true" width="800" height="400" alt="Base_Gearbox_Evolution"/>	
 </p>
 
 * __Iteraton 1__
