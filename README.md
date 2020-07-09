@@ -342,7 +342,9 @@ In order to asseble all of the parts I use two main techniques:
 
 The combination between these two methods allows for a good balance between solid assembly of large modules and allows those modules to be connected using a universal attachement interface.
 
-===	INSERT IMAGE ===
+<p align="center">
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Universal_Connector.png?raw=true" width="800" height="400" alt="Base_Gearbox_Evolution"/>	
+</p>
 
 ***Note:*** Initially I used two other methods of assembling the robot:
 1. Friction fit connections with square or hexagonal shape to allow for easy assembly/disassembly.
@@ -739,10 +741,6 @@ Due to the relative complexity of the system, I will not write too much text to 
 <p align="center">
 <img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/913b1a407d1099f23ecaa9df2d1c0a067465be6c/Documentation/Software%20Diagrams/Server_Modules.svg?token=AGMIB7LD6W7WVNF4YF4TMN27A52IM" width="80%" height="80%">
 </p>
-
-
-
-
 ##### [Back to top](#Contents)
 
 ---
