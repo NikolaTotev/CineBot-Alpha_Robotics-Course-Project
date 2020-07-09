@@ -167,6 +167,59 @@ namespace PrimaryClasses
                 Thread.Sleep(TimeSpan.FromSeconds(1));
             }
         }
+
+        public static void ModeEntryLights(MotionModes mode)
+        {
+            switch (mode)
+            {
+                case MotionModes.StepperJog:
+                    for (int i = 0; i < 2; i++)
+                    {
+                        m_Controller.Write(m_NotificationLight, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                        m_Controller.Write(m_NotificationLight, PinValue.Low);
+
+                        Thread.Sleep(TimeSpan.FromSeconds(0.5));
+
+                        m_Controller.Write(m_ErrorLight, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                        m_Controller.Write(m_ErrorLight, PinValue.Low);
+
+                        Thread.Sleep(TimeSpan.FromSeconds(0.5));
+
+                        m_Controller.Write(m_StatusLight, PinValue.High);
+                        Thread.Sleep(TimeSpan.FromSeconds(0.1));
+                        m_Controller.Write(m_StatusLight, PinValue.Low);
+
+                        Thread.Sleep(TimeSpan.FromSeconds(0.5));
+                    }
+
+                    break;
+                case MotionModes.GimbalJog:
+                    m_Controller.Write(m_NotificationLight, PinValue.High);
+                    m_Controller.Write(m_ErrorLight, PinValue.Low);
+                    m_Controller.Write(m_StatusLight, PinValue.High);
+                    Thread.Sleep(TimeSpan.FromSeconds(0.5));
+                    m_Controller.Write(m_NotificationLight, PinValue.Low);
+                    m_Controller.Write(m_ErrorLight, PinValue.High);
+                    m_Controller.Write(m_StatusLight, PinValue.Low);
+                    Thread.Sleep(TimeSpan.FromSeconds(0.5));
+                    m_Controller.Write(m_NotificationLight, PinValue.Low);
+                    m_Controller.Write(m_ErrorLight, PinValue.Low);
+                    m_Controller.Write(m_StatusLight, PinValue.Low);
+                    break;
+                case MotionModes.ObjectTrack:
+                    break;
+                case MotionModes.PathFollow:
+                    break;
+                case MotionModes.TestMode:
+                    break;
+                case MotionModes.StepperHome:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+        }
     }
 }
 

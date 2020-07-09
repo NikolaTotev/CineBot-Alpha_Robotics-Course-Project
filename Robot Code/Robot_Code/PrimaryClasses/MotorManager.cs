@@ -57,7 +57,6 @@ namespace PrimaryClasses
         private readonly float m_SpeedSensitivity = 1;
         private readonly float m_CollisionDetectionFrequency = 0.01f;
         private int m_MovementSensitivity = 1;
-        private int m_StepsInRange = 0;
         public readonly bool Cw = true;
         public readonly bool Ccw = false;
 
@@ -74,7 +73,7 @@ namespace PrimaryClasses
         private float m_A4;
         private float m_A5;
         private float m_StartAngle = 0;
-        private float m_FinalAngle ;
+        private float m_FinalStep ;
         private float m_StartVelocity = 0;
         private float m_FinalVelocity = 0;
         private float m_StartAcceleration = 0;
@@ -82,7 +81,7 @@ namespace PrimaryClasses
         private float m_ValueMapCoef;
 
 
-        float m_Eti = 0;
+        float m_Eti;
         private readonly float m_TimeDivisionSize = 0.0001f;
 
         // =====================
@@ -151,9 +150,9 @@ namespace PrimaryClasses
             m_A0 = m_StartAngle;
             m_A1 = m_StartVelocity;
             m_A2 = m_StartAcceleration / 2f;
-            m_A3 = -1 * (20 * m_StartAngle - 20 * m_FinalAngle + 12 * motionTime * m_StartVelocity + 8 * motionTime * m_FinalVelocity + 3 * m_StartAcceleration * motionTime * motionTime - m_FinalAcceleration * motionTime * motionTime) / (2 * motionTime * motionTime * motionTime);
-            m_A4 = (30f * m_StartAngle - 30f * m_FinalAngle + 16f * motionTime * m_StartVelocity + 14f * motionTime * m_FinalVelocity + 3f * m_StartAcceleration * motionTime * motionTime - 2f * m_FinalAcceleration * motionTime * motionTime) / (2f * motionTime * motionTime * motionTime * motionTime);
-            m_A5 = -1f * (12f * m_StartAngle - 12f * m_FinalAngle + 6f * motionTime * m_StartVelocity + 6f * motionTime * m_FinalVelocity + m_StartAcceleration * motionTime * motionTime - m_FinalAcceleration * motionTime * motionTime) / (2f * motionTime * motionTime * motionTime * motionTime * motionTime);
+            m_A3 = -1 * (20 * m_StartAngle - 20 * m_FinalStep + 12 * motionTime * m_StartVelocity + 8 * motionTime * m_FinalVelocity + 3 * m_StartAcceleration * motionTime * motionTime - m_FinalAcceleration * motionTime * motionTime) / (2 * motionTime * motionTime * motionTime);
+            m_A4 = (30f * m_StartAngle - 30f * m_FinalStep + 16f * motionTime * m_StartVelocity + 14f * motionTime * m_FinalVelocity + 3f * m_StartAcceleration * motionTime * motionTime - 2f * m_FinalAcceleration * motionTime * motionTime) / (2f * motionTime * motionTime * motionTime * motionTime);
+            m_A5 = -1f * (12f * m_StartAngle - 12f * m_FinalStep + 6f * motionTime * m_StartVelocity + 6f * motionTime * m_FinalVelocity + m_StartAcceleration * motionTime * motionTime - m_FinalAcceleration * motionTime * motionTime) / (2f * motionTime * motionTime * motionTime * motionTime * motionTime);
             if (float.IsNaN(m_A0))//make sure it is not undefined
             {
                 m_A0 = 0;
@@ -185,14 +184,11 @@ namespace PrimaryClasses
             return m_A5 * 5 * (float)Math.Pow(currentTime, 4) + m_A4 * 4 * (float)Math.Pow(currentTime, 3) + m_A3 * 3 * (float)Math.Pow(currentTime, 2) + m_A2 * 2 * (float)Math.Pow(currentTime, 1) + m_A1;
         }
 
-        private void InitMapCoef(StepperMotorOptions targetMotor)
+        private void InitMapCoef()
         {
-            
-            //float numberOfSteps = ConvertAngleToSteps((int)m_FinalAngle, targetMotor);
-
-            if (Math.Abs(m_FinalAngle) > 0.01)
+            if (Math.Abs(m_FinalStep) > 0.01)
             {
-                m_Eti = m_OverallTime / m_FinalAngle; 
+                m_Eti = m_OverallTime / m_FinalStep; 
             }
             else
             {
@@ -210,7 +206,7 @@ namespace PrimaryClasses
                 Console.WriteLine("Error in Map Coef. initialization! (funcMaxSpeed = 0)");
                 
             }
-            Console.WriteLine($"Number of time divisions {numberOfTimeDivisions} \n funcMaxSpeed {funcMaxSpeed} \n Eti {m_Eti} \n Final Angle {m_FinalAngle}");
+            Console.WriteLine($"Number of time divisions {numberOfTimeDivisions} \n funcMaxSpeed {funcMaxSpeed} \n Eti {m_Eti} \n Final Angle {m_FinalStep}");
         }
 
         private float mapValue(float input)
@@ -232,9 +228,9 @@ namespace PrimaryClasses
             }
             if (usePoly)
             {
-                m_FinalAngle = numberOfSteps;
+                m_FinalStep = numberOfSteps;
                 CalcCoefs(m_OverallTime);
-                InitMapCoef(stepperMotor);
+                InitMapCoef();
             }
             
                 Console.WriteLine($"Number of steps = {numberOfSteps}");

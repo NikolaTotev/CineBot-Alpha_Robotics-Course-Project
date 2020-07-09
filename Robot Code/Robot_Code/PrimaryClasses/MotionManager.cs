@@ -67,6 +67,7 @@ namespace PrimaryClasses
 
         public MotionManager(MotionModes mode)
         {
+            NotificationManager.ModeEntryLights(mode);
             m_CurrentMode = mode;
         }
 

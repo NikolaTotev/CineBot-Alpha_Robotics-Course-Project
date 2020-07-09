@@ -186,7 +186,6 @@ namespace PrimaryClasses
             SetupPin(m_TiltSwitch, PinMode.InputPullUp);
 
             SetupPin(SelectA, PinMode.InputPullUp);
-            //SetupPin(m_SelectB, PinMode.InputPullUp);
 
             SetupPin(JogCW, PinMode.InputPullUp);
             SetupPin(JogCCW, PinMode.InputPullUp);
@@ -197,11 +196,7 @@ namespace PrimaryClasses
             SetupPin(m_JointBDir, PinMode.Output);
             SetupPin(m_JointBStep, PinMode.Output);
 
-            m_Controller.Write(m_StatusLight, PinValue.High);
-            m_Controller.Write(m_ErrorLight, PinValue.High);
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-            m_Controller.Write(m_StatusLight, PinValue.Low);
-            m_Controller.Write(m_ErrorLight, PinValue.Low);
+            NotificationManager.SetupLights();
 
             if (m_Controller != null && m_RegisteredPins != null)
             {
@@ -209,7 +204,7 @@ namespace PrimaryClasses
             }
             else
             {
-                NotificationManager.SetupLights();
+                NotificationManager.StartupError();
             }
         }
 
@@ -218,49 +213,6 @@ namespace PrimaryClasses
         {
             return m_Instance ??= new PinManager();
         }
-
-        public void ModeEntryLights(MotionModes mode)
-        {
-            switch (mode)
-            {
-                case MotionModes.StepperJog:
-                    for (int i = 0; i < 2; i++)
-                    {
-                        m_Controller.Write(m_NotificationLight, PinValue.High);
-                        Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                        m_Controller.Write(m_NotificationLight, PinValue.Low);
-
-                        Thread.Sleep(TimeSpan.FromSeconds(0.5));
-
-                        m_Controller.Write(m_ErrorLight, PinValue.High);
-                        Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                        m_Controller.Write(m_ErrorLight, PinValue.Low);
-
-                        Thread.Sleep(TimeSpan.FromSeconds(0.5));
-
-                        m_Controller.Write(m_StatusLight, PinValue.High);
-                        Thread.Sleep(TimeSpan.FromSeconds(0.1));
-                        m_Controller.Write(m_StatusLight, PinValue.Low);
-
-                        Thread.Sleep(TimeSpan.FromSeconds(0.5));
-                    }
-
-                    break;
-                case MotionModes.GimbalJog:
-                    break;
-                case MotionModes.ObjectTrack:
-                    break;
-                case MotionModes.PathFollow:
-                    break;
-                case MotionModes.TestMode:
-                    break;
-                case MotionModes.StepperHome:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-            }
-        }
-
 
         public bool SetupPin(int pin, PinMode pinMode)
         {
