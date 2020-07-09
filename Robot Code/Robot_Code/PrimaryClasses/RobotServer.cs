@@ -45,11 +45,19 @@ namespace PrimaryClasses
             m_ListenerThread = new Thread(AwaitConnection);
             ServerNotification?.Invoke($"[{DateTime.Now}]: Creating listener thread.");
 
+            try
+            {
+                m_ListenerThread.Start(m_localEndPoint);
+                ServerNotification?.Invoke($"[{DateTime.Now}] Status Update:  Server version {m_ServerVersion} started!");
+                NotificationManager.ServerStarted();
+                SerialComsManager.GetInstance();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An error occured during thread start. Aborting operation\n");
+                NotificationManager.Exception();
+            }
 
-            m_ListenerThread.Start(m_localEndPoint);
-            ServerNotification?.Invoke($"[{DateTime.Now}] Status Update:  Server version {m_ServerVersion} started!");
-            NotificationManager.ServerStarted();
-            SerialComsManager.GetInstance();
         }
 
 
@@ -66,10 +74,11 @@ namespace PrimaryClasses
                     listener.Start();
                     ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Awaiting connection on port: {m_Port}");
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Failed to start listener!");
-                    throw;
+                    ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Failed to start listener! Exception {e.HResult} occured. Aborting operation\n");
+                    NotificationManager.Exception();
+                    return;
                 }
             }
             else
@@ -78,18 +87,21 @@ namespace PrimaryClasses
                 return;
             }
 
-
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Starting listening loop.");
+            int counter = 0;
+
             while (!m_StopFlag)
             {
                 try
                 {
                     if (listener.Pending())
                     {
-                        ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Pending connection detected.");
+                        ServerNotification?.Invoke(
+                            $"\r\n[{DateTime.Now}] Listener Thread: Pending connection detected.");
                         m_ControlClient = listener.AcceptSocket();
                         ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Connected to Client!");
-                        ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: Switching listener thread name to control thread");
+                        ServerNotification?.Invoke(
+                            $"\r\n[{DateTime.Now}] Listener Thread: Switching listener thread name to control thread");
                         listener.Stop();
                         NotificationManager.ClientConnected();
 
@@ -110,11 +122,43 @@ namespace PrimaryClasses
                         NotificationManager.DoublePulse();
                         Thread.Sleep(1000);
                     }
+
+                    counter = 0;
+                }
+                catch (SocketException e)
+                {
+                    if (counter < 3)
+                    {
+                        ServerNotification?.Invoke(
+                            $"\r\n[{DateTime.Now}] Listener Thread: The server encountered a socket with error code {e.ErrorCode}. Attempting to restart. \n {e}");
+                        counter++;
+                        NotificationManager.StartupError();
+                    }
+                    else
+                    {
+                        ServerNotification?.Invoke(
+                            $"\r\n[{DateTime.Now}] Server attempted to recover {counter} times from socket error. Terminating Operation.\n");
+                        NotificationManager.Exception();
+                        m_StopFlag = true;
+                    }
+
                 }
                 catch (Exception e)
                 {
-                    ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Listener Thread: The server encountered a fatal error. Terminating listening. \n {e}");
-                    throw;
+                    if (counter < 3)
+                    {
+                        ServerNotification?.Invoke(
+                            $"\r\n[{DateTime.Now}] Listener Thread: The server encountered a fatal error. Attempting to restart. Attempt {counter} \n {e}");
+                        counter++;
+                        NotificationManager.StartupError();
+                    }
+                    else
+                    {
+                        ServerNotification?.Invoke(
+                            $"\r\n[{DateTime.Now}] Server attempted to restart {counter} times. Aborting restart. \n");
+                        NotificationManager.Exception();
+                        m_StopFlag = true;
+                    }
                 }
             }
 
@@ -127,10 +171,13 @@ namespace PrimaryClasses
         public int ClientHandler()
         {
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Starting client handler. ");
+
             NetworkStream stream = new NetworkStream(m_ControlClient);
             StreamWriter writer = new StreamWriter(stream, Encoding.ASCII);
             StreamReader reader = new StreamReader(stream, Encoding.ASCII);
+
             writer.AutoFlush = true;
+
             bool initialResponseReceived = false;
 
             string initialMessage = $"INITCONF Hello client! I'm server version {m_ServerVersion}.";
@@ -157,10 +204,6 @@ namespace PrimaryClasses
                             }
                             else
                             {
-                                // ServerNotification?.Invoke(
-                                //   $"\r\n[{DateTime.Now}] Control Thread: Control statement is: \n {clientInstructions} ");
-                                // ServerNotification?.Invoke(
-                                //    $"\r\n[{DateTime.Now}] Control Thread: Sending instructions to ExecutionHandler.");
                                 bool result = ExecutionHandler(clientInstructions);
                                 string textResult = result ? "success" : "failure";
                                 string responseMessage = $"Execution of {clientInstructions} was a {textResult}.";
@@ -172,10 +215,8 @@ namespace PrimaryClasses
                         else
                         {
                             m_ControlClient.Poll(30, SelectMode.SelectRead);
-                            //  ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Awaiting instructions... ");
                             Thread.Sleep(TimeSpan.FromSeconds(0.01));
                         }
-
                     }
                 }
                 catch (Exception e)
@@ -186,9 +227,17 @@ namespace PrimaryClasses
 
                 if (!IsSocketConnected(m_ControlClient))
                 {
-                    ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Client has disconnected. Terminating handling.");
-                    ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Returning to listening mode.");
-                    m_ControlClient.Disconnect(true);
+                    try
+                    {
+                        m_ControlClient.Disconnect(true);
+                        ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Client has disconnected. Terminating handling.");
+                        ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Returning to listening mode.");
+                    }
+                    catch (SocketException e)
+                    {
+                        Console.WriteLine($"A socket exception with code {e.ErrorCode} occured.");
+                        throw;
+                    }
                     return 1;
                 }
             }
@@ -255,7 +304,6 @@ namespace PrimaryClasses
                 default:
                     ServerNotification?.Invoke($"\r\n[{DateTime.Now}] <ERROR> Wrong command passed to server. Unable to execute.");
                     break;
-
             }
             return true;
         }
@@ -265,7 +313,11 @@ namespace PrimaryClasses
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Calling stop command. ");
             m_StopFlag = true;
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Moving to home position.");
-            //MotorManager.GetInstance().GoToHome();
+            MotionManager steppersHome = new MotionManager(MotionModes.StepperHome);
+            MotionManager gimbalHome = new MotionManager(MotionModes.GimbalHome);
+            steppersHome.ExecuteCommand();
+            gimbalHome.ExecuteCommand();
+            NotificationManager.DoublePulse();
         }
 
         public void RestartServer()
