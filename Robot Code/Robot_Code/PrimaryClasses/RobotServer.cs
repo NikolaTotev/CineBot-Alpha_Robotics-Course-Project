@@ -310,7 +310,6 @@ namespace PrimaryClasses
 
                 case "SJ":
                     currentManager = new MotionManager(MotionModes.StepperJog);
-                    PinManager.GetInstance().ModeEntryLights(MotionModes.StepperJog);
                     currentManager.ExecuteCommand();
                     break;
 

@@ -73,7 +73,7 @@ namespace PrimaryClasses
         private float m_A4;
         private float m_A5;
         private float m_StartAngle = 0;
-        private float m_FinalStep ;
+        private float m_FinalStep;
         private float m_StartVelocity = 0;
         private float m_FinalVelocity = 0;
         private float m_StartAcceleration = 0;
@@ -128,7 +128,6 @@ namespace PrimaryClasses
                 default:
                     ratioToUse = m_JointBGearRatio;
                     break;
-                    
             }
 
             int stepsForCarrierRevolution = m_StepsPerRevolution * m_StepMultiplier * ratioToUse;
@@ -137,7 +136,6 @@ namespace PrimaryClasses
             if (partOfCircle == 0)
             {
                 return 0;
-
             }
 
             int stepsForInputAngle = stepsForCarrierRevolution / partOfCircle;
@@ -188,7 +186,7 @@ namespace PrimaryClasses
         {
             if (Math.Abs(m_FinalStep) > 0.01)
             {
-                m_Eti = m_OverallTime / m_FinalStep; 
+                m_Eti = m_OverallTime / m_FinalStep;
             }
             else
             {
@@ -197,14 +195,14 @@ namespace PrimaryClasses
 
             float numberOfTimeDivisions = m_OverallTime / m_TimeDivisionSize;
             float funcMaxSpeed = GetSpeed((numberOfTimeDivisions / 2) * m_TimeDivisionSize);
-            if (funcMaxSpeed!=0)
+            if (funcMaxSpeed != 0)
             {
-                m_ValueMapCoef = (m_DefaultMaxSpeed - m_DefaultMinSpeed) / funcMaxSpeed; 
+                m_ValueMapCoef = (m_DefaultMaxSpeed - m_DefaultMinSpeed) / funcMaxSpeed;
             }
             else
             {
                 Console.WriteLine("Error in Map Coef. initialization! (funcMaxSpeed = 0)");
-                
+
             }
             Console.WriteLine($"Number of time divisions {numberOfTimeDivisions} \n funcMaxSpeed {funcMaxSpeed} \n Eti {m_Eti} \n Final Angle {m_FinalStep}");
         }
@@ -217,7 +215,7 @@ namespace PrimaryClasses
         public void MoveStepper(int angle, float speed, StepperMotorOptions stepperMotor, bool direction,
             bool useDebugMessages, FlagArgs flags, int steps = 0, bool usePoly = false)
         {
-            int numberOfSteps =0 ;
+            int numberOfSteps = 0;
             if (steps == 0)
             {
                 numberOfSteps = ConvertAngleToSteps(angle, stepperMotor);
@@ -232,8 +230,7 @@ namespace PrimaryClasses
                 CalcCoefs(m_OverallTime);
                 InitMapCoef();
             }
-            
-                Console.WriteLine($"Number of steps = {numberOfSteps}");
+
             int stepPin;
             int dirPin;
 
@@ -328,6 +325,13 @@ namespace PrimaryClasses
         }
 
         //1= CW, 0 = CCW
+
+        /// <summary>
+        /// Determines if the robot can move depending on which limit switches are activated and what the desired direction is.
+        /// </summary>
+        /// <param name="directionFlag"></param>
+        /// <param name="collisionInfo"></param>
+        /// <returns></returns>
         private bool CanMove(bool directionFlag, FlagArgs collisionInfo)
         {
             if (collisionInfo.CollisionFlag)
@@ -348,6 +352,12 @@ namespace PrimaryClasses
             return true;
         }
 
+        /// <summary>
+        /// Tracks for collisions. If a limit switch is activated appropriate flags are raised.
+        /// This function runs separately for each motor and on a different thread.
+        /// This function can detect which limit switch has been hit.
+        /// </summary>
+        /// <param name="boolObject"></param>
         private void CollisionDetection(object boolObject)
         {
             Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Collision detection enabled.");
@@ -381,15 +391,15 @@ namespace PrimaryClasses
                     bottomSensorState = PinManager.GetInstance().Controller.Read(bottomSensor);
                     emergencyButtonState = PinManager.GetInstance().Controller.Read(emergencyStop);
 
-                    //ToDo: Invert button activation to provide redundancy in the event of disconnected cable.
                     if (topSensorSate == PinValue.Low || bottomSensorState == PinValue.Low || emergencyButtonState == PinValue.Low)
                     {
                         if (emergencyButtonState == PinValue.Low)
                         {
                             flags.EmergencyStopActive = true;
                         }
-                        // Console.WriteLine($"[{DateTime.Now}] <Collision Info>: Motor {flags.TargetStepperMotor} has reached an end-stop or the emergency switch as been activated..");
+
                         flags.CollisionFlag = true;
+                        
                         if (topSensorSate == PinValue.Low)
                         {
                             flags.topHit = true;
@@ -414,7 +424,7 @@ namespace PrimaryClasses
 
 
         /// <summary>
-        /// Returns target section to the home positions. (DONE)
+        /// Returns target stepper motor to the home position.
         /// </summary>
         /// <param name="targetStepperMotor"></param>
         /// <param name="useDebugMessages"></param>
@@ -516,6 +526,9 @@ namespace PrimaryClasses
             }
         }
 
+        /// <summary>
+        /// Returns gimbal to the home (center) position.
+        /// </summary>
         public void GoToHomeGimbal()
         {
             SerialComsManager.GetInstance().Write("P30");
@@ -563,6 +576,10 @@ namespace PrimaryClasses
             Thread.Sleep(TimeSpan.FromSeconds(0.5));
         }
 
+        /// <summary>
+        /// Allows for movement 
+        /// </summary>
+        /// <param name="threadParams"></param>
         public void JogMode(object threadParams)
         {
             if (threadParams is MotorThreadStartObj tParams)
@@ -1024,7 +1041,7 @@ namespace PrimaryClasses
                     {
                         bool direction = stepperBController.GetDirection();
 
-                        int numberOfSteps = ConvertAngleToSteps(m_MinimumAngle * m_MovementSensitivity, StepperMotorOptions.motorB );
+                        int numberOfSteps = ConvertAngleToSteps(m_MinimumAngle * m_MovementSensitivity, StepperMotorOptions.motorB);
 
                         float speed = m_DefaultMinSpeed * m_SpeedSensitivity;
 
@@ -1318,7 +1335,7 @@ namespace PrimaryClasses
                                 currentAStepperPosition -= stepADelta;
                             }
                             Console.WriteLine($"Moving motor {StepperMotorOptions.motorA} with delta {stepADelta} and direction {stepperDir}");
-                            MoveStepper(0, follwoSpeed, StepperMotorOptions.motorA, stepperDir, false, Aflags, stepADelta,true);
+                            MoveStepper(0, follwoSpeed, StepperMotorOptions.motorA, stepperDir, false, Aflags, stepADelta, true);
                             break;
                         case StepperMotorOptions.motorB:
                             stepBDelta = Math.Abs(pathNode.Value.StepsFromHome - currentBStepperPosition);
