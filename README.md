@@ -563,12 +563,16 @@ This is a pretty simple part of the whole project. Its main goal is to make the 
 The schematics are very useful for anyone trying to make this exact robot. Please make sure to safely handle compoents and double check connections before powering on the system. ***NEVER plug or unplug anything from the  RPi or Arduino while they are working. ***
 
 * ___Stepper motor connection schematic___ [_alternate link_](https://github.com/NikolaTotev/Robotics-Course-Project/tree/master/Documentation/Images/Electronic%20Schematics)
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Electronic%20Schematics/Stepper%20Motor%20Connection%20Schematic.png?raw=true" width="707.5" height="667.5">
+</p>
 
 ---
 
 * ___Encoder & switch connection schematic___ [_alternate link_](https://github.com/NikolaTotev/Robotics-Course-Project/tree/master/Documentation/Images/Electronic%20Schematics)
+<p align="center>
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Electronic%20Schematics/Button%20and%20Encoder%20Connections%20Schematic.png?raw=true" width="707.5" height="667.5">
+</p>
 
 ---
 
