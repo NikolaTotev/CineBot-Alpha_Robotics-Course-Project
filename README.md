@@ -716,7 +716,7 @@ Due to the relative complexity of the system, I will not write too much text to 
 
 ---
 ### Deployment Structure
-<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Software%20Diagrams/Deployment_Diagram.png?raw=true" width="100%" height="100%">
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Software%20Diagrams/Deployment_Diagram.png?raw=true" width="75%" height="75%">
 
 ##### [Back to top](#Contents)
 
