@@ -411,37 +411,37 @@ This is the final iteration. As you can see it quite different and uses a much s
    This will just quickly cover the different adapters I made.
  
 <p align="center">
-<img src="  https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Base_Adapter_Evolution.png?raw=true" width="800" height="400" alt="Base_Gearbox_Evolution"/>	
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Base_Gearbox_Evolution.png?raw=true" width="800" height="400" alt="Base_Gearbox_Evolution"/>	
 </p>
 
-	* __Iteraton 1__
-		Uses hexagonal friction fit on one side and screws for mounting the arm section. 
-		Cons - 
-		*	No cable management
-		*	Tolerance issues
-		*	Time-consuming to mount/unmount arm sections
-		*	Too thin for the loads it would experience
+* __Iteraton 1__
+	Uses hexagonal friction fit on one side and screws for mounting the arm section. 
+	Cons - 
+	*	No cable management
+	*	Tolerance issues
+	*	Time-consuming to mount/unmount arm sections
+	*	Too thin for the loads it would experience
+
+	Pros - 
+	* simple design
+	* quick to print.
 	
-		Pros - 
-		* simple design
-		* quick to print.
-		
-	*  __Iteraton 2__
-		This  version as you can see it a bit better, but it still has the major issues of the previous 		 		    	    one.	
-		
-		 Pros - 
-		 * fixes thinness issue
-		 * adds some stability due to wider footprint
-		 
-		 Cons
-		 * still time-consuming to mount arm sections
-		 * still has tolerance issues
-		 
-	* __Iteraton 3__	
-		This one solves all of the issues of the previous ones, but introduces some new ones. As you can see it is connected with screws to the gearbox, but those screws also hold the planet gears and carrier in alignment. This means that they can't be tightened too much as it will cause the gearbox to bind. Despite those problems, the easy swap functionality that comes from the use of a universal trapezoid mount allows for easy mounting of the other part of the robot. This base also has cable management that feeds the cables out of the back.
-		
-	* __Iteration 4__
-	The final iteration of this part is actually removing it altogether. See the last arm iteration to understand the whole idea.
+*  __Iteraton 2__
+	This  version as you can see it a bit better, but it still has the major issues of the previous 		 		    	    one.	
+	
+	 Pros - 
+	 * fixes thinness issue
+	 * adds some stability due to wider footprint
+	 
+	 Cons
+	 * still time-consuming to mount arm sections
+	 * still has tolerance issues
+	 
+* __Iteraton 3__	
+	This one solves all of the issues of the previous ones, but introduces some new ones. As you can see it is connected with screws to the gearbox, but those screws also hold the planet gears and carrier in alignment. This means that they can't be tightened too much as it will cause the gearbox to bind. Despite those problems, the easy swap functionality that comes from the use of a universal trapezoid mount allows for easy mounting of the other part of the robot. This base also has cable management that feeds the cables out of the back.
+	
+* __Iteration 4__
+The final iteration of this part is actually removing it altogether. See the last arm iteration to understand the whole idea.
 
 ##### [Back to top](#Contents)
 ---
