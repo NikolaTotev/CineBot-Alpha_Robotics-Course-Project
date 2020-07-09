@@ -630,6 +630,7 @@ Along with the safety features, the robot has a couple of different modes of ope
 ### User interface
 This is an imporant category, as it is the way for the user to know what mode the robot is in.
 This is done via 3 LED's mounted on the front of the electronics housing. The main way the user can interact with the system with via the client application which has both a GUI and console interface.
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Housing_Close.jpg?raw=true" width="50%" height="50%">
 
 ---
 
@@ -705,8 +706,6 @@ It is not the smoothest operation, but that is mostly due to the fact that I am 
 ---
 ### Diagrams
 Due to the relative complexity of the system, I will not write too much text to explain it. Instead I will use the things I learned in my Software Architectures course this semester to create diagrams for my system.
-
-##### [Back to top](#Contents)
 
 ---
 
