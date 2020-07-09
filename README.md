@@ -518,7 +518,9 @@ This part is pretty simple. Since I neede something to balnce the gimbal, and an
 
 This part also has a lot of iterations, as initially I didn't know what the best approach was. All of the axes are controled via servo motors.
 
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/CAD%20Models/Gimbal_Evolution.png?raw=true" width="800" height="400" alt="Gimbal_Evolution"/>
+</p>
 
 * __Iteraton 1__
  This looks like a standard gimbal, the rotation motor housing is quite big and it is really heavy. Along with that, the camera mount is weak and the tilt and pan arms are also flimsy.
@@ -536,8 +538,9 @@ This final design is inspired by [a project I found on youtube](https://www.yout
 ---
 
 #### Limit switches
-
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Limit_Switch.jpg?raw=true" width="717" height="422" alt="Limit_Switch"/>
+</p>
 
 These don't really have any iterations. I just bought a simple switch from the store and mounted it to the robot with two simple mounts. Despite their simplicity, these are critical parts as the allow the robot to "know" what position it is in. Please read [the improvemens section](#Possible-improvements) for more insight on the improvements I would make in the area of positional awareness. 
 
@@ -546,7 +549,9 @@ These don't really have any iterations. I just bought a simple switch from the s
 
 #### Electronics housing
 
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Housing_Wide.jpg?raw=true" width="646.16" height="509.66" alt="Electronics_Housing_Wide"/>
+</p>
 
 This is a pretty simple part of the whole project. Its main goal is to make the project a bit more complete and polished. It also ensures, that once all of the cables are connected in a working that they stay that way. The case also provides active cooling because it has two 95mm fans on one side.
 
@@ -641,6 +646,7 @@ Along with the safety features, the robot has a couple of different modes of ope
 ### User interface
 This is an imporant category, as it is the way for the user to know what mode the robot is in.
 This is done via 3 LED's mounted on the front of the electronics housing. The main way the user can interact with the system with via the client application which has both a GUI and console interface.
+
 <p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Housing_Close.jpg?raw=true" width="50%" height="50%">
 </p>
@@ -668,8 +674,9 @@ The standard way of moving a stepper motor with the `A4988` driver is by pulsing
 
 * The stepper motor losing steps
 * Extreme stresses that can lead to structural faliures like this:
-
+<p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Struc_Faliure.jpg?raw=true" width="270" height="480">
+</p>
 
 * Unnecessary wear on components.
 
