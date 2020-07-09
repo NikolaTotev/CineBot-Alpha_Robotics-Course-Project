@@ -666,10 +666,28 @@ A common approach that is used in larger robots is by using a [polynomial trajec
 This is done by using this kind of a quintic polynomial equation:
 
 where the function iteself gives us the change in position, the first derivative gives us the velocity curve and the thrid derivative  gives us the acceleration curve. All of these curves are given for a set period of time.
-If it takes more time to move the curves will look like this:
-==INSERT IMAGE==
-if it takes less time, they would look like this :
-==INSERT IMAGE==
+
+Lets imagine we want to rotate the base of the robot from 0 to 42 degrees. There are a couple of options:
+
+* If it takes ~ 0 seconds to move from 0 to 42 degrees, the curves would look something like this:
+* 
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/InstantAcceleration.png?raw=true" width="474" height="214.5">
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/InstantVelocity.png?raw=true"  width="468" height="226">
+
+***Note:The Y axis values are the value from the function and to not represent actual velocity or acceleration metrics***
+
+As you can see, both acceleration and velocity almost instantly shoot up, this causes a lot of stress on the structure and the motor. 
+
+**Note: The curves are shown separately, to better illustrate the point.**
+
+On the other hand, if we use a polynomial trajectory, the curves look something like this:
+
+<img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Polynomial%20Func/Poly_10sec.png?raw=true"  width="474" height="237">
+
+As you can see here, the acceleration is less and the curve is much more gentle.
+Of course if you reduce the time a motion needs to be executed in a smaller time frame even with the polynomial trajectory you can have high accelerations, in those cases you can either use other trajectories like trapizoidal or design the robot to handle higher stresses.
+
 
 After doing some research on the topic, I decied to try to implement this. Luckily for me such a project has already been attemped and I am very grateful to Joseph Q. Oberhauser for the work he has done on his [master thesis ](https://etd.ohiolink.edu/!etd.send_file?accession=ohiou1460045979&disposition=inline) which has a part that covers this exact topic. I am also grateful that he has uploaded his C# code to his [dropbox](https://www.dropbox.com/sh/l5rgy7s7osya5vz/AABrLWKVYxZhbu4hxOwEMSMZa?dl=0) and still has it available at the time of writing this documentation.
 Even though it doesn't cover everything I needed, with the help of his work I was able to implement a working polynomial trajectory for my robot.
