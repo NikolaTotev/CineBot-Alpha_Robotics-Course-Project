@@ -4,9 +4,14 @@ using System.Device.Gpio.Drivers;
 using System.Device.Pwm;
 using System.Diagnostics.Tracing;
 using System.Dynamic;
+using System.IO;
 using System.IO.Ports;
 using System.Threading;
 using Iot.Device.ServoMotor;
+using Unosquare.RaspberryIO;
+using Unosquare.RaspberryIO.Native;
+using Unosquare.RaspberryIO.Camera;
+
 
 namespace General_Testing
 {
@@ -26,7 +31,16 @@ namespace General_Testing
                 {
                     case "Buttons":
                         TestButtons(int.Parse(args[1]), int.Parse(args[2]));
+                        break;
 
+                    case "Camera":
+                        var pictureBytes = Pi.Camera.CaptureImageJpeg(640, 480);
+                        var targetPath = "/home/pi/picture.jpg";
+                        if (File.Exists(targetPath))
+                            File.Delete(targetPath);
+
+                        File.WriteAllBytes(targetPath, pictureBytes);
+                        Console.WriteLine($"Took picture -- Byte count: {pictureBytes.Length}");
                         break;
 
                     case "Rotary":
