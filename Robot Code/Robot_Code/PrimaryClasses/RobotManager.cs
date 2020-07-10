@@ -16,14 +16,11 @@ namespace PrimaryClasses
         private bool m_StopFlag;
         private RobotManager()
         {
-            //MotorManager.GetInstance().Initialize();
             m_PinManager= PinManager.GetInstance();
             Console.WriteLine("Starting server.");
             m_Server = new RobotServer();
             m_Server.ServerNotification += DisplayMessage;
             m_Server.StartServer();
-
-
 
             while (!m_StopFlag)
             {
@@ -47,11 +44,5 @@ namespace PrimaryClasses
         {
             return m_Instance ??= new RobotManager();
         }
-
-
-
-
-
-
     }
 }
