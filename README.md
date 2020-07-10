@@ -19,6 +19,7 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 	* [Scope](#Scope)
 	* [Key features](#Key-features)
 	* [Initial design decisions](#Initial-design-decisions)
+	* [Interesting Statistics](#Project-Statistics)
 	
 * [Getting started ](#Getting-started)   *(click here if you just want to setup the robot and learn how to use it)*
 	* [How to run client](#How-to-run-client)
@@ -114,7 +115,10 @@ Once I decided what kind of robot I would make the size of the robot was the nex
 
 Before beginning with the CAD design, I used Legos to create a crude model of the robot arm and the joints it would have and how they would move. I found this to be the best way to make the initial prototype as it cost nothing and gave a good enough visualization/feel.
 
-!!== INSERT IMAGE ==!!
+## Project Statistics
+Work time - about 600-650 hours - aprox. 25-27days
+Print Time - 805h 8min - aprox. 33.5 days
+Total Project - 5.61GB
 
 ## Tools & Software
 As this project has both software and hardware components I feel that it is necessary to list all of the tools I used during development
@@ -301,9 +305,6 @@ There are some known errors that may occur during the starting of either the sev
 
 
 ##### [Back to top](#Contents)
-
----
-## User manual
 
 ---
 
@@ -746,6 +747,7 @@ Due to the relative complexity of the system, I will not write too much text to 
 <p align="center">
 <img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/913b1a407d1099f23ecaa9df2d1c0a067465be6c/Documentation/Software%20Diagrams/Server_Modules.svg?token=AGMIB7LD6W7WVNF4YF4TMN27A52IM" width="80%" height="80%">
 </p>
+
 ##### [Back to top](#Contents)
 
 ---
@@ -758,13 +760,3 @@ Due to the relative complexity of the system, I will not write too much text to 
 ##### [Back to top](#Contents)
 
 ---
-
-### Process Flow
-
-##### [Back to top](#Contents)
-
----
-
-
-## Assembly Information
-
