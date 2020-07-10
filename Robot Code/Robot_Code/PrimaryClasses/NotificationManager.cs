@@ -8,25 +8,19 @@ using Unosquare.RaspberryIO;
 
 namespace PrimaryClasses
 {
-    static class NotificationManager
+    public class NotificationManager
     {
         static GpioController m_Controller;
         static int m_StatusLight;
         static int m_ErrorLight;
         static int m_NotificationLight;
 
-        static NotificationManager()
+        public NotificationManager(GpioController controller, int status, int error, int notification)
         {
-            GetController(out m_Controller, out m_StatusLight, out m_ErrorLight, out m_NotificationLight);
-
-        }
-
-        public static void GetController(out GpioController controller, out int statusLight, out int errorLight, out int notifLight)
-        {
-            controller = PinManager.GetInstance().Controller;
-            statusLight = PinManager.GetInstance().StatusLight;
-            errorLight = PinManager.GetInstance().StatusLight;
-            notifLight = PinManager.GetInstance().StatusLight;
+            m_Controller = controller;
+            m_StatusLight = status;
+            m_ErrorLight = error;
+            m_NotificationLight = notification;
         }
 
         public static void EmergencyStopLights()
@@ -215,6 +209,12 @@ namespace PrimaryClasses
                 case MotionModes.TestMode:
                     break;
                 case MotionModes.StepperHome:
+                    break;
+                case MotionModes.GimbalHome:
+                    break;
+                case MotionModes.RecordPath:
+                    break;
+                case MotionModes.Replay:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mode), mode, null);

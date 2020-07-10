@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Gpio;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Text;
 using System.Threading;
@@ -1308,6 +1309,7 @@ namespace PrimaryClasses
                 Console.WriteLine($"Motion path {file} is empty.");
             }
 
+            int photoCounter = 0;
             foreach (var pathNode in movementSequence)
             {
                 if (PinManager.GetInstance().Controller.Read(emergencyButton) == PinValue.Low)
@@ -1370,6 +1372,12 @@ namespace PrimaryClasses
                     MoveServo(pathNode.Value.TiltPosition, ServoMotorOptions.tilt);
                     Thread.Sleep(TimeSpan.FromMilliseconds(420));
                 }
+
+                ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = "python", Arguments = $"/home/pi/Desktop/CameraTest.py /home/pi/Desktop/Photos/image-{0}-{DateTime.Now.TimeOfDay}-capture.jpg" };
+                Process proc = new Process() { StartInfo = startInfo, };
+                proc.Start();
+                photoCounter++;
+                Thread.Sleep(TimeSpan.FromSeconds(0.5));
             }
         }
         public void SetupMotors()

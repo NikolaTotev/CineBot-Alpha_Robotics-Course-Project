@@ -13,6 +13,7 @@ namespace PrimaryClasses
     {
         private Dictionary<int, PinMode> m_RegisteredPins;
         private GpioController m_Controller;
+        public NotificationManager NotificationManager;
         private static PinManager m_Instance;
 
         private readonly int m_StatusLight = 23;
@@ -196,6 +197,7 @@ namespace PrimaryClasses
             SetupPin(m_JointBDir, PinMode.Output);
             SetupPin(m_JointBStep, PinMode.Output);
 
+            NotificationManager = new NotificationManager(m_Controller, m_StatusLight, m_ErrorLight, m_NotificationLight);
             NotificationManager.SetupLights();
 
             if (m_Controller != null && m_RegisteredPins != null)

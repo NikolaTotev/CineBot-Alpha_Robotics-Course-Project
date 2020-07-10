@@ -2,6 +2,7 @@
 using System.Device.Gpio;
 using System.Device.Gpio.Drivers;
 using System.Device.Pwm;
+using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Dynamic;
 using System.IO;
@@ -34,13 +35,9 @@ namespace General_Testing
                         break;
 
                     case "Camera":
-                        var pictureBytes = Pi.Camera.CaptureImageJpeg(640, 480);
-                        var targetPath = "/home/pi/picture.jpg";
-                        if (File.Exists(targetPath))
-                            File.Delete(targetPath);
-
-                        File.WriteAllBytes(targetPath, pictureBytes);
-                        Console.WriteLine($"Took picture -- Byte count: {pictureBytes.Length}");
+                        ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = "python", Arguments = $"/home/pi/Desktop/CameraTest.py /home/pi/Desktop/Photos/image-{0}-{DateTime.Now.TimeOfDay}-capture.jpg"};
+                        Process proc = new Process() { StartInfo = startInfo, };
+                        proc.Start();
                         break;
 
                     case "Rotary":
