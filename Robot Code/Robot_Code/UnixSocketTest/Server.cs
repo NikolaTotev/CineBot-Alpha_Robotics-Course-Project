@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Device.Gpio;
 using System.IO.Ports;
+using System.Text.RegularExpressions;
 
 namespace UnixSocketTest
 {
@@ -14,7 +15,7 @@ namespace UnixSocketTest
         private Socket m_Socket;
         private Socket m_Handler;
         private readonly string m_SocketPath = "/home/pi/socketTest.sock";
-        private readonly string m_TestMessage = "Hello from the other side! I will be your server today.";
+        private readonly string m_TestMessage = "32 Bytes";
 
         private readonly int m_StepMultiplier = 1;
         private readonly int m_GearRatio = 9;
@@ -64,6 +65,7 @@ namespace UnixSocketTest
             serialPort.WriteLine("P75");
 
             int counter = 0;
+            int purgeTimer = 0;
             while (counter < 100)
             {
                 try
@@ -113,19 +115,28 @@ namespace UnixSocketTest
             try
             {
                 byte[] message = Encoding.ASCII.GetBytes(m_TestMessage);
-                byte[] response = new byte[1024];
+                byte[] response = new byte[32];
                 bool waitingForMessage = true;
                 while (waitingForMessage)
                 {
                     if (m_Handler.Available > 0)
                     {
-                        int numberOfBytes = m_Handler.Receive(response, 18, SocketFlags.None);
+                        int numberOfBytes = m_Handler.Receive(response, 16, SocketFlags.None);
+                   
                         try
                         {
-                            string[] splitVariables = Encoding.ASCII.GetString(response).Split('#');
-                            string[] reading = splitVariables[1].Split('^');
-                            float panMove = float.Parse(reading[0]);
-                            float tiltMove = float.Parse(reading[1]);
+                            //string[] splitVariables = Encoding.ASCII.GetString(response).Split('#');
+                            //string[] reading = splitVariables[1].Split('^');
+                            
+
+                            Regex rx = new Regex(@"([\+-]?\d*\.?\d{2}?){1}",
+                                RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+                            // Find matches.
+                            MatchCollection matches = rx.Matches(Encoding.ASCII.GetString(response));
+
+                            int panMove = (int)float.Parse(matches[0].ToString());
+                            int tiltMove = (int)float.Parse(matches[1].ToString());
 
                             if (panMove > 0)
                             {
@@ -143,8 +154,8 @@ namespace UnixSocketTest
                             {
                                 serialPort.WriteLine($"P{Math.Abs((int)panMove)}");
                                 serialPort.WriteLine($"T{Math.Abs((int)tiltMove)}");
-                                Console.WriteLine($"Servo pos {(int)panMove},  {panMove}");
-                                Console.WriteLine($"Servo pos {(int)tiltMove},  {tiltMove}");
+                                Console.WriteLine($"Pan servo pos {(int)panMove},  {panMove}");
+                                Console.WriteLine($"Tilt servo pos {(int)tiltMove},  {tiltMove}");
                                 Thread.Sleep(TimeSpan.FromMilliseconds(100));
                             }
 
@@ -162,19 +173,26 @@ namespace UnixSocketTest
                         catch (Exception e)
                         {
                             Console.WriteLine($"Parsing fail {Encoding.ASCII.GetString(response)}");
-                            Console.WriteLine($"Split {Encoding.ASCII.GetString(response).Split('#')[1]}");
+                            //Console.WriteLine($"Split {Encoding.ASCII.GetString(response).Split('#')[1]}");
                         }
 
 
                         //m_Handler.Send(Encoding.ASCII.GetBytes($"SERVER GOT - {Encoding.ASCII.GetString(response)} SERVER"));
                         waitingForMessage = true;
+                        //purgeTimer++;
+                        //if (purgeTimer == 128)
+                        //{
+                        //    byte[] trash = new byte[32];
+                        //    m_Handler.Receive(trash, 32, SocketFlags.None);
+                        //    purgeTimer = 0;
+                        //}
                     }
                     // Thread.Sleep(TimeSpan.FromMilliseconds(420));
                 }
             }
-            catch (Exception e)
+            catch (SocketException e)
             {
-                Console.WriteLine("The socket may have closed.");
+                Console.WriteLine($"{e}The socket may have closed.");
                 m_Socket.Dispose();
                 m_Handler.Dispose();
             }

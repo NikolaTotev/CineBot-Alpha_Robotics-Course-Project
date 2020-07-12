@@ -7,6 +7,7 @@ using System.Diagnostics.Tracing;
 using System.Dynamic;
 using System.IO;
 using System.IO.Ports;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Iot.Device.ServoMotor;
 using Unosquare.RaspberryIO;
@@ -23,8 +24,35 @@ namespace General_Testing
 
         static void Main(string[] args)
         {
-            //PolyMotorControl();
-            //return;
+
+            // Define a regular expression for repeated words.
+            Regex rx = new Regex(@"([\+-]?\d*\.?\d{4}?){1}",
+                RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            // Define a test string.
+            string text = "25.2312 -23.2324";
+
+            // Find matches.
+            MatchCollection matches = rx.Matches(text);
+
+            // Report the number of matches found.
+            Console.WriteLine("{0} matches found in:\n   {1}",
+                matches.Count,
+                text);
+
+            // Report on each match.
+            Console.WriteLine(matches[1]);
+            //foreach (Match match in matches)
+            //{
+            //    GroupCollection groups = match.Groups;
+            //    Console.WriteLine("'{0}' repeated at positions {1} and {2}",
+            //        groups["word"].Value,
+            //        groups[0].Index,
+            //        groups[1].Index);
+            //}
+
+
+            return;
             //string[] args;
             if (args.Length > 0)
             {
