@@ -608,13 +608,16 @@ The schematics are very useful for anyone trying to make this exact robot. Pleas
 
 #### Used components
 * __Stepper motor & stepper motor drivers__
-              * [A4988 Stepper Motor Driver Carrier](https://www.pololu.com/product/1182)
-              * [NEMA 14 Stepper motor](https://www.pololu.com/product/1208)
+
+     * [A4988 Stepper Motor Driver Carrier](https://www.pololu.com/product/1182)
+     * [NEMA 14 Stepper motor](https://www.pololu.com/product/1208)
 * __Encoders__
-              * [Waveshare rotary encoder](https://www.waveshare.com/rotation-sensor.htm)
+
+     * [Waveshare rotary encoder](https://www.waveshare.com/rotation-sensor.htm)
+     
 * __Single-board computer & microcontroller__
-              * [Raspberry Pi 4 2GB](https://erelement.com/raspberry-pi-4-2gb) is used as the primary computer.
-              * [Arduino UNO](https://store.arduino.cc/arduino-uno-rev3) is used for servo control.
+    * [Raspberry Pi 4 2GB](https://erelement.com/raspberry-pi-4-2gb) is used as the primary computer.
+    * [Arduino UNO](https://store.arduino.cc/arduino-uno-rev3) is used for servo control.
 
 ---
 
@@ -654,6 +657,9 @@ Since this is a simple robot, with limited functionality, I decided to make safe
 
 These two safety-critical checks run on a separate thread and for each motor at the same time. All of that said, it is important to consider the [platform](#Choosing-a-suitable-platform) and [programing language](#Programing-language-selection) being used, and the pros and cons associated with those decisions.
 
+##### [Back to top](#Contents)
+
+---
 
 ### Required modes of operation
 Along with the safety features, the robot has a couple of different modes of operation:
@@ -663,6 +669,10 @@ Along with the safety features, the robot has a couple of different modes of ope
 4. Record path - records a path, multithread stepper motor control, and an option to switch to gimbal control. Path nodes are set by pressing the correct buttons for each mode. More info can be found in the [how to use section]()
 5. Replay path - Reads a saved file and replays the motion that was recorded.
 6. Face detection & tracking - track a detected face by attempting to keep it in the center of the frame  ***(only works for gimbal)***
+
+##### [Back to top](#Contents)
+
+---
 
 ### User interface
 This is an important category, as it is the way for the user to know what mode the robot is in.
@@ -687,6 +697,9 @@ Since I have previous experience with C# and since the Raspberry Pi is essential
 
 *2. I am also aware of [ROS](https://www.ros.org/), but I found out about it too late into the project for it to be possible to switch.*
 *3. Despite the cons, for this current project, C# is more than capable of delivering good performance. This has been determined by simply working with and on the system for 5 months*
+
+##### [Back to top](#Contents)
+
 
 ## Unix Domain Sockets
 As mentioned in the [Key Features](#Key-Features) section, there is a mode for facial tracking. The problem is that is written in Python, but all of my other code is in C#. This means that I need some way for the two processes to communicate with each other. Unix Domain Sockets to the rescue! Since everything is a "file" in Unix, I can just create a simple server-client set up to allow the Python program to communicate with the C# cod that controls the servos.
