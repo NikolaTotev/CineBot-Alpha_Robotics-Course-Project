@@ -171,7 +171,7 @@ Here are a couple of things you will need to get started:
 * [WinSCP](https://winscp.net/eng/download.php)
 * Basic Linux knowledge & ability to work in a terminal
 * Command prompt or an SSH client such as [Putty](https://www.putty.org/) or [Solar Putty](https://www.solarwinds.com/free-tools/solar-putty) if you want a better GUI
-* A raspberry pi with the latest version of [Raspbiean ](https://www.raspberrypi.org/downloads/raspberry-pi-os/) (or as it is now called "Raspberry  Pi OS)*
+* A raspberry pi with the latest version of [Raspbian](https://www.raspberrypi.org/downloads/raspberry-pi-os/) (or as it is now called "Raspberry  Pi OS)*
 * [ .NET Core](https://github.com/dotnet/iot) needs to be installed on your raspberry
 * You will also need to install [OpenCV](https://qengineering.eu/install-opencv-4.3-on-raspberry-pi-4.html)
 #### For the builders
