@@ -30,7 +30,7 @@ through the skills I needed to learn to make this project a reality. In no parti
 		* [Publishing from Visual Studio](#Publishing-from-Visual-Studio)
 		* [Uploading via WinSCP](#Uploading-via-WinSCP)
 		* [Running Server](#Running-server)
-	* [Trouble shooting](#Trouble-shooting)
+	* [Trouble shooting](#Troubleshooting)
 
 -  [Hardware](#Hardware)
 	* [Design constraints](#Design-constraints)
