@@ -39,8 +39,7 @@ through the skills I needed to learn to make this project a reality. In no parti
 			* [Manufacturing capabilities](#Manufacturing-capabilities)
 			* [Material choice](#Material-choice)
 		* [Assembly methods](#Assembly-methods)
-		* [Other resource constraints regarding hardware development](#Other-resource-constraints-regarding-hardware-development)
-	
+
 	* [Hardware design decisions](#Hardware-design-decisions) 	
 		*	[Structure overview](#Structure-overview) (part evolution and motivation behind the design)
 			*	[Base & base drive train](#Base-and-base-drive-train)
@@ -609,13 +608,13 @@ The schematics are very useful for anyone trying to make this exact robot. Pleas
 
 #### Used components
 * __Stepper motor & stepper motor drivers__
-               * [A4988 Stepper Motor Driver Carrier](https://www.pololu.com/product/1182)
-               * [NEMA 14 Stepper motor](https://www.pololu.com/product/1208)
+              * [A4988 Stepper Motor Driver Carrier](https://www.pololu.com/product/1182)
+              * [NEMA 14 Stepper motor](https://www.pololu.com/product/1208)
 * __Encoders__
-               * [Waveshare rotary encoder](https://www.waveshare.com/rotation-sensor.htm)
+              * [Waveshare rotary encoder](https://www.waveshare.com/rotation-sensor.htm)
 * __Single-board computer & microcontroller__
-               * [Raspberry Pi 4 2GB](https://erelement.com/raspberry-pi-4-2gb) is used as the primary computer.
-               * [Arduino UNO](https://store.arduino.cc/arduino-uno-rev3) is used for servo control.
+              * [Raspberry Pi 4 2GB](https://erelement.com/raspberry-pi-4-2gb) is used as the primary computer.
+              * [Arduino UNO](https://store.arduino.cc/arduino-uno-rev3) is used for servo control.
 
 ---
 
