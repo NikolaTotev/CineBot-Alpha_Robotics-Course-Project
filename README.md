@@ -8,11 +8,11 @@ This is the documentation for my Robotics Course Project created during my secon
 
 ## *Acknowledgements*
 Before I begin, I would like to acknowledge my parents, for their constant love and encouragement, not only for this project, but for all of my previous and current envdeavours. Without them this project would not be the same.
-I would also like to thank the teachers the teachers that guided me though the skills I needed to learn in order to make this project a reality. 
-In no particular order I'd like to thank
-Dr. Ivan Chavdarov, for teaching me the skills related to 3D modelling & printing, as well as giving me guidance on my structural design by telling me what could be improved and how such things are usually made/designed.
-and
-Trayan Iliev, for expanding my horizons on the subjects of IoT and the software side of robotics.
+I would also like to thank the teachers the teachers that guided me though the skills I needed to learn in order to make this project a reality. In no particular order I'd like to thank:
+
+* Dr. Ivan Chavdarov, for teaching me the skills related to 3D modelling & printing, as well as giving me guidance on my structural design by telling me what could be improved and how such things are usually made/designed.
+
+* Trayan Iliev, for expanding my horizons on the subjects of IoT and the software side of robotics.
 
 # Contents
 -  [Introduction](#Introduction)
@@ -28,7 +28,6 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 		* [Uploading via WinSCP](#Uploading-via-WinSCP)
 		* [Running Server](#Running-server)
 	* [Trouble shooting](#Trouble-shooting)
-	* [User manual](#User-manual)
 
 -  [Hardware](#Hardware)
 	* [Design constraints](#Design-constraints)
@@ -53,21 +52,19 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 			* [Schematics](#Schematics)
 			* [Used components](#Used-components)
 			* [Electronics housing and connections to robot](#Electronics-housing-and-connections-to-robot)
-			
-		*  [Misc](#Misc)	
-		
+					
 -  [Software](#Software)
 	- [Software Requirements](#Software-Requirements)
 		- [Safety requirements](#Safety-requirements)
 		- [Required modes of operation](#Required-modes-of-operation)
 
 	- [Software Architecture](#Software-Architecture)
+		- [Unix Domain Sockets](#Unix-Domain-Sockets)
  	- [Choosing a suitable platform](#Choosing-a-suitable-platform)
 	- [Programing language selection](#Programing-language-selection)
 	- [Diagrams](#Diagrams)
 		- [System Modules](#System-Modules)
 		- [Deployment Structure](#Deployment-Structure)
-		- [Process Flow](#Process-Flow)
 
 
 ---
@@ -75,18 +72,20 @@ Trayan Iliev, for expanding my horizons on the subjects of IoT and the software 
 This project is for ***educational purposes only***. This is my ***first*** robotics project and there are certainly bad practices/decisions that could lead to injury or damage to components. 
 If you decide to recreate this please do so carefully. If any issues are discovered please put in an issue so I can fix it.
 
+_Also please note, this project is made by a beginner, I have never assebled, designed or programmed a robot before. When giving feedback or grading this please take the into consideration._
+
 ---
 
 # Introduction
 ## Documentation structure
-This project has two main sections hardware & software. The structure of this documentation begins with the hardware aspects of the project because that is the way the development of this project began. After that I will continue with the software side of things and at the end...**(TODO)**
+This project has two main sections hardware & software. The structure of this documentation begins with the hardware aspects of the project because that is the way the development of this project began. After that I will continue with the software side of this project. 
 
  The goal of this documentation is to inform the reader about the project and give him/her a better understanding about the project, what the motivations are behind the various design decisions and how the many harware and software components interact with on another to create a complete robot as well. This document will also cover the many mistakes I made along the way, the challenges I faced as a complete beginner, how I over came them. I also describe the lessons I learned along the way and point out the improvements that can be made if someone attempts to recreate this project.
 
 Since this is my first project and documentation of such scale I would like the reader to know that there may be some errors and things that can be done better. If you find such a thing, please make an issue in Github so I can get some constructive feedback and so I can improve this project for future readers.
  
 ## Scope
-Since this is my first robotics project, the scope of this project is farily limited but quite broad for a beginner.  At the start of this project the scope was quite limited, but as the development progressed so did the scope because I discovered new things that would help me improve this project and teach me even more new things.
+Since this is my first robotics project, the scope of this project is farily limited if compared to the current state of robotics, but quite broad for a complete beginner.  At the start of this project the scope was quite limited, but as the development progressed so did the scope because I discovered new things that would help me improve this project and teach me even more new things.
 
 During the development of this project in no particular order I wanted to:
 
@@ -100,10 +99,22 @@ During the development of this project in no particular order I wanted to:
 	* Safety considerations when designing a robot
 	* Motion smooth / using qinitic polynomial equation in order to manage forces on the robot cause by acceleration during movement.
 * Learn how to make a basic multithreaded control software for the robot
-* Facial tracking using openCV and implementing a PID controller to track a face by moving the robot.
+* Facial tracking using OpenCV and implementing a PID controller to track a face by moving the robot.
 
 
 ## Key features
+* __Jog Mode__ 
+This  is manual control done via the encoders on the front of the electronics case. This is 			  	used for diagnostics and testing.
+
+* __Program Path__
+Similar to jog mode when it comes to controling the robot, but there is an option for entering a node for a given position of the robot (both for gimbal and stepper motors). Once wanted path is done, it is saved to a file and it can be replayed later.
+
+* __Replay Path__  
+Reads instructions from selected file and replays them. A picture is taken at each node.
+
+* __Face detection & tracking__
+This mode is still a bit experiemental, but it does detect a face using openCV with Haar Cascade. Then with a PID Controller it tracks a face attempting to keep it centered in the frame. I followed [this tutorial](https://www.pyimagesearch.com/2019/04/01/pan-tilt-face-tracking-with-a-raspberry-pi-and-opencv/), but I had to make a couple of changes in order to make it work with the C# code. More information can be found in the [Unix Domain Sockets](#Unix-Domain-Sockets) section.
+
 
 ## Initial design decisions 
 The first choice I had to make was what kind of robot would be suitable for this project. The two main choices where either a mobile robot or a stationary robot arm. I know there are more options but considering my limited knowledge at the beginning I wanted to attempt one of the two types. In the end I decided to make a stationary robot arm for the following reasons:
@@ -354,8 +365,6 @@ The combination between these two methods allows for a good balance between soli
 Both of these method had significant downsides. The friction fit relied on tight tollerances, something that is not consistent when 3D printing parts.
 For the screw method, once the larger parts were connected, if something needed to be replaced, a siginificant amount of work needed to be put in to change a singlep part.
 
-### Other resource constraints regarding hardware development
-
 ##### [Back to top](#Contents)
 ## Hardware design decisions
 ### Structure overview 
@@ -502,18 +511,17 @@ This is the final iteration and it is a smaller version of second iteration of t
 ----
 
 #### Joint to arm section interfaces/adapters
-* Iteraton 1
-	==INSERT IMAGE==
+* __Iteraton 1__
 	As you can see there is more than one version, but I'm grouping them as the first iteration as they do not include any counterbalance. These are simple, they all do their job, but due to the weight of the gimbal, a counterbalance is requried.
-* Iteraton 2
-==INSERT IMAGE==
+	
+* __Iteraton 2__
 As you can see on this version, at the back there is a mounting point for the counter balance mentioned above. This makes the job of the reducer much easier by balancing the forces.
 
 ##### [Back to top](#Contents)
 ---
 
 #### Counter balance 
-* Iteraton 1
+* __Iteraton 1__
 This part is pretty simple. Since I neede something to balnce the gimbal, and an arduino is needed to control the motors, I decied to combine the two and this is the result. The back has a tray for some metal weights and on the top there are mounting holes for the arduino. As mentioned above it connects to the second iteration of the arm joint adapter
 
 ##### [Back to top](#Contents)
@@ -664,6 +672,7 @@ This is done via 3 LED's mounted on the front of the electronics housing. The ma
 ## Software Architecture 
 ### Choosing a suitable platform
 Due to my limited budget and experience, the most reasonable platform was the Raspberry Pi and the Arduino UNO. Considering my fairly light requirements these two devices are more than capable to meet the requirements and perform well.
+
 ### Programing language selection
 My initial choice was Python, but it was lacking TCP pending functionality that prevents blocking of the main thread while the server awaits a connection. I am sure there are options that allow for this functionality, but I was not able to get something to work. This issue combined with my lack of Python experience made me look for alternatives.
 Since I have previous experience with C# and since the Raspberry Pi is essentially running linux my dad suggested that I look into .NET Core which can be run on Linux. After a bit of research I discoved the .NET IoT Core library by Microsoft. It was easy to setup and quickly test and that is why the majority of the software is written in C#.
@@ -673,6 +682,9 @@ Since I have previous experience with C# and since the Raspberry Pi is essential
 
 *2. I am also aware of [ROS](https://www.ros.org/), but I found out about it too late into the project for it to be possible to switch.*
 *3. Despite the cons, for this current project, C# is more than capable of delivering good performance. This has been determined by simply working with and on the system over the course of 5 months*
+
+## Unix Domain Sockets
+As mentioned in the [Key Features](#Key-Features) section, there is a mode for facial tracking. The problem is that is is written in Python, but all of my other code is in C#. This means that I need some way for the two processes to communicate with each other. Unix Domain Sockets to the rescue! Since everything is a "file" in Unix, I can just create a simple server client setup to allow the Python program to communicate with the C# cod that controls the servos.
 
 ---
 
@@ -741,11 +753,11 @@ Due to the relative complexity of the system, I will not write too much text to 
 
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/913b1a407d1099f23ecaa9df2d1c0a067465be6c/Documentation/Software%20Diagrams/Client_Modules.svg?token=AGMIB7NZTS52J73MTZADGNS7A52GU" width="50%" height="50%" > 
+<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/2a61a2f3e2c6e9b4ed6ecc0658b16b2103fae912/Documentation/Software%20Diagrams/Client_Modules.svg?token=AGMIB7MHU3PP2RZ6VG46N427BS6PE" width="50%" height="50%" > 
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/913b1a407d1099f23ecaa9df2d1c0a067465be6c/Documentation/Software%20Diagrams/Server_Modules.svg?token=AGMIB7LD6W7WVNF4YF4TMN27A52IM" width="80%" height="80%">
+<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/2a61a2f3e2c6e9b4ed6ecc0658b16b2103fae912/Documentation/Software%20Diagrams/Server_Modules.svg?token=AGMIB7OJK5R7QLKEOSEVWOK7BS6QS" width="80%" height="80%">
 </p>
 
 ##### [Back to top](#Contents)
@@ -753,7 +765,7 @@ Due to the relative complexity of the system, I will not write too much text to 
 ---
 ### Deployment Structure
 <p align="center">
-<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/5a1f2118d90c1c8636417fd8419571fd57f68060/Documentation/Software%20Diagrams/Deployment_Diagram.svg?token=AGMIB7IKCEHTODLS7AG4G6C7A5V5S" width="72%" height="70%">
+<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/2a61a2f3e2c6e9b4ed6ecc0658b16b2103fae912/Documentation/Software%20Diagrams/Deployment_Diagram.svg?token=AGMIB7NAEJ43EJ5H462Q2WK7BS6RS" width="72%" height="70%">
 </p>
 
 
