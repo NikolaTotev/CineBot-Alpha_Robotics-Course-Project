@@ -354,7 +354,7 @@ As I am using 3D printing for making all of the parts I need to take into accoun
 Most of the parts are printed in a way that avoids overhangs as much as possible. Layer orientation is taken into consideration when possible.
 
 To assemble all of the parts I use two main techniques:
-- M3 & M2.5 machine screws of various lengths. (more information can be found in the [assembly booklet](#Assembly-Information)
+- M3 & M2.5 machine screws of various lengths.
 - Trapezoid wedges that slide into each other
 
 The combination of these two methods allows for a good balance between the solid assembly of large modules and allows those modules to be connected using a universal attachment interface.
@@ -374,23 +374,23 @@ For the screw method, once the larger parts were connected, if something needed 
 ## Hardware design decisions
 ### Structure overview
 The structure of the robot is fairly simple. In the following points, I'll describe each part and all of the iterations I had to go through. The general goals for the hardware can be divided into two sections:
-* Robot structure
 
-               1. It has to be printable
-               2. The parts need to be able to support the expected forces and use as little material as possible
-               3. The reducer mechanisms need to move smoothly
-               4. As mentioned above assembly needs to be pretty simple
-               5. Parts must be modular and easy to swap out
-               6. Built-in cable management.
-               7. It needs to look good (this has a lower priority, but still an important aspect)
+* Robot structure
+	1. It has to be printable
+	2. The parts need to be able to support the expected forces and use as little material as possible
+	3. The reducer mechanisms need to move smoothly
+	4. As mentioned above assembly needs to be pretty simple
+	5. Parts must be modular and easy to swap out
+	6. Built-in cable management.
+	7. It needs to look good (this has a lower priority, but still an important aspect)
                
 * Electronics housing
-               1. There must be enough room to work inside and fit the electronics
-               2. Cooling needs to be integrated into the case to help with performance
-               3. Notification LEDs need to be in a good position for the user
-               4. Any controls such as rotary encoders also need to be in an easily accessible spot.
-               5. All ports that are used for connection to the robot need to be in the back
-               6. As with the robot, it has to look good (again lower priority)
+	1. There must be enough room to work inside and fit the electronics
+	2. Cooling needs to be integrated into the case to help with performance
+	3. Notification LEDs need to be in a good position for the user
+	4. Any controls such as rotary encoders also need to be in an easily accessible spot.
+	5. All ports that are used for connection to the robot need to be in the back
+	6. As with the robot, it has to look good (again lower priority)
 
 *Some of the things mentioned in the electronics housing are described in more detail in the [electrical system](#Electrical-system) section.*
 ####  A little bit about iterations
@@ -430,27 +430,27 @@ This is the final iteration. As you can see it quite different and uses a much s
 </p>
 
 * __Iteraton 1__
-               Uses hexagonal friction fit on one side and screws for mounting the arm section.
-               Cons -
-               *            No cable management
-               *            Tolerance issues
-               *            Time-consuming to mount/unmount arm sections
-               *            Too thin for the loads it would experience
+ Uses hexagonal friction fit on one side and screws for mounting the arm section.
+Cons -
+	* No cable management
+	* Tolerance issues
+	* Time-consuming to mount/unmount arm sections
+	* Too thin for the loads it would experience
 
-               Pros -
-               * simple design
-               * quick to print.
-               
+	Pros -
+	* simple design
+	* quick to print.
+
 *  __Iteraton 2__
                This version as you can see it a bit better, but it still has the major issues of the previous one. 
                
-                Pros -
-                * fixes thinness issue
-                * adds some stability due to wider footprint
-                
-                Cons
-                * still time-consuming to mount arm sections
-                * still has tolerance issues
+      Pros -
+      * fixes thinness issue
+      * adds some stability due to wider footprint
+      
+      Cons
+      * still time-consuming to mount arm sections
+      * still has tolerance issues
                 
 * __Iteraton 3__             
                This one solves all of the issues of the previous ones but introduces some new ones. As you can see it is connected with screws to the gearbox, but those screws also hold the planet gears and carrier in alignment. This means that they can't be tightened too much as it will cause the gearbox to bind. Despite those problems, the easy swap functionality that comes from the use of a universal trapezoid mount allows for easy mounting of the other part of the robot. This base also has cable management that feeds the cables out of the back.
@@ -622,10 +622,10 @@ The schematics are very useful for anyone trying to make this exact robot. Pleas
 The electronics housing is not an essential part of the project, but it makes for a more complete and polished project. It also hides the mess of cables and provides an interface for the robot to connect to via standard ports.
 
 **There are 4 ports:**
-1.           Stepper motor A
-2.           Stepper motor B
-3.           Servo power & limit switches for stepper A
-4.           I2C connection & limit switches for stepper B _(Unfortunately I2C is never used)_
+1.  Stepper motor A
+2. Stepper motor B
+3. Servo power & limit switches for stepper A
+4. I2C connection & limit switches for stepper B _(Unfortunately I2C is never used)_
 
 <p align="center">
 <img src="https://github.com/NikolaTotev/Robotics-Course-Project/blob/master/Documentation/Images/Robot%20Images/Photos/Robot_Ports.jpg?raw=true" width="50%" height="50%">
