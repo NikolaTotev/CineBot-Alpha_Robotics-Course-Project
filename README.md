@@ -61,8 +61,8 @@ through the skills I needed to learn to make this project a reality. In no parti
 		- [Required modes of operation](#Required-modes-of-operation)
 
 	- [Software Architecture](#Software-Architecture)
-		- [Using TCP](#Using-TCP)
 		- [Unix Domain Sockets](#Unix-Domain-Sockets)
+		- [Using TCP](#Using-TCP)
  	- [Choosing a suitable platform](#Choosing-a-suitable-platform)
 	- [Programing language selection](#Programing-language-selection)
 	- [Software motor control](#Software-motor-control)
