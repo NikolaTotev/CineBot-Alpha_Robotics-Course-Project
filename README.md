@@ -1,4 +1,5 @@
 
+
 # Project Cinebot Alpha
 
 This is the documentation for my Robotics Course Project created during my second year, second semester in FMI for the course Practical Robotics and Smart "Things".
@@ -25,7 +26,7 @@ through the skills I needed to learn to make this project a reality. In no parti
 	
 * [Getting started ](#Getting-started)   *(click here if you just want to setup the robot and learn how to use it)*
 	* [How to run client](#How-to-run-client)
-	* [How to run  server (robot)](#How-to-run-robot)
+	* [How to run  server (robot)](#How-to-run-the-robot)
 		* [Publishing from Visual Studio](#Publishing-from-Visual-Studio)
 		* [Uploading via WinSCP](#Uploading-via-WinSCP)
 		* [Running Server](#Running-server)
