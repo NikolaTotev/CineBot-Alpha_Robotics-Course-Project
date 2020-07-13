@@ -61,9 +61,11 @@ through the skills I needed to learn to make this project a reality. In no parti
 		- [Required modes of operation](#Required-modes-of-operation)
 
 	- [Software Architecture](#Software-Architecture)
+		- [Using TCP](#Using-TCP)
 		- [Unix Domain Sockets](#Unix-Domain-Sockets)
  	- [Choosing a suitable platform](#Choosing-a-suitable-platform)
 	- [Programing language selection](#Programing-language-selection)
+	- [Software motor control](#Software-motor-control)
 	- [Diagrams](#Diagrams)
 		- [System Modules](#System-Modules)
 		- [Deployment Structure](#Deployment-Structure)
@@ -685,10 +687,17 @@ This is done via 3 LED's mounted on the front of the electronics housing. The ma
 ---
 
 ## Software Architecture
-### Choosing a suitable platform
+
+### Unix Domain Sockets
+As mentioned in the [Key Features](#Key-Features) section, there is a mode for facial tracking. The problem is that is written in Python, but all of my other code is in C#. This means that I need some way for the two processes to communicate with each other. Unix Domain Sockets to the rescue! Since everything is a "file" in Unix, I can just create a simple server-client set up to allow the Python program to communicate with the C# cod that controls the servos.
+
+### Using TCP
+The robot communicatew with the client via TCP. The robot is the TCP server.
+
+## Choosing a suitable platform
 Due to my limited budget and experience, the most reasonable platform was the Raspberry Pi and the Arduino UNO. Considering my fairly light requirements these two devices are more than capable to meet the requirements and perform well.
 
-### Programing language selection
+## Programing language selection
 My initial choice was Python, but it was lacking TCP pending functionality that prevents blocking of the main thread while the server awaits a connection. I am sure some options allow for this functionality, but I was not able to get something to work. This issue combined with my lack of Python experience made me look for alternatives.
 Since I have previous experience with C# and since the Raspberry Pi is essentially running Linux my dad suggested that I look into .NET Core which can be run on Linux. After a bit of research, I discovered the .NET IoT Core library by Microsoft. It was easy to set up and quickly test and that is why the majority of the software is written in C#.
 
@@ -699,14 +708,9 @@ Since I have previous experience with C# and since the Raspberry Pi is essential
 *3. Despite the cons, for this current project, C# is more than capable of delivering good performance. This has been determined by simply working with and on the system for 5 months*
 
 ##### [Back to top](#Contents)
-
-
-## Unix Domain Sockets
-As mentioned in the [Key Features](#Key-Features) section, there is a mode for facial tracking. The problem is that is written in Python, but all of my other code is in C#. This means that I need some way for the two processes to communicate with each other. Unix Domain Sockets to the rescue! Since everything is a "file" in Unix, I can just create a simple server-client set up to allow the Python program to communicate with the C# cod that controls the servos.
-
 ---
 
-### Software motor control
+## Software motor control
 This is a separate section because there is more to it than turning the motor on and off.
 The standard way of moving a stepper motor with the `A4988` driver is by pulsing the step pin at a given speed. For simple applications, this is more than enough, but since this is a robot and since there is a considerable amount of mass that needs to be moved, simply moving the motor from 0 to full speed is not possible. There are a couple of  unwanted side effects of such instant acceleration:
 
