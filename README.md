@@ -753,11 +753,11 @@ Due to the relative complexity of the system, I will not write too much text to 
 
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/913b1a407d1099f23ecaa9df2d1c0a067465be6c/Documentation/Software%20Diagrams/Client_Modules.svg?token=AGMIB7NZTS52J73MTZADGNS7A52GU" width="50%" height="50%" > 
+<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/2a61a2f3e2c6e9b4ed6ecc0658b16b2103fae912/Documentation/Software%20Diagrams/Client_Modules.svg?token=AGMIB7MHU3PP2RZ6VG46N427BS6PE" width="50%" height="50%" > 
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/913b1a407d1099f23ecaa9df2d1c0a067465be6c/Documentation/Software%20Diagrams/Server_Modules.svg?token=AGMIB7LD6W7WVNF4YF4TMN27A52IM" width="80%" height="80%">
+<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/2a61a2f3e2c6e9b4ed6ecc0658b16b2103fae912/Documentation/Software%20Diagrams/Server_Modules.svg?token=AGMIB7OJK5R7QLKEOSEVWOK7BS6QS" width="80%" height="80%">
 </p>
 
 ##### [Back to top](#Contents)
@@ -765,7 +765,7 @@ Due to the relative complexity of the system, I will not write too much text to 
 ---
 ### Deployment Structure
 <p align="center">
-<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/5a1f2118d90c1c8636417fd8419571fd57f68060/Documentation/Software%20Diagrams/Deployment_Diagram.svg?token=AGMIB7IKCEHTODLS7AG4G6C7A5V5S" width="72%" height="70%">
+<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/2a61a2f3e2c6e9b4ed6ecc0658b16b2103fae912/Documentation/Software%20Diagrams/Deployment_Diagram.svg?token=AGMIB7NAEJ43EJ5H462Q2WK7BS6RS" width="72%" height="70%">
 </p>
 
 
