@@ -130,9 +130,9 @@ Once I decided what kind of robot I would make the size of the robot was the nex
 Before beginning with the CAD design, I used Legos to create a crude model of the robot arm and the joints it would have and how they would move. I found this to be the best way to make the initial prototype as it cost nothing and gave a good enough visualization/feel.
 
 ## Project Statistics
-Work time - about 600-650 hours - aprox. 25-27days
-Print Time - 805h 8min - aprox. 33.5 days
-Total Project - 5.61GB
+* Work time - about 600-650 hours - aprox. 25-27days
+* Print Time - 805h 8min - aprox. 33.5 days
+* Total Project - 5.61GB
 
 ## Tools & Software
 As this project has both software and hardware components I feel that it is necessary to list all of the tools I used during development
