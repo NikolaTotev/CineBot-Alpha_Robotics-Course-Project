@@ -153,9 +153,9 @@ namespace UnixSocketTest
                             if (panMove != 0 && tiltMove !=0)
                             {
                                 serialPort.WriteLine($"P{Math.Abs((int)panMove)}");
-                                serialPort.WriteLine($"T{Math.Abs((int)tiltMove)}");
+                                // serialPort.WriteLine($"T{Math.Abs((int)tiltMove)}");
                                 Console.WriteLine($"Pan servo pos {(int)panMove},  {panMove}");
-                                Console.WriteLine($"Tilt servo pos {(int)tiltMove},  {tiltMove}");
+                                //Console.WriteLine($"Tilt servo pos {(int)tiltMove},  {tiltMove}");
                                 Thread.Sleep(TimeSpan.FromMilliseconds(100));
                             }
 
