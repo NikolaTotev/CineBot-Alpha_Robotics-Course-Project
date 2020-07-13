@@ -18,58 +18,55 @@ through the skills I needed to learn to make this project a reality. In no parti
 
 # Contents
 -  [Introduction](#Introduction)
-               * [Scope](#Scope)
-               * [Key features](#Key-features)
-               * [Initial design decisions](#Initial-design-decisions)
-               * [Interesting Statistics](#Project-Statistics)
-               
+	* [Scope](#Scope)
+	* [Key features](#Key-features)
+	* [Initial design decisions](#Initial-design-decisions)
+	* [Interesting Statistics](#Project-Statistics)
+	
 * [Getting started ](#Getting-started)   *(click here if you just want to setup the robot and learn how to use it)*
-               * [How to run client](#How-to-run-client)
-               * [How to run  server (robot)](#How-to-run-robot)
-                               * [Publishing from Visual Studio](#Publishing-from-Visual-Studio)
-                               * [Uploading via WinSCP](#Uploading-via-WinSCP)
-                               * [Running Server](#Running-server)
-               * [Trouble shooting](#Trouble-shooting)
+	* [How to run client](#How-to-run-client)
+	* [How to run  server (robot)](#How-to-run-robot)
+		* [Publishing from Visual Studio](#Publishing-from-Visual-Studio)
+		* [Uploading via WinSCP](#Uploading-via-WinSCP)
+		* [Running Server](#Running-server)
+	* [Trouble shooting](#Trouble-shooting)
 
-- 
-[Hardware](#Hardware)
-               * [Design constraints](#Design-constraints)
-                               * [Actuators](#Actuators)
-                               * [Method of manufacturing](#Method-of-manufacturing)
-                                               * [Manufacturing capabilities](#Manufacturing-capabilities)
-                                               * [Material choice](#Material-choice)
-                               * [Assembly methods](#Assembly-methods)
-                               * [Other resource constraints regarding hardware development](#Other-resource-constraints-regarding-hardware-development)
-               
-               * [Hardware design decisions](#Hardware-design-decisions)       
-                               *            [Structure overview](#Structure-overview) (part evolution and motivation behind the design)
-                                               *            [Base & base drive train](#Base-and-base-drive-train)
-                                               * [Arm section](#Arm-section)
-                                               * [Arm joint](#Arm-Joint)
-                                               * [Counter balance](#Counter-balance)
-                                               * [Gimbal](#Gimbal)
-                                               * [Limit switches](#Limit-switches)
-                                               * [Electronics housing](#Electronics-housing) ***(design aspects)***
-                                               
-                               * [Electrical system](#Electrical-system)
-                                               * [Schematics](#Schematics)
-                                               * [Used components](#Used-components)
-                                               * [Electronics housing and connections to robot](#Electronics-housing-and-connections-to-robot)
-                                                                               
-- 
-[Software](#Software)
-               - [Software Requirements](#Software-Requirements)
-                               - [Safety requirements](#Safety-requirements)
-                               - [Required modes of operation](#Required-modes-of-operation)
+-  [Hardware](#Hardware)
+	* [Design constraints](#Design-constraints)
+		* [Actuators](#Actuators)
+		* [Method of manufacturing](#Method-of-manufacturing)
+			* [Manufacturing capabilities](#Manufacturing-capabilities)
+			* [Material choice](#Material-choice)
+		* [Assembly methods](#Assembly-methods)
+		* [Other resource constraints regarding hardware development](#Other-resource-constraints-regarding-hardware-development)
+	
+	* [Hardware design decisions](#Hardware-design-decisions) 	
+		*	[Structure overview](#Structure-overview) (part evolution and motivation behind the design)
+			*	[Base & base drive train](#Base-and-base-drive-train)
+			* [Arm section](#Arm-section)
+			* [Arm joint](#Arm-Joint) 
+			* [Counter balance](#Counter-balance)
+			* [Gimbal](#Gimbal)
+			* [Limit switches](#Limit-switches)
+			* [Electronics housing](#Electronics-housing) ***(design aspects)***
+			
+		* [Electrical system](#Electrical-system)
+			* [Schematics](#Schematics)
+			* [Used components](#Used-components)
+			* [Electronics housing and connections to robot](#Electronics-housing-and-connections-to-robot)
+					
+-  [Software](#Software)
+	- [Software Requirements](#Software-Requirements)
+		- [Safety requirements](#Safety-requirements)
+		- [Required modes of operation](#Required-modes-of-operation)
 
-               - [Software Architecture](#Software-Architecture)
-                               - [Unix Domain Sockets](#Unix-Domain-Sockets)
-               - [Choosing a suitable platform](#Choosing-a-suitable-platform)
-               - [Programing language selection](#Programing-language-selection)
-               - [Diagrams](#Diagrams)
-                               - [System Modules](#System-Modules)
-                               - [Deployment Structure](#Deployment-Structure)
-
+	- [Software Architecture](#Software-Architecture)
+		- [Unix Domain Sockets](#Unix-Domain-Sockets)
+ 	- [Choosing a suitable platform](#Choosing-a-suitable-platform)
+	- [Programing language selection](#Programing-language-selection)
+	- [Diagrams](#Diagrams)
+		- [System Modules](#System-Modules)
+		- [Deployment Structure](#Deployment-Structure)
 
 ---
 # ==== Disclaimer ====
