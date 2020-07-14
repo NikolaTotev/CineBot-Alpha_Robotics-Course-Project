@@ -146,6 +146,8 @@ namespace PrimaryClasses
         }
         public int GimbalJog()
         {
+            MotorManager currentManager = new MotorManager();
+            currentManager.GimbalJog();
             return 0; 
         }
 

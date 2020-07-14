@@ -400,7 +400,7 @@ namespace PrimaryClasses
                         }
 
                         flags.CollisionFlag = true;
-                        
+
                         if (topSensorSate == PinValue.Low)
                         {
                             flags.topHit = true;
@@ -700,181 +700,6 @@ namespace PrimaryClasses
                     Console.WriteLine($"[{DateTime.Now}] <EXCEPTION>: An exception with code {e.HResult} occured during thread abortion.");
                 }
             }
-        }
-
-
-        public void GimbalJog()
-        {
-            int emergencyStop = PinManager.GetInstance().EmergencyStop;
-
-            SerialPort serialPort;
-            serialPort = new SerialPort("/dev/ttyACM0", 9600); //Set the read/write timeouts    
-            serialPort.ReadTimeout = 1500;
-            serialPort.WriteTimeout = 1500;
-            serialPort.Open();
-            serialPort.WriteLine("P75");
-            Thread.Sleep(TimeSpan.FromMilliseconds(45));
-            serialPort.WriteLine("R80");
-            Thread.Sleep(TimeSpan.FromMilliseconds(45));
-            serialPort.WriteLine("T80");
-            Thread.Sleep(TimeSpan.FromMilliseconds(45));
-
-
-            int panSia = PinManager.GetInstance().PanSIA;
-            int panSib = PinManager.GetInstance().PanSIB;
-
-            int rotSia = PinManager.GetInstance().RotSIA;
-            int rotSib = PinManager.GetInstance().RotSIB;
-
-            int tiltSia = PinManager.GetInstance().TiltSIA;
-            int tiltSib = PinManager.GetInstance().TiltSIB;
-
-            int resetPan = PinManager.GetInstance().PanReset;
-            int resetRot = PinManager.GetInstance().RotReset;
-            int resetTilt = PinManager.GetInstance().TiltReset;
-
-            float panCounter = 75;
-            float rotCounter = 80;
-            float tiltCounter = 80;
-
-            PinValue PanState;
-            PinValue PanLastState;
-
-            PinValue RotState;
-            PinValue RotLastState;
-
-            PinValue TiltState;
-            PinValue TiltLastState;
-
-            PanLastState = PinManager.GetInstance().Controller.Read(panSia);
-            RotLastState = PinManager.GetInstance().Controller.Read(rotSia);
-            TiltLastState = PinManager.GetInstance().Controller.Read(tiltSia);
-
-            while (PinManager.GetInstance().Controller.Read(emergencyStop) != PinValue.Low)
-            {
-                if (PinManager.GetInstance().Controller.Read(resetPan) == PinValue.Low)
-                {
-                    panCounter = 75;
-                    serialPort.WriteLine($"P{panCounter}");
-                    Thread.Sleep(TimeSpan.FromMilliseconds(45));
-                }
-
-                if (PinManager.GetInstance().Controller.Read(resetRot) == PinValue.Low)
-                {
-                    rotCounter = 80;
-                    serialPort.WriteLine($"R{rotCounter}");
-                    Thread.Sleep(TimeSpan.FromMilliseconds(45));
-                }
-
-                if (PinManager.GetInstance().Controller.Read(resetTilt) == PinValue.Low)
-                {
-                    tiltCounter = 80;
-                    serialPort.WriteLine($"T{tiltCounter}");
-                    Thread.Sleep(TimeSpan.FromMilliseconds(45));
-                }
-
-                //Read();
-                Thread.Sleep(TimeSpan.FromSeconds(0.001));
-
-                PanState = PinManager.GetInstance().Controller.Read(panSia);
-                RotState = PinManager.GetInstance().Controller.Read(rotSia);
-                TiltState = PinManager.GetInstance().Controller.Read(tiltSia);
-
-                if (PanState != PanLastState)
-                {
-                    if (PinManager.GetInstance().Controller.Read(panSib) != PanState)
-                    {
-                        panCounter += 2.5f;
-                    }
-                    else
-                    {
-                        panCounter -= 2.5f;
-                    }
-
-                    if (Math.Abs(panCounter % 1) < 0.01)
-                    {
-                        Console.WriteLine($"Step: P{panCounter}");
-                        serialPort.WriteLine($"P{panCounter}");
-                        Thread.Sleep(TimeSpan.FromMilliseconds(35));
-                    }
-
-                    if (Math.Abs(panCounter - 360) < 0.0001 || Math.Abs(panCounter - (-360)) < 0.0001)
-                    {
-                        panCounter = 0;
-                    }
-                }
-
-
-                if (RotState != RotLastState)
-                {
-                    if (PinManager.GetInstance().Controller.Read(rotSib) != RotState)
-                    {
-                        rotCounter += 2.5f;
-                    }
-                    else
-                    {
-                        rotCounter -= 2.5f;
-                    }
-
-                    if (Math.Abs(rotCounter % 1) < 0.01)
-                    {
-                        Console.WriteLine($"Step: R{rotCounter}");
-                        serialPort.WriteLine($"R{rotCounter}");
-                        Thread.Sleep(TimeSpan.FromMilliseconds(35));
-                    }
-
-                    if (Math.Abs(rotCounter - 360) < 0.0001 || Math.Abs(rotCounter - (-360)) < 0.0001)
-                    {
-                        rotCounter = 0;
-                    }
-                }
-
-
-                if (TiltState != TiltLastState)
-                {
-                    if (PinManager.GetInstance().Controller.Read(tiltSib) != TiltState)
-                    {
-                        tiltCounter += 2.5f;
-                    }
-                    else
-                    {
-                        tiltCounter -= 2.5f;
-                    }
-
-                    if (Math.Abs(tiltCounter % 1) < 0.01)
-                    {
-                        Console.WriteLine($"Step: T{tiltCounter}");
-                        serialPort.WriteLine($"T{tiltCounter}");
-                        Thread.Sleep(TimeSpan.FromMilliseconds(35));
-                    }
-
-                    if (Math.Abs(tiltCounter - 360) < 0.0001 || Math.Abs(tiltCounter - (-360)) < 0.0001)
-                    {
-                        tiltCounter = 0;
-                    }
-                }
-
-                Thread.Sleep(TimeSpan.FromSeconds(0.001));
-                PanLastState = PanState;
-                RotLastState = RotState;
-                TiltLastState = TiltState;
-
-
-                try
-                {
-                    if (serialPort.BytesToRead > 0)
-                    {
-                        string message = serialPort.ReadLine();
-                        Console.WriteLine(message);
-                    }
-
-                }
-                catch (TimeoutException)
-                {
-                }
-            }
-
-            serialPort.Close();
         }
 
         public void RecordMotion()
@@ -1267,7 +1092,7 @@ namespace PrimaryClasses
             SerializerManager.SaveMotionPath(movementSequence, saveFile);
 
             Console.WriteLine("The recorded path will now be replayed.");
-            Thread.Sleep(TimeSpan.FromSeconds(3));
+            Thread.Sleep(TimeSpan.FromSeconds(1));
             FollowPath(saveFile);
         }
 
@@ -1276,6 +1101,96 @@ namespace PrimaryClasses
 
         }
 
+
+        public void GimbalJog()
+        {
+            Console.WriteLine($"[{DateTime.Now}] [INFO]: Entering gimbal jog mode. Press emergency stop button to exit.");
+
+            Encoder stepperAController = new Encoder(EncoderOptions.Pan);
+            Encoder stepperBController = new Encoder(EncoderOptions.Rotate);
+            Encoder controlEncoder = new Encoder(EncoderOptions.Tilt);
+
+            int panCounter = 75;
+            int rotateCounter = 75;
+            int tiltCounter = 75;
+            int stopButton = PinManager.GetInstance().EmergencyStop;
+
+            GoToHomeGimbal();
+
+            while (PinManager.GetInstance().Controller.Read(stopButton) != PinValue.Low)
+            {
+
+                #region PanServo
+                if (stepperAController.CompareStates())
+                {
+                    bool direction = stepperAController.GetDirection();
+
+                    if (direction)
+                    {
+                        panCounter -= m_MinimumServoAngle;
+                    }
+                    else
+                    {
+                        panCounter += m_MinimumServoAngle;
+                    }
+
+                    Console.WriteLine($"Pan servo moved {panCounter}");
+                    MoveServo(panCounter, ServoMotorOptions.pan);
+
+                    stepperAController.ReadSIA();
+                    stepperAController.ReadSIB();
+                }
+                stepperAController.SetLastState();
+                Thread.Sleep(TimeSpan.FromMilliseconds(1));
+                #endregion
+
+                #region Rotate
+                if (stepperBController.CompareStates())
+                {
+                    bool direction = stepperBController.GetDirection();
+
+                    if (direction)
+                    {
+                        rotateCounter -= m_MinimumServoAngle;
+                    }
+                    else
+                    {
+                        rotateCounter += m_MinimumServoAngle;
+                    }
+
+                    Console.WriteLine($"Rot servo moved {panCounter}");
+                    MoveServo(rotateCounter, ServoMotorOptions.rotate);
+
+                    stepperBController.ReadSIA();
+                    stepperBController.ReadSIB();
+                }
+                stepperBController.SetLastState();
+                Thread.Sleep(TimeSpan.FromMilliseconds(1));
+                #endregion
+
+                #region Tilt
+                if (controlEncoder.CompareStates())
+                {
+                    if (controlEncoder.GetDirection())
+                    {
+                        tiltCounter -= m_MinimumServoAngle;
+                    }
+                    else
+                    {
+                        tiltCounter += m_MinimumServoAngle;
+                    }
+
+                    Console.WriteLine($"Tilt servo moved {panCounter}");
+                    MoveServo(tiltCounter, ServoMotorOptions.tilt);
+
+                    controlEncoder.ReadSIA();
+                    controlEncoder.ReadSIB();
+                }
+                controlEncoder.SetLastState();
+                Thread.Sleep(TimeSpan.FromMilliseconds(1));
+                #endregion
+            }
+        }
 
         public void FollowPath(int file)
         {

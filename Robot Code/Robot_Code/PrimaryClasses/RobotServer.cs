@@ -100,13 +100,7 @@ namespace PrimaryClasses
 
             while (!m_StopFlag)
             {
-                if (PinManager.GetInstance().Controller.Read(PinManager.GetInstance().EmergencyStop) == PinValue.Low)
-                {
-                    StopServer();
-                    break;
-                }
-
-                try
+               try
                 {
                     if (listener.Pending())
                     {
@@ -206,13 +200,6 @@ namespace PrimaryClasses
             ServerNotification?.Invoke($"\r\n[{DateTime.Now}] Control Thread: Starting coms. loop.");
             while (!m_StopFlag)
             {
-
-                if (PinManager.GetInstance().Controller.Read(PinManager.GetInstance().EmergencyStop) == PinValue.Low) 
-                {
-                    StopServer();
-                    break;
-                }
-
                 try
                 {
                     while (IsSocketConnected(m_ControlClient) && !m_StopFlag)
@@ -230,13 +217,7 @@ namespace PrimaryClasses
                             else
                             {
                                 bool result = ExecutionHandler(clientInstructions);
-
-                                if (PinManager.GetInstance().Controller.Read(PinManager.GetInstance().EmergencyStop) == PinValue.Low)
-                                {
-                                    StopServer();
-                                    break;
-                                }
-
+                                
                                 string textResult = result ? "success" : "failure";
                                 string responseMessage = $"Execution of {clientInstructions} was a {textResult}.";
                                 writer.WriteLine(responseMessage);
@@ -313,20 +294,11 @@ namespace PrimaryClasses
                     currentManager.ExecuteCommand();
                     break;
 
-                case "OBJT":
-                    currentManager = new MotionManager(MotionModes.ObjectTrack);
-                    currentManager.ExecuteCommand();
-                    break;
-
                 case "PF":
                     currentManager = new MotionManager(MotionModes.PathFollow);
                     currentManager.ExecuteCommand();
                     break;
 
-                case "TST":
-                    currentManager = new MotionManager(MotionModes.TestMode);
-                    currentManager.ExecuteCommand();
-                    break;
                 case "HM":
                     currentManager = new MotionManager(MotionModes.StepperHome);
                     currentManager.ExecuteCommand();

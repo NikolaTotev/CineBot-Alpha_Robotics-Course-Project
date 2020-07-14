@@ -121,7 +121,7 @@ namespace UnixSocketTest
                 {
                     if (m_Handler.Available > 0)
                     {
-                        int numberOfBytes = m_Handler.Receive(response, 16, SocketFlags.None);
+                        int numberOfBytes = m_Handler.Receive(response, 14, SocketFlags.None);
                    
                         try
                         {
@@ -153,8 +153,10 @@ namespace UnixSocketTest
                             if (panMove != 0 && tiltMove !=0)
                             {
                                 serialPort.WriteLine($"P{Math.Abs((int)panMove)}");
-                                // serialPort.WriteLine($"T{Math.Abs((int)tiltMove)}");
+                                serialPort.WriteLine($"T{Math.Abs((int)tiltMove)}");
+                                Console.WriteLine($"Response: {Encoding.ASCII.GetString(response)}");
                                 Console.WriteLine($"Pan servo pos {(int)panMove},  {panMove}");
+
                                 //Console.WriteLine($"Tilt servo pos {(int)tiltMove},  {tiltMove}");
                                 Thread.Sleep(TimeSpan.FromMilliseconds(100));
                             }
