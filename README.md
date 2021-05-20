@@ -37,6 +37,104 @@ import 'package:storyhouse/frontend/storyhouseui/ShHeader.dart';
 	 
      ShBasePage(pageContents: [], header:  ShHeader(currentUserUserType: UserTypes.author, currentPage: PageTypes.home,) )
 
+##### Example
+
+    import 'package:flutter/foundation.dart';  
+import 'package:flutter/material.dart';  
+import 'package:storyhouse/frontend/placeholderpage.dart';  
+import 'package:storyhouse/frontend/storyhouseui.dart';  
+import 'package:storyhouse/frontend/storyhouseui/ShBasePage.dart';  
+import 'package:storyhouse/frontend/storyhouseui/ShImages.dart';  
+import 'package:storyhouse/frontend/storyhouseui/storyhouseutils.dart';  
+import 'package:storyhouse/utilities/ColorMaster.dart';  
+import 'package:storyhouse/frontend/storyhouseui/ShButtons.dart';  
+import 'package:storyhouse/frontend/storyhouseui/ShHeader.dart';  
+import 'package:storyhouse/frontend/storyhouseui/ShInput.dart';  
+import 'package:storyhouse/frontend/storyhouseui/ShText.dart';  
+  
+class Homepage extends StatelessWidget {  
+  @override  
+  Widget build(BuildContext context) {  
+  return ShBasePage(pageContents: [  
+  ShSpacer(180),  
+  Align(  
+  alignment: Alignment.topLeft,  
+  child: Padding(  
+  padding: const EdgeInsets.only(top: 20.0),  
+  child: ShText_H1("Welcome Alex", FontType.balo, TextAlign.left,  
+  FontWeight.bold, ColorMaster.sh_TextBlack),  
+  ),  
+  ),  
+  Align(  
+  alignment: Alignment.topLeft,  
+  child: Padding(  
+  padding: const EdgeInsets.only(bottom: 10.0),  
+  child: ShText_H2("Where you left off", FontType.balo, TextAlign.left,  
+  FontWeight.bold, ColorMaster.sh_TextBlack),  
+  ),  
+  ),  
+  Row(  
+  children: [  
+  Padding(  
+  padding: const EdgeInsets.only(right: 20.0),  
+  child: ShBookImage(size: ImageSizes.med, imageIndex: 0),  
+  ),  
+  Expanded(  
+  child: Column(  
+  children: [  
+  Align(  
+  alignment: Alignment.topLeft,  
+  child: ShText_H1("A series of unfortunate events", FontType.balo,  
+  TextAlign.left, FontWeight.bold, ColorMaster.sh_TextBlack),  
+  ),  
+  Align(  
+  alignment: Alignment.topLeft,  
+  child: Padding(  
+  padding: const EdgeInsets.only(bottom: 100.0),  
+  child: ShText_Paragraph(  
+  "Bad thins happen to good people and the Baudelaire orphans know that all too well. In the reptile room Lemony Snicket introduces us to the next chapter of their unfortunate life.  ",  
+  FontType.mont,  
+  TextAlign.left,  
+  FontWeight.normal,  
+  ColorMaster.sh_TextBlack),  
+  ),  
+  ),  
+  Align(  
+  alignment: Alignment.centerLeft,  
+  child: Wrap(  
+  children: [  
+  ShText_H2("By: Lemony Snicket", FontType.balo, TextAlign.left,  
+  FontWeight.bold, ColorMaster.sh_TextBlack),  
+  IntrinsicHeight(child: VerticalDivider(thickness: 2,)),  
+  ShText_Paragraph("By: Lemony Snicket", FontType.balo,  
+  TextAlign.left, FontWeight.bold, ColorMaster.sh_TextBlack),  
+  IntrinsicHeight(child: VerticalDivider(thickness: 2,)),  
+  ],  
+  ),  
+  ),  
+  Align(  
+  alignment: Alignment.bottomLeft,  
+  child: ShTextButton(  
+  "Continue",  
+  () {},  
+  ColorMaster.sh_White,  
+  ColorMaster.sh_AccentOrange,  
+  22,  
+  FontType.balo,  
+  FontWeight.normal,  
+  uniformPadding: true,  
+  textPadding: 8,  
+  ),  
+  )  
+ ],  
+  ),  
+  )  
+ ],  
+  ),  
+  ], header: ShHeader(currentUserUserType: UserTypes.author, currentPage: PageTypes.home,));  
+  }  
+}
+
 # UI Library Documentation
 ## Index
 * [Header](#header)
