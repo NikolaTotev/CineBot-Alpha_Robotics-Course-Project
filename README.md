@@ -132,6 +132,45 @@ import 'package:storyhouse/frontend/storyhouseui/ShHeader.dart';
 		  textPadding: 10,  
 		),
 ##### Icon Button
+
+    // Parameters
+     buttonIcon: IconData
+     callback: VoidCallback, (){}  
+     textColor: String, ColorMaster.<Select String>
+     backgroundColor: String, ColorMaster.<Select String> 
+     
+     iconSize: double
+    
+
+     // Button Padding
+     unformPadding: bool     
+     buttonPadding: double, default value = 10
+     l_buttonPadding: double, default value = 10
+     r_buttonPadding: double, default value = 10
+     t_buttonPadding: double, default value = 10
+     b_buttonPadding: double, default value = 10
+     
+     // Icon Padding
+     iconPadding: double, default value = 16
+   
+
+	  
+     
+     // Example
+      ShIconeButton(  
+		  Icons.star,,  
+		  () {  
+			  Clipboard.setData(ClipboardData(text: StringMaster.ButtonType1CODE));  
+		  },  
+		  ColorMaster.sh_TextBlack, //Icon Color  
+		  ColorMaster.sh_WhiteOrange, //Background Color
+		  30,  // Icon size  
+		  uniformPadding: true,  
+		  buttonPadding: 10,  
+		  iconPadding: 10,
+		  borderRadius  
+		),
+
 ## Images
 #### How to import
 #### Usage
