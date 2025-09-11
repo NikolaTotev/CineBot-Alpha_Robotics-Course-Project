@@ -763,7 +763,7 @@ Due to the relative complexity of the system, I will not write too much text to 
 </p>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/2a61a2f3e2c6e9b4ed6ecc0658b16b2103fae912/Documentation/Software%20Diagrams/Server_Modules.svg?token=AGMIB7OJK5R7QLKEOSEVWOK7BS6QS" width="80%" height="80%">
+<img src="https://github.com/NikolaTotev/CineBot-Alpha_Robotics-Course-Project/blob/master/Documentation/Software%20Diagrams/Server_Modules.svg" width="80%" height="80%">
 </p>
 
 ##### [Back to top](#Contents)
@@ -771,7 +771,7 @@ Due to the relative complexity of the system, I will not write too much text to 
 ---
 ### Deployment Structure
 <p align="center">
-<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/2a61a2f3e2c6e9b4ed6ecc0658b16b2103fae912/Documentation/Software%20Diagrams/Deployment_Diagram.svg?token=AGMIB7NAEJ43EJ5H462Q2WK7BS6RS" width="72%" height="70%">
+<img src="https://github.com/NikolaTotev/CineBot-Alpha_Robotics-Course-Project/blob/master/Documentation/Software%20Diagrams/Deployment_Diagram.svg" width="72%" height="70%">
 </p>
 
 
