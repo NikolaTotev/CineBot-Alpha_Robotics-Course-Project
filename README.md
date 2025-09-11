@@ -759,7 +759,7 @@ Due to the relative complexity of the system, I will not write too much text to 
 
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/NikolaTotev/Robotics-Course-Project/2a61a2f3e2c6e9b4ed6ecc0658b16b2103fae912/Documentation/Software%20Diagrams/Client_Modules.svg?token=AGMIB7MHU3PP2RZ6VG46N427BS6PE" width="50%" height="50%" >
+<img src="https://github.com/NikolaTotev/CineBot-Alpha_Robotics-Course-Project/blob/master/Documentation/Software%20Diagrams/Client_Modules.svg" width="50%" height="50%" >
 </p>
 
 <p align="center">
